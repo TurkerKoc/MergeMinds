@@ -27,14 +27,17 @@ export const colorTokens = {
     800: "#00353F",
     900: "#001519",
   },
+  test: {
+    50: "##FFFFFF",
+  },
 };
 
-// mui theme settings
+// mui theme settings 
 export const themeSettings = (mode) => {
   return {
     palette: {
       mode: mode,
-      ...(mode === "dark"
+      ...(mode === "dark" // if dark mode is enabled then use these palette values
         ? {
             // palette values for dark mode
             primary: {
@@ -52,6 +55,9 @@ export const themeSettings = (mode) => {
             background: {
               default: colorTokens.grey[900],
               alt: colorTokens.grey[800],
+            },
+            test: {
+              white: colorTokens.test[50],
             },
           }
         : {

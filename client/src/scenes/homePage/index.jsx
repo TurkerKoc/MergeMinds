@@ -1,3 +1,4 @@
+// difference between js and jsx: jsx contains react components
 import { Box, useMediaQuery } from "@mui/material";
 import { useSelector } from "react-redux";
 import Navbar from "scenes/navbar";
@@ -13,15 +14,15 @@ const HomePage = () => {
 
   return (
     <Box>
-      <Navbar />
+      <Navbar /> {/* Navbar is a component we created in mern-social-media/client/src/scenes/navbar/index.jsx */}
       <Box
         width="100%"
         padding="2rem 6%"
-        display={isNonMobileScreens ? "flex" : "block"}
-        gap="0.5rem"
+        display={isNonMobileScreens ? "flex" : "block"} //block mode: each element in a new line, flex mode: all elements in one line
+        gap="0.5rem" // gap between elements
         justifyContent="space-between"
       >
-        <Box flexBasis={isNonMobileScreens ? "26%" : undefined}>
+        <Box flexBasis={isNonMobileScreens ? "26%" : undefined}> {/* flexBasis is a css property to set width of an element and 26% means 26% of parent element (%26 of page) */}
           <UserWidget userId={_id} picturePath={picturePath} />
         </Box>
         <Box

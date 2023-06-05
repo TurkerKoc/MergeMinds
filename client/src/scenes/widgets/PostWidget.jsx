@@ -11,6 +11,7 @@ import WidgetWrapper from "components/WidgetWrapper";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setPost } from "state";
+import formatDistanceToNow from 'date-fns/formatDistanceToNow'
 
 const PostWidget = ({
   postId,
@@ -22,6 +23,7 @@ const PostWidget = ({
   userPicturePath,
   likes,
   comments,
+  createdAt,
 }) => {
   const [isComments, setIsComments] = useState(false);
   const dispatch = useDispatch();
@@ -33,6 +35,7 @@ const PostWidget = ({
   const { palette } = useTheme();
   const main = palette.neutral.main;
   const primary = palette.primary.main;
+  const dark = palette.primary.dark;
 
   const patchLike = async () => {
     const response = await fetch(`http://localhost:3001/posts/${postId}/like`, {
@@ -49,6 +52,9 @@ const PostWidget = ({
 
   return (
     <WidgetWrapper m="2rem 0">
+      <Typography color={dark} sx={{ mb: "1rem" }}>
+        {formatDistanceToNow(new Date(createdAt), { addSuffix: true })}
+      </Typography>
       <Friend
         friendId={postUserId}
         name={name}
