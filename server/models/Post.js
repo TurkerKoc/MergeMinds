@@ -19,7 +19,7 @@ const postSchema = mongoose.Schema(
     picturePath: String,
     userPicturePath: String,
     likes: {
-      type: Map,
+      type: Map, // Instead of using user ids, we will use a map to store user ids and whether they liked the post or not (true or false) -> more efficient (userId: true)
       of: Boolean,
     },
     comments: {
