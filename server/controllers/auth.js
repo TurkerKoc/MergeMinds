@@ -1,6 +1,6 @@
 import bcrypt from "bcrypt"; // for password hashing
 import jwt from "jsonwebtoken"; // for generating tokens
-import User from "../models/User.js"; // import User model test
+import User from "../models/User.js"; // import User model test 2
 
 /* REGISTER USER */
 export const register = async (req, res) => { // async function to register user -> it is async we are using await
