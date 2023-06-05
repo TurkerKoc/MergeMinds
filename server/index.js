@@ -68,6 +68,6 @@ mongoose
     /* ADD DUMMY DATA ONE TIME */
     // User.insertMany(users);
     // Post.insertMany(posts);
-    MergeUser.insertMany(mergeUsers);
+    // MergeUser.insertMany(mergeUsers);
   })
   .catch((error) => console.log(`${error} did not connect`)); // catch error if connection is not established
