@@ -167,7 +167,7 @@ const Form = () => {
                   helperText={touched.lastName && errors.lastName}
                   sx={{ gridColumn: "span 2" }}
                 />
-                <TextField
+                {/* <TextField
                   label="Location"
                   onBlur={handleBlur}
                   onChange={handleChange}
@@ -176,8 +176,8 @@ const Form = () => {
                   error={Boolean(touched.location) && Boolean(errors.location)}
                   helperText={touched.location && errors.location}
                   sx={{ gridColumn: "span 4" }}
-                />
-                <TextField
+                /> */}
+                {/* <TextField
                   label="Occupation"
                   onBlur={handleBlur}
                   onChange={handleChange}
@@ -188,7 +188,7 @@ const Form = () => {
                   }
                   helperText={touched.occupation && errors.occupation}
                   sx={{ gridColumn: "span 4" }}
-                />
+                /> */}
                 <Box /* Box to cover upload image field */
                   gridColumn="span 4"
                   border={`1px solid ${palette.neutral.medium}`} /* border for the box from theme */

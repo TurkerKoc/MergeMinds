@@ -16,7 +16,8 @@ import { createPost } from "./controllers/posts.js";
 import { verifyToken } from "./middleware/auth.js";
 import User from "./models/User.js"; // for one time user creation
 import Post from "./models/Post.js"; // for one time post creation
-import { users, posts } from "./data/index.js"; // for one time user and post creation
+import MergeUser from "./models/MergeUser.js";
+import { mergeUsers, users, posts } from "./data/index.js"; // for one time user and post creation
 
 /* CONFIGURATIONS */
 const __filename = fileURLToPath(import.meta.url); // get current file path
@@ -67,5 +68,6 @@ mongoose
     /* ADD DUMMY DATA ONE TIME */
     // User.insertMany(users);
     // Post.insertMany(posts);
+    MergeUser.insertMany(mergeUsers);
   })
   .catch((error) => console.log(`${error} did not connect`)); // catch error if connection is not established

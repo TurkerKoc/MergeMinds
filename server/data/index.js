@@ -11,6 +11,26 @@ const userIds = [
   new mongoose.Types.ObjectId(),
 ];
 
+export const mergeUsers = [
+  {
+    _id: userIds[0],
+    username: "Tuko",
+    password: "$2b$10$dsasdgsagasda//G9JxQ4bQ8KXf4OAIe/X/AK9skyWUy",
+    name: "Turker",
+    surname: "Koc",
+    email: "turkerkoc35@gmail.com",    
+    trustPoints: 5.0,
+    trustPointViewCount: 135,
+    picturePath: "p11.jpeg",
+    friends: [],
+    profileSummary: "I am a software engineer",
+    webSiteLink: "https://www.turkerkoc.com",
+    mergeCoins: 100,
+    createdAt: 1115211422,
+    updatedAt: 1115211422,
+    __v: 0,
+  },
+]
 export const users = [
   {
     _id: userIds[0],
