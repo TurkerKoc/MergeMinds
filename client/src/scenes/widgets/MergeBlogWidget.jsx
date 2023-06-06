@@ -41,7 +41,7 @@ const MergeBlogWidget = () => {
       </FlexBetween>
       <List>
         {FAQs.map((faq, index) => (
-          <ListItem key={index} component="a" href={faq .url}>
+          <ListItem key={index} component="a" href={faq.url}>
             <ListItemText primary={faq.question} />
           </ListItem>
         ))}

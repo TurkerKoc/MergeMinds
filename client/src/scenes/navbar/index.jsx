@@ -1,6 +1,7 @@
 import { useState } from "react"; // useState is a react hook
 import {
   Box,
+  Button, // Button is a component from material ui library
   IconButton,
   InputBase,
   Typography,
@@ -41,7 +42,6 @@ const Navbar = () => {
   const alt = theme.palette.background.alt; // grabbing alt color from theme
 
   const fullName = `${user.firstName} ${user.lastName}`; // grabbing user's full name to show it in navbar
-
   return (
     <FlexBetween padding="1rem 6%" backgroundColor={alt}> {/* for box component you can pass additional css properties like padding, backgroundColor, etc. */}
       <FlexBetween gap="1.75rem"> {/* gap beteen items in navbar (like different divs) */}
@@ -71,12 +71,20 @@ const Navbar = () => {
               <Search /> {/* Search is an icon from material ui library */}
             </IconButton>
           </FlexBetween>
+          
         )}
       </FlexBetween>
 
       {/* DESKTOP NAV */}
       {isNonMobileScreens ? ( // if screen is not mobile then show these icons
         <FlexBetween gap="2rem"> {/* gap from search bar -> 2rem is equal to 32px */}
+          <Button 
+            variant="contained" 
+            color="primary" 
+            onClick={() => navigate(`/submission/${user._id}`)} // navigate to submission page when user clicks on submit button
+          >
+            Submit Idea
+          </Button>
           <IconButton onClick={() => dispatch(setMode())}> {/* dispatch setMode action when user clicks on dark/light mode icon */}
             {theme.palette.mode === "dark" ? ( // when setMode changes state.mode in redux store, theme.palette.mode will change too (useMemo in App.js calls themeSettings when state.mode changes)
               <DarkMode sx={{ fontSize: "25px" }} /> // dark mode icon will be light color when theme.palette.mode is dark
@@ -93,7 +101,7 @@ const Navbar = () => {
               value={fullName}
               sx={{ // to change style of dropdown menu we can give css properties with sx
                 backgroundColor: neutralLight,
-                width: "150px",
+                width: "170px",
                 borderRadius: "0.25rem",
                 p: "0.25rem 1rem", //0.25 from top bottom and 1 from left right
                 "& .MuiSvgIcon-root": { // to change style of dropdown icon

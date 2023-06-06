@@ -2,6 +2,7 @@ import { BrowserRouter, Navigate, Routes, Route } from "react-router-dom"; // fo
 import HomePage from "scenes/homePage"; // for home page
 import LoginPage from "scenes/loginPage"; // for login page
 import ProfilePage from "scenes/profilePage"; // for profile page
+import SubmissionPage from "scenes/submissionPage"; // for submission page
 import { useMemo } from "react"; // for memoization
 import { useSelector } from "react-redux"; // for getting state from redux
 import { CssBaseline, ThemeProvider } from "@mui/material"; // for material ui
@@ -36,6 +37,10 @@ function App() {
             <Route /* if the path is /profile/:userId then render the ProfilePage component */
               path="/profile/:userId"
               element={isAuth ? <ProfilePage /> : <Navigate to="/" />}
+            />
+            <Route /* if the path is /submission then render the SubmissionPage component */
+              path="/submission/:userId"
+              element={isAuth ? <SubmissionPage /> : <Navigate to="/" />}
             />
           </Routes>
         </ThemeProvider>
