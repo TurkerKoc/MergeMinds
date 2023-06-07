@@ -11,6 +11,7 @@ import { fileURLToPath } from "url"; // allow us to properly set paths
 import authRoutes from "./routes/auth.js";
 import userRoutes from "./routes/users.js";
 import postRoutes from "./routes/posts.js";
+import mergeUserRoutes from "./routes/mergeUsers.js";
 import { register } from "./controllers/auth.js"; // for registering user
 import { createPost } from "./controllers/posts.js";
 import { verifyToken } from "./middleware/auth.js";
@@ -54,6 +55,10 @@ app.post("/posts", verifyToken, upload.single("picture"), createPost); // also t
 app.use("/auth", authRoutes); // auth route for login and register
 app.use("/users", userRoutes); // user route for getting users
 app.use("/posts", postRoutes); // post route for getting posts
+
+/* MERGE ROUTES */
+app.use("/mergeUsers", mergeUserRoutes); // user route for getting users
+
 
 /* MONGOOSE SETUP */
 const PORT = process.env.PORT || 6001; // set port from environment variable or 6001
