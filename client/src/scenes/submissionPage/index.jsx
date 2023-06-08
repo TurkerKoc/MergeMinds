@@ -7,7 +7,9 @@ import FriendListWidget from "scenes/widgets/FriendListWidget";
 import MyPostWidget from "scenes/widgets/MyPostWidget";
 import PostsWidget from "scenes/widgets/PostsWidget";
 import UserWidget from "scenes/widgets/UserWidget";
-
+import MergeSubmissionWidget from "scenes/widgets/MergeSubmissionWidget";
+import MergeBlogWidget from "scenes/widgets/MergeBlogWidget";
+import AdvertWidget from "scenes/widgets/AdvertWidget";
 const SubmissionPage = () => {
   const [user, setUser] = useState(null);
   const { userId } = useParams();
@@ -48,10 +50,16 @@ const SubmissionPage = () => {
           flexBasis={isNonMobileScreens ? "42%" : undefined}
           mt={isNonMobileScreens ? undefined : "2rem"}
         >
-          <MyPostWidget picturePath={user.picturePath} />
-          <Box m="2rem 0" />
-          <PostsWidget userId={userId} isProfile />
+          <MergeSubmissionWidget picturePath={user.picturePath} />
         </Box>
+        {isNonMobileScreens && (
+          <Box flexBasis="26%">
+              <MergeBlogWidget />
+              <Box m="2rem 0" />
+              <AdvertWidget />
+              <Box m="2rem 0" />
+          </Box>
+        )}
       </Box>
     </Box>
   );

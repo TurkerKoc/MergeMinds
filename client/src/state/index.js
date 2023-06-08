@@ -40,9 +40,25 @@ export const authSlice = createSlice({ // this is the slice of the redux store -
       updatedPosts.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
 
       state.posts = updatedPosts; // set posts to updated posts
+    },
+
+    setSubmissions: (state, action) => { // set posts in redux store
+      state.posts = action.payload.posts;
+    },
+    setSubmission: (state, action) => { // set single post in redux store
+      const updatedPosts = state.posts.map((post) => { // map through all posts and update the post that was edited
+        if (post._id === action.payload.post._id) return action.payload.post; // if post id matches the post id that was edited then return the edited post
+        return post; // else return the post
+      });      
+      updatedPosts.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+
+      state.posts = updatedPosts; // set posts to updated posts
     }
+
+
+
   },
 });
 
-export const { setMode, setLogin, setLogout, setFriends, setPosts, setPost } = authSlice.actions; // these are the functions that can be called to change the redux store
+export const { setMode, setLogin, setLogout, setFriends, setPosts, setPost, setSubmissions, setSubmission } = authSlice.actions; // these are the functions that can be called to change the redux store
 export default authSlice.reducer; // this is the reducer that will be used to change the redux store
