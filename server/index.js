@@ -11,10 +11,15 @@ import { fileURLToPath } from "url"; // allow us to properly set paths
 import authRoutes from "./routes/auth.js";
 import userRoutes from "./routes/users.js";
 import postRoutes from "./routes/posts.js";
+
+import mergeAuthRoutes from "./routes/mergeAuth.js";
 import mergeUserRoutes from "./routes/mergeUsers.js";
+
 import { register } from "./controllers/auth.js"; // for registering user
 import { createPost } from "./controllers/posts.js";
 import { verifyToken } from "./middleware/auth.js";
+
+import { mergeRegister } from "./controllers/mergeAuth.js"; // for registering user
 import User from "./models/User.js"; // for one time user creation
 import Post from "./models/Post.js"; // for one time post creation
 import MergeUser from "./models/MergeUser.js";
@@ -49,6 +54,7 @@ const upload = multer({ storage }); // initialize multer with storage -> we will
 /* ROUTES WITH FILES */
 //upload.single("picture") -> if you set picture it will be set in http request body as picture and multer will upload it to public/assets
 app.post("/auth/register", upload.single("picture"), register); // only the register route is defined here because it is the only route that needs to upload a file
+app.post("/mergeAuth/register", upload.single("picture"), mergeRegister); // only the register route is defined here because it is the only route that needs to upload a file
 app.post("/posts", verifyToken, upload.single("picture"), createPost); // also this one has a file upload
 
 /* ROUTES */
@@ -58,6 +64,7 @@ app.use("/posts", postRoutes); // post route for getting posts
 
 /* MERGE ROUTES */
 app.use("/mergeUsers", mergeUserRoutes); // user route for getting users
+app.use("/mergeAuth", mergeAuthRoutes); // auth route for login and register
 
 
 /* MONGOOSE SETUP */

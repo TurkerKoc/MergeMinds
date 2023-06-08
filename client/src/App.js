@@ -1,6 +1,7 @@
 import { BrowserRouter, Navigate, Routes, Route } from "react-router-dom"; // for routing
 import HomePage from "scenes/homePage"; // for home page
 import LoginPage from "scenes/loginPage"; // for login page
+import MergeLoginPage from "scenes/mergeLoginPage"; // for login page
 import ProfilePage from "scenes/profilePage"; // for profile page
 import SubmissionPage from "scenes/submissionPage"; // for submission page
 import { useMemo } from "react"; // for memoization
@@ -30,6 +31,7 @@ function App() {
           <CssBaseline /> {/* to reset the css and use the theme */}
           <Routes>
             <Route path="/" element={<LoginPage />} /> {/* if the path is / then render the LoginPage component */}
+            <Route path="/mergeLogin" element={<MergeLoginPage />} /> {/* if the path is / then render the LoginPage component */}
             <Route /* if the path is /home then render the HomePage component */
               path="/home"
               element={isAuth ? <HomePage /> : <Navigate to="/" />}
