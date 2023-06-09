@@ -22,6 +22,7 @@ import {
   Close,
   Paid
 } from "@mui/icons-material"; // you can find icons in https://mui.com/material-ui/material-icons
+import AddIcon from '@mui/icons-material/Add';
 import { useDispatch, useSelector } from "react-redux"; // useDispatch used for dispatching actions to redux store and useSelector used for selecting data from redux store
 import { setMode, setLogout } from "state"; // setMode and setLogout are actions from state.js
 import { useNavigate } from "react-router-dom"; // useNavigate used for navigation between pages
@@ -58,21 +59,7 @@ const Navbar = () => {
           }}
         >
           MergeMinds
-        </Typography>
-        {isNonMobileScreens && ( // if screen is not mobile then show search bar
-          <FlexBetween
-            backgroundColor={neutralLight}
-            borderRadius="9px"
-            gap="3rem"
-            padding="0.1rem 1.5rem"
-          >
-            <InputBase placeholder="Search..." /> {/* InputBase is a component from material ui library to show input */}
-            <IconButton>
-              <Search /> {/* Search is an icon from material ui library */}
-            </IconButton>
-          </FlexBetween>
-          
-        )}
+        </Typography>        
       </FlexBetween>
 
       {/* DESKTOP NAV */}
@@ -82,6 +69,7 @@ const Navbar = () => {
             variant="contained" 
             color="primary" 
             onClick={() => navigate(`/submission/${user._id}`)} // navigate to submission page when user clicks on submit button
+            startIcon={<AddIcon />} // Add the plus icon using the startIcon prop
           >
             Submit Idea
           </Button>
@@ -94,8 +82,8 @@ const Navbar = () => {
           </IconButton>
           <Paid sx={{ fontSize: "25px" }} /> {/* MergeCoin */}
           <Message sx={{ fontSize: "25px" }} /> 
-          <Notifications sx={{ fontSize: "25px" }} />
-          <Help sx={{ fontSize: "25px" }} />
+          {/* <Notifications sx={{ fontSize: "25px" }} />
+          <Help sx={{ fontSize: "25px" }} /> */}
           <FormControl variant="standard" value={fullName}> {/* Dropdown menu for user's full name and log out */}
             <Select
               value={fullName}
