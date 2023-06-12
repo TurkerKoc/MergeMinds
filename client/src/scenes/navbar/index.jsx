@@ -80,7 +80,12 @@ const Navbar = () => {
               <LightMode sx={{ color: dark, fontSize: "25px" }} /> // dark mode icon will be dark color when theme.palette.mode is light
             )}
           </IconButton>
-          <Paid sx={{ fontSize: "25px" }} /> {/* MergeCoin */}
+          <div 
+            onClick={() => navigate(`/token/${user._id}`)} 
+            style={{ cursor: "pointer" }}
+          >
+            <Paid sx={{ fontSize: "25px" }} />
+          </div>
           <Message sx={{ fontSize: "25px" }} /> 
           {/* <Notifications sx={{ fontSize: "25px" }} />
           <Help sx={{ fontSize: "25px" }} /> */}
