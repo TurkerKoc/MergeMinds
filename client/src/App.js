@@ -1,8 +1,10 @@
 import { BrowserRouter, Navigate, Routes, Route } from "react-router-dom"; // for routing
 import HomePage from "scenes/homePage"; // for home page
 import LoginPage from "scenes/loginPage"; // for login page
+import MergeLoginPage from "scenes/mergeLoginPage"; // for login page
 import ProfilePage from "scenes/profilePage"; // for profile page
 import SubmissionPage from "scenes/submissionPage"; // for submission page
+import NewsFeed from "scenes/newsFeed";
 import { useMemo } from "react"; // for memoization
 import { useSelector } from "react-redux"; // for getting state from redux
 import { CssBaseline, ThemeProvider } from "@mui/material"; // for material ui
@@ -31,6 +33,7 @@ function App() {
           <CssBaseline /> {/* to reset the css and use the theme */}
           <Routes>
             <Route path="/" element={<LoginPage />} /> {/* if the path is / then render the LoginPage component */}
+            <Route path="/mergeLogin" element={<MergeLoginPage />} /> {/* if the path is / then render the LoginPage component */}
             <Route /* if the path is /home then render the HomePage component */
               path="/home"
               element={isAuth ? <HomePage /> : <Navigate to="/" />}
@@ -46,6 +49,10 @@ function App() {
             <Route /* if the path is /token then render the MergeTokenPage component */
               path="/token/:userId"
               element={isAuth ? <MergeTokenPage /> : <Navigate to="/" />}
+            />
+            <Route /* if the path is /submission then render the SubmissionPage component */
+              path="/newsfeed"
+              element={<NewsFeed />}
             />
           </Routes>
         </ThemeProvider>

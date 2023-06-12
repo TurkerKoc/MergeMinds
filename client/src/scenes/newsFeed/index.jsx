@@ -8,9 +8,9 @@ import PostsWidget from "scenes/widgets/PostsWidget";
 import MergeBlogWidget from "scenes/widgets/MergeBlogWidget";
 import AdvertWidget from "scenes/widgets/AdvertWidget";
 import FriendListWidget from "scenes/widgets/FriendListWidget";
-import MergeBlogWidget from "scenes/widgets/MergeBlogWidget";
+import LinksWidget from "scenes/widgets/LinksWidget";
 
-const HomePage = () => {
+const NewsFeed = () => {
   const isNonMobileScreens = useMediaQuery("(min-width:1000px)");
   const { _id, picturePath } = useSelector((state) => state.user);
 
@@ -25,13 +25,12 @@ const HomePage = () => {
         justifyContent="space-between"
       >
         <Box flexBasis={isNonMobileScreens ? "26%" : undefined}> {/* flexBasis is a css property to set width of an element and 26% means 26% of parent element (%26 of page) */}
-          <UserWidget userId={_id} picturePath={picturePath} />
-        </Box>
+          <LinksWidget />
+        </Box >
         <Box
           flexBasis={isNonMobileScreens ? "42%" : undefined}
-          mt={isNonMobileScreens ? undefined : "2rem"}
+          mt={isNonMobileScreens ? undefined : "1rem"}
         >
-          <MyPostWidget picturePath={picturePath} />
           <PostsWidget userId={_id} />
         </Box>
         {isNonMobileScreens && (
@@ -48,4 +47,4 @@ const HomePage = () => {
   );
 };
 
-export default HomePage;
+export default NewsFeed;
