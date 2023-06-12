@@ -51,7 +51,7 @@ const PostWidget = ({
   };
 
   return (
-    <WidgetWrapper m="2rem 0">
+    <WidgetWrapper mb="2rem">
       <Typography color={dark} sx={{ mb: "1rem" }}>
         {formatDistanceToNow(new Date(createdAt), { addSuffix: true })}
       </Typography>

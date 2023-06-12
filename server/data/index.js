@@ -10,6 +10,65 @@ const userIds = [
   new mongoose.Types.ObjectId(),
   new mongoose.Types.ObjectId(),
 ];
+const locationIds = [
+  new mongoose.Types.ObjectId(),
+  new mongoose.Types.ObjectId(),
+  new mongoose.Types.ObjectId(),
+];
+const categoryIds = [
+  new mongoose.Types.ObjectId(),
+  new mongoose.Types.ObjectId(),
+  new mongoose.Types.ObjectId(),
+  new mongoose.Types.ObjectId(),
+];
+const priceIds = [
+  new mongoose.Types.ObjectId(),
+  new mongoose.Types.ObjectId(),
+];
+
+export const locations = [
+  {
+    _id: locationIds[0],
+    name: "San Francisco, CA",    
+  },
+  {
+    _id: locationIds[1],
+    name: "New York, NY",
+  }
+]
+
+export const prices = [
+  {
+    _id: priceIds[0],
+    name: "Free",
+    amount: 0,
+  },
+  {
+    _id: priceIds[1],
+    name: "IdeaPost",
+    amount: 2,
+  },
+]
+
+export const categories = [
+  {
+    _id: categoryIds[0],
+    domain: "Technology",
+  },
+  {
+    _id: categoryIds[1],
+    domain: "Business",
+  },
+  {
+    _id: categoryIds[2],
+    domain: "Science",
+  },
+  {
+    _id: categoryIds[3],
+    domain: "Art",
+  }
+]
+
 
 export const mergeUsers = [
   {

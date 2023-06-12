@@ -37,7 +37,7 @@ export const authSlice = createSlice({ // this is the slice of the redux store -
         if (post._id === action.payload.post._id) return action.payload.post; // if post id matches the post id that was edited then return the edited post
         return post; // else return the post
       });      
-      updatedPosts.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+      updatedPosts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
       state.posts = updatedPosts; // set posts to updated posts
     }
