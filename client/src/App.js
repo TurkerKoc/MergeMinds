@@ -8,6 +8,7 @@ import { useSelector } from "react-redux"; // for getting state from redux
 import { CssBaseline, ThemeProvider } from "@mui/material"; // for material ui
 import { createTheme } from "@mui/material/styles"; // for material ui
 import { themeSettings } from "./theme"; // for theme settings (light and dark mode) -> created in theme.js
+import MergeTokenPage from "scenes/tokenPage";
 // import { useDispatch } from "react-redux"; // useDispatch used for dispatching actions to redux store
 // import { setError } from "state"; // setError is an action from state.js
 
@@ -41,6 +42,10 @@ function App() {
             <Route /* if the path is /submission then render the SubmissionPage component */
               path="/submission/:userId"
               element={isAuth ? <SubmissionPage /> : <Navigate to="/" />}
+            />
+            <Route /* if the path is /token then render the MergeTokenPage component */
+              path="/token/:userId"
+              element={isAuth ? <MergeTokenPage /> : <Navigate to="/" />}
             />
           </Routes>
         </ThemeProvider>
