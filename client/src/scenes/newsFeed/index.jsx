@@ -26,7 +26,7 @@ const NewsFeed = () => {
       >
         <Box flexBasis={isNonMobileScreens ? "26%" : undefined}> {/* flexBasis is a css property to set width of an element and 26% means 26% of parent element (%26 of page) */}
           <LinksWidget />
-        </Box>
+        </Box >
         <Box
           flexBasis={isNonMobileScreens ? "42%" : undefined}
           mt={isNonMobileScreens ? undefined : "1rem"}

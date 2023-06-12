@@ -31,8 +31,8 @@ const MergeUserSchema = new mongoose.Schema(
       max: 50,
       unique: true,
     },
-      trustPoints: Number,
-      trustPointViewCount: Number,
+    trustPoints: Number,
+    trustPointViewCount: Number,
     picturePath: {
       type: String,
       default: "",

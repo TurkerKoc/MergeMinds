@@ -112,7 +112,7 @@ const Form = () => {
           token: loggedIn.token,
         })
       );
-        navigate("/home"); // we will navigate to home page
+        navigate("/newsfeed"); // we will navigate to home page
     }
   };
 
