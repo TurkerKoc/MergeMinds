@@ -47,7 +47,7 @@ function App() {
             />
             <Route /* if the path is /submission then render the SubmissionPage component */
               path="/newsfeed"
-              element={<NewsFeed />}
+              element={isAuth ? <NewsFeed /> : <Navigate to="/mergeLogin" />}
             />
           </Routes>
         </ThemeProvider>

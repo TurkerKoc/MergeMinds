@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setPosts } from "state";
 import MergePostWidget from "./MergePostWidget";
+import { Merge } from "@mui/icons-material";
 
 const MergePostsWidget = ({ userId, isProfile = false }) => {
 	const dispatch = useDispatch();
@@ -43,19 +44,38 @@ const MergePostsWidget = ({ userId, isProfile = false }) => {
         ({
           _id,
           userId,
+          locationId,
+          title,
+          description,
+          isHidden,
+          prepaidApplicants,
+          categoryId,
+          priceId,
+          likes,
+          dislikes,
+          Applications,
+          picturePath,
+          createdAt
           //TODO add everything else
         }) => (
           <MergePostWidget
             key={_id}
             postId={_id}
-            postUserId={userId}
-            name={`${firstName} ${lastName}`}
-            description={description}
-            location={location}
+            postUserId={userId._id}            
+            name={`${userId.name} ${userId.surname}`}
+            userPicturePath={userId.picturePath}
+            trustPoints={userId.trustPoints}
             picturePath={picturePath}
-            userPicturePath={userPicturePath}
+            location={locationId.name}
+            title={title}
+            description={description}
+            isHidden={isHidden}
+            prepaidApplicants={prepaidApplicants}
+            categoryId={categoryId.domain}
+            priceId={priceId.amount}
             likes={likes}
-            comments={comments}
+            dislikes={dislikes}
+            Applications={Applications}
             createdAt={createdAt}
           />
         )
@@ -64,4 +84,4 @@ const MergePostsWidget = ({ userId, isProfile = false }) => {
   );
 };
 
-export default PostsWidget;
+export default MergePostsWidget;

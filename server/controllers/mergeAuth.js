@@ -12,12 +12,8 @@ export const mergeRegister = async (req, res) => { // async function to register
       email,
       password,
       picturePath,
-      friends,
-      trustPoints,
-      trustPointViewCount,
       profileSummary,
-      webSiteLink,
-      mergeCoins,
+      webSiteLink
     } = req.body; // get all data from request body
 
     console.log(req.body);
@@ -31,12 +27,12 @@ export const mergeRegister = async (req, res) => { // async function to register
       email,
       password: passwordHash,
       picturePath,
-      friends,
-      trustPoints,
-      trustPointViewCount,
+      friends: [],
+      trustPoints: 5,
+      trustPointViewCount: 0,
       profileSummary,
       webSiteLink,
-      mergeCoins,
+      mergeCoins: 2,
     }); // create new user with hashed password
     const savedUser = await newUser.save(); // save user to database -> it is async we are using await
     res.status(201).json(savedUser); // send saved user as response
