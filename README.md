@@ -10,6 +10,15 @@ For all related questions and discussions about this project, check out the disc
 
 Visit the page for stripe installation https://stripe.com/docs/stripe-cli
 
+## npm installation
+
+In server run the following command :
+* npm i @stripe/stripe-js
+
+In client run the following command :
+* npm install --force stripe
+
+
 ## Credentials
 
 Add following env variables to .env file in server
@@ -25,3 +34,4 @@ After installed the stripe cli, logged in. By using the following command:
 
 Run this command to start stripe endpoint : 
 * stripe listen --forward-to localhost:3001/stripe/webhook
+
