@@ -9,6 +9,7 @@ import MergeBlogWidget from "scenes/widgets/MergeBlogWidget";
 import AdvertWidget from "scenes/widgets/AdvertWidget";
 import FriendListWidget from "scenes/widgets/FriendListWidget";
 import LinksWidget from "scenes/widgets/LinksWidget";
+import MergePostsWidget from "scenes/widgets/MergePostsWidget";
 
 const NewsFeed = () => {
   const isNonMobileScreens = useMediaQuery("(min-width:1000px)");
@@ -31,7 +32,7 @@ const NewsFeed = () => {
           flexBasis={isNonMobileScreens ? "42%" : undefined}
           mt={isNonMobileScreens ? undefined : "1rem"}
         >
-          <PostsWidget userId={_id} />
+          <MergePostsWidget userId={_id} />
         </Box>
         {isNonMobileScreens && (
           <Box flexBasis="26%">
@@ -39,7 +40,7 @@ const NewsFeed = () => {
             <Box m="2rem 0" />
             <AdvertWidget />
             <Box m="2rem 0" />
-            <FriendListWidget userId={_id} />
+            {/* <FriendListWidget userId={_id} /> */}
           </Box>
         )}
       </Box>

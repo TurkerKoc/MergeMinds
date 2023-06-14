@@ -1,13 +1,17 @@
 import IdeaPost from "../models/IdeaPost.js"; // for getting posts
 import MergeUser from "../models/MergeUser.js"; // for getting users
+import Location from "../models/Location.js"; // for getting locations
+import Category from "../models/Category.js"; // for getting categories
+import Price from "../models/Price.js"; // for getting prices
+import Application from "../models/Application.js"; // for getting applications
 import mongoose from "mongoose";
 /* CREATE */
 export const createMergePost = async (req, res) => {
   // Extract post details from request body
-  const { userId, locationId, title, description, isHidden, prepaidApplicants, categoryId, priceId } = req.body;
+  const { userId, locationId, title, description, isHidden, prepaidApplicants, categoryId, priceId, picturePath } = req.body;
 
   // Validate request body data
-  if (!userId || !locationId || !title || !description || isHidden === undefined || prepaidApplicants === undefined || !categoryId || !priceId) {
+  if (!userId || !locationId || !title || !description || isHidden === undefined || prepaidApplicants === undefined || !categoryId || !priceId || !picturePath) {
       return res.status(400).json({ message: 'Missing required fields' });
   }
 
@@ -24,14 +28,46 @@ export const createMergePost = async (req, res) => {
           priceId: mongoose.Types.ObjectId(priceId),
           likes: new Map(),
           dislikes: new Map(),
-          Applications: []
+          Applications: [],
+          picturePath
       });
 
       // Save the new post document
       await newPost.save();
 
       // Get all posts and sort them by createdAt in descending order
-      const posts = await IdeaPost.find().sort('-createdAt');
+      const posts = await IdeaPost.find().populate([
+        {
+            path: 'userId',
+            select: 'name surname username email picturePath trustPoints',
+            model: MergeUser
+        },
+        {
+            path: 'Applications',
+            select: 'content userId',
+            model: Application,
+            populate: {
+                path: 'userId',
+                select: 'name surname picturePath',
+                model: MergeUser
+            }
+        },
+        {
+            path: 'categoryId',
+            select: 'domain',
+            model: Category
+        },
+        {
+            path: 'locationId',
+            select: 'name',
+            model: Location
+        },
+        {
+            path: 'priceId',
+            select: 'amount',
+            model: Price
+        }
+    ]).sort({ createdAt: -1 });
 
       // Respond with all posts
       return res.status(201).json(posts);
@@ -42,12 +78,51 @@ export const createMergePost = async (req, res) => {
 };
 
 /* READ */
+// export const getFeedPosts = async (req, res) => { 
+//   try {
+//     const post = await IdeaPost.find().sort({ createdAt: -1 }); // find all posts and sort by createdAt descending
+//     res.status(200).json(post); // return all posts
+//   } catch (err) {
+//     res.status(404).json({ message: err.message });
+//   }
+// };
 export const getFeedPosts = async (req, res) => { 
   try {
-    const post = await IdeaPost.find().sort({ createdAt: -1 }); // find all posts and sort by createdAt descending
-    res.status(200).json(post); // return all posts
+    const posts = await IdeaPost.find().populate([
+        {
+            path: 'userId',
+            select: 'name surname username email picturePath trustPoints',
+            model: MergeUser
+        },
+        {
+            path: 'Applications',
+            select: 'content userId',
+            model: Application,
+            populate: {
+                path: 'userId',
+                select: 'name surname picturePath',
+                model: MergeUser
+            }
+        },
+        {
+            path: 'categoryId',
+            select: 'domain',
+            model: Category
+        },
+        {
+            path: 'locationId',
+            select: 'name',
+            model: Location
+        },
+        {
+            path: 'priceId',
+            select: 'amount',
+            model: Price
+        }
+    ]).sort({ createdAt: -1 });
+    res.status(200).json(posts);
   } catch (err) {
-    res.status(404).json({ message: err.message });
+      res.status(404).json({ message: err.message });
   }
 };
 
@@ -55,7 +130,38 @@ export const getUserPosts = async (req, res) => {
   try {
     console.log(req.params)
     const { userId } = req.params; // get userId from request parameters
-    const userPosts = await IdeaPost.find({ userId: mongoose.Types.ObjectId(userId) }).sort('-createdAt');
+    const userPosts = await IdeaPost.find({ userId: mongoose.Types.ObjectId(userId) }).populate([
+      {
+          path: 'userId',
+          select: 'name surname username email picturePath trustPoints',
+          model: MergeUser
+      },
+      {
+          path: 'Applications',
+          select: 'content userId',
+          model: Application,
+          populate: {
+              path: 'userId',
+              select: 'name surname picturePath',
+              model: MergeUser
+          }
+      },
+      {
+          path: 'categoryId',
+          select: 'domain',
+          model: Category
+      },
+      {
+          path: 'locationId',
+          select: 'name',
+          model: Location
+      },
+      {
+          path: 'priceId',
+          select: 'amount',
+          model: Price
+      }
+  ]).sort({ createdAt: -1 });
     res.status(200).json(userPosts); // return all posts
   } catch (err) {
     res.status(404).json({ message: err.message });
@@ -85,7 +191,38 @@ export const likePost = async (req, res) => {
       postId, // id
       { likes: post.likes }, // likes
       { new: true } // new object 
-    );
+    ).populate([
+      {
+          path: 'userId',
+          select: 'name surname username email picturePath trustPoints',
+          model: MergeUser
+      },
+      {
+          path: 'Applications',
+          select: 'content userId',
+          model: Application,
+          populate: {
+              path: 'userId',
+              select: 'name surname picturePath',
+              model: MergeUser
+          }
+      },
+      {
+          path: 'categoryId',
+          select: 'domain',
+          model: Category
+      },
+      {
+          path: 'locationId',
+          select: 'name',
+          model: Location
+      },
+      {
+          path: 'priceId',
+          select: 'amount',
+          model: Price
+      }
+  ]);
 
     res.status(200).json(updatedPost); // return updated post
   } catch (err) {
@@ -116,7 +253,38 @@ export const dislikePost = async (req, res) => {
       postId, // id
       { dislikes: post.dislikes }, // dislikes
       { new: true } // new object 
-    );
+    ).populate([
+      {
+          path: 'userId',
+          select: 'name surname username email picturePath trustPoints',
+          model: MergeUser
+      },
+      {
+          path: 'Applications',
+          select: 'content userId',
+          model: Application,
+          populate: {
+              path: 'userId',
+              select: 'name surname picturePath',
+              model: MergeUser
+          }
+      },
+      {
+          path: 'categoryId',
+          select: 'domain',
+          model: Category
+      },
+      {
+          path: 'locationId',
+          select: 'name',
+          model: Location
+      },
+      {
+          path: 'priceId',
+          select: 'amount',
+          model: Price
+      }
+  ]);
 
     res.status(200).json(updatedPost); // return updated post
   } catch (err) {

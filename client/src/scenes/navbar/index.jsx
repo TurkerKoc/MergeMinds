@@ -42,7 +42,7 @@ const Navbar = () => {
   const primaryLight = theme.palette.primary.light; // grabbing primary light color from theme
   const alt = theme.palette.background.alt; // grabbing alt color from theme
 
-  const fullName = `${user.firstName} ${user.lastName}`; // grabbing user's full name to show it in navbar
+  const fullName = `${user.name} ${user.surname}`; // grabbing user's full name to show it in navbar
   return (
     <FlexBetween padding="1rem 6%" backgroundColor={alt}> {/* for box component you can pass additional css properties like padding, backgroundColor, etc. */}
       <FlexBetween gap="1.75rem"> {/* gap beteen items in navbar (like different divs) */}

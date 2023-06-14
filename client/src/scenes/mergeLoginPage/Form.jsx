@@ -24,7 +24,7 @@ const registerSchema = yup.object().shape({ //required is a yup function to show
   email: yup.string().email("invalid email").required("required"), // yup will show this error message if user enters invalid email
   password: yup.string().required("required"),
   profileSummary: yup.string().required("required"),
-  websiteLink: yup.string().required("required"),
+  websiteLink: yup.string(),
   picture: yup.string().required("required"), 
 });
 
@@ -112,7 +112,7 @@ const Form = () => {
           token: loggedIn.token,
         })
       );
-        navigate("/newsfeed"); // we will navigate to home page
+      navigate("/newsfeed"); // we will navigate to home page
     }
   };
 
@@ -153,29 +153,29 @@ const Form = () => {
                   label="First Name"
                   onBlur={handleBlur}
                   onChange={handleChange}
-                  value={values.firstName} // save entered value in values.firstName
+                  value={values.name} // save entered value in values.firstName
                   name="name" // name of the field
                   error={ // error prop is a boolean to show error message if the field is touched and has an error
-                    Boolean(touched.firstName) && Boolean(errors.firstName) // if the field is touched and has an error then show error message
+                    Boolean(touched.name) && Boolean(errors.name) // if the field is touched and has an error then show error message
                   }
-                  helperText={touched.firstName && errors.firstName} // helperText is the error message
+                  helperText={touched.name && errors.name} // helperText is the error message
                   sx={{ gridColumn: "span 2" }} // in larger screens we want the field to take 2 columns and in smaller screens we want the field to take 4 columns (defined above)
                 />
                 <TextField
                   label="Last Name"
                   onBlur={handleBlur}
                   onChange={handleChange}
-                  value={values.lastName}
+                  value={values.surname}
                   name="surname"
-                  error={Boolean(touched.lastName) && Boolean(errors.lastName)}
-                  helperText={touched.lastName && errors.lastName}
+                  error={Boolean(touched.surname) && Boolean(errors.surname)}
+                  helperText={touched.surname && errors.surname}
                   sx={{ gridColumn: "span 2" }}
                 />
                 <TextField
                   label="Username"
                   onBlur={handleBlur}
                   onChange={handleChange}
-                  value={values.location}
+                  value={values.username}
                   name="username"
                   error={Boolean(touched.username) && Boolean(errors.username)}
                   helperText={touched.username && errors.username}
@@ -185,7 +185,7 @@ const Form = () => {
                   label="Profile Summary"
                   onBlur={handleBlur}
                   onChange={handleChange}
-                  value={values.occupation}
+                  value={values.profileSummary}
                   name="profileSummary"
                   error={
                     Boolean(touched.profileSummary) && Boolean(errors.profileSummary)
@@ -197,7 +197,7 @@ const Form = () => {
                     label="Website Link"
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    value={values.occupation}
+                    value={values.webSiteLink}
                     name="websiteLink"
                     error={
                         Boolean(touched.websiteLink) && Boolean(errors.websiteLink)
