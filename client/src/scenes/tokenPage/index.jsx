@@ -21,7 +21,7 @@ const MergeTokenPage = () => {
   const isNonMobileScreens = useMediaQuery("(min-width:300px)");
 
   const getUser = async () => {
-    const response = await fetch(`http://localhost:3001/users/${userId}`, {
+    const response = await fetch(`http://localhost:3001/mergeUsers/${userId}`, {
       method: "GET",
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -46,9 +46,9 @@ const MergeTokenPage = () => {
         justifyContent="center"
       >
         <Box flexBasis={isNonMobileScreens ? "26%" : undefined}>
-          <UserWidget userId={userId} picturePath={user.picturePath} />
+          {/* <UserWidget userId={userId} picturePath={user.picturePath} />
           <Box m="2rem 0" />
-          <FriendListWidget userId={userId} />
+          <FriendListWidget userId={userId} /> */}
           </Box>
         <Box flexBasis={isNonMobileScreens ? "76%" : undefined}>
           <PricingTable />
