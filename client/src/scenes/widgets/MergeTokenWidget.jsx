@@ -1,5 +1,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { loadStripe } from '@stripe/stripe-js';
 import { Typography, useTheme } from "@mui/material";
 import FlexBetween from "components/FlexBetween";
 import WidgetWrapper from "components/WidgetWrapper";
@@ -16,6 +18,8 @@ const PricingTable = () => {
     </stripe-pricing-table>
   `;
 
+  
+
   const iframeRef = useRef(null);
 
   useEffect(() => {
@@ -25,6 +29,10 @@ const PricingTable = () => {
       const height = contentDocument.documentElement.scrollHeight;
       contentWindow.postMessage({ type: 'setHeight', height }, '*');
     }
+
+    
+
+
   }, []);
 
 
