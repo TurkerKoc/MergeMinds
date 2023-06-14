@@ -10,11 +10,15 @@ import UserWidget from "scenes/widgets/UserWidget";
 import MergeSubmissionWidget from "scenes/widgets/MergeSubmissionWidget";
 import MergeBlogWidget from "scenes/widgets/MergeBlogWidget";
 import AdvertWidget from "scenes/widgets/AdvertWidget";
-const SubmissionPage = () => {
+import { Merge } from "@mui/icons-material";
+import PricingTable from "scenes/widgets/MergeTokenWidget";
+
+
+const MergeTokenPage = () => {
   const [user, setUser] = useState(null);
   const { userId } = useParams();
   const token = useSelector((state) => state.token);
-  const isNonMobileScreens = useMediaQuery("(min-width:1000px)");
+  const isNonMobileScreens = useMediaQuery("(min-width:300px)");
 
   const getUser = async () => {
     const response = await fetch(`http://localhost:3001/users/${userId}`, {
@@ -45,24 +49,13 @@ const SubmissionPage = () => {
           <UserWidget userId={userId} picturePath={user.picturePath} />
           <Box m="2rem 0" />
           <FriendListWidget userId={userId} />
-        </Box>
-        <Box
-          flexBasis={isNonMobileScreens ? "42%" : undefined}
-          mt={isNonMobileScreens ? undefined : "2rem"}
-        >
-          <MergeSubmissionWidget picturePath={user.picturePath} />
-        </Box>
-        {isNonMobileScreens && (
-          <Box flexBasis="26%">
-              <MergeBlogWidget />
-              <Box m="2rem 0" />
-              <AdvertWidget />
-              <Box m="2rem 0" />
           </Box>
-        )}
+        <Box flexBasis={isNonMobileScreens ? "76%" : undefined}>
+          <PricingTable />
+        </Box>   
       </Box>
     </Box>
   );
 };
 
-export default SubmissionPage;
+export default MergeTokenPage;
