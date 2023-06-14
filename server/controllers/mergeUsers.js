@@ -19,6 +19,7 @@ export const getMergeUserFriends = async (req, res) => {
     const mergeFriends = await Promise.all( // get all friends of user
       mergeUser.friends.map((id) => MergeUser.findById(id)) // map through friends array and find each friend by id
     );
+    if(mergeFriends.length == 0) return res.status(200).json([]); // if user has no friends return empty array
     const formattedMergeFriends = mergeFriends.map( // format for frontend
       ({ _id, name, surname, trustPoints, picturePath }) => { // destructure user object
         return { _id, name, surname, trustPoints, picturePath }; // return formatted user object
