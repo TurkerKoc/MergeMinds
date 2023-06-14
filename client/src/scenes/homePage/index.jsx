@@ -8,7 +8,6 @@ import PostsWidget from "scenes/widgets/PostsWidget";
 import MergeBlogWidget from "scenes/widgets/MergeBlogWidget";
 import AdvertWidget from "scenes/widgets/AdvertWidget";
 import FriendListWidget from "scenes/widgets/FriendListWidget";
-import MergeBlogWidget from "scenes/widgets/MergeBlogWidget";
 
 const HomePage = () => {
   const isNonMobileScreens = useMediaQuery("(min-width:1000px)");
