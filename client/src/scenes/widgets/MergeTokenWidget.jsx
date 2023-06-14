@@ -18,7 +18,9 @@ const PricingTable = () => {
     </stripe-pricing-table>
   `;
 
-  
+
+
+
 
   const iframeRef = useRef(null);
 
@@ -42,7 +44,6 @@ const PricingTable = () => {
         <Typography color={dark} variant="h3" fontWeight="990" style={{ marginBottom: "1rem" }}>
           Payment
         </Typography>
-       
       </FlexBetween>
       <iframe
         ref={iframeRef}

@@ -11,23 +11,24 @@ import MergeSubmissionWidget from "scenes/widgets/MergeSubmissionWidget";
 import MergeBlogWidget from "scenes/widgets/MergeBlogWidget";
 import AdvertWidget from "scenes/widgets/AdvertWidget";
 const SubmissionPage = () => {
-  const [user, setUser] = useState(null);
-  const { userId } = useParams();
-  const token = useSelector((state) => state.token);
+  // const [user, setUser] = useState(null);
+  // const { userId } = useParams();
+  // const token = useSelector((state) => state.token);
+  const user = useSelector((state) => state.user);
   const isNonMobileScreens = useMediaQuery("(min-width:1000px)");
 
-  const getUser = async () => {
-    const response = await fetch(`http://localhost:3001/users/${userId}`, {
-      method: "GET",
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    const data = await response.json();
-    setUser(data);
-  };
+  // const getUser = async () => {
+  //   const response = await fetch(`http://localhost:3001/mergeUsers/${userId}`, {
+  //     method: "GET",
+  //     headers: { Authorization: `Bearer ${token}` },
+  //   });
+  //   const data = await response.json();
+  //   setUser(data);
+  // };
 
-  useEffect(() => {
-    getUser();
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  // useEffect(() => {
+  //   getUser();
+  // }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (!user) return null;
 
@@ -42,9 +43,9 @@ const SubmissionPage = () => {
         justifyContent="center"
       >
         <Box flexBasis={isNonMobileScreens ? "26%" : undefined}>
-          <UserWidget userId={userId} picturePath={user.picturePath} />
+          {/* <UserWidget userId={user._id} picturePath={user.picturePath} />
           <Box m="2rem 0" />
-          <FriendListWidget userId={userId} />
+          <FriendListWidget userId={user._id} /> */}
         </Box>
         <Box
           flexBasis={isNonMobileScreens ? "42%" : undefined}
