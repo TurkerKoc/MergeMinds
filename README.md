@@ -12,10 +12,10 @@ Visit the page for stripe installation https://stripe.com/docs/stripe-cli
 
 ## npm installation
 
-In server run the following command :
+In client run the following command :
 * npm i @stripe/stripe-js
 
-In client run the following command :
+In server run the following command :
 * npm install --force stripe
 
 
