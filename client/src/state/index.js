@@ -5,6 +5,7 @@ const initialState = {  // this is the initial state of the redux store
   user: null,
   token: null,
   posts: [],
+  coins: []
 };
 
 export const authSlice = createSlice({ // this is the slice of the redux store -> think of it as functions that can be called to change the redux store
@@ -53,12 +54,16 @@ export const authSlice = createSlice({ // this is the slice of the redux store -
       updatedPosts.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
 
       state.posts = updatedPosts; // set posts to updated posts
-    }
+    },
+
+    setCoins: (state, action) => { // set posts in redux store
+      state.coins = action.payload.coins;
+    },
 
 
 
   },
 });
 
-export const { setMode, setLogin, setLogout, setFriends, setPosts, setPost, setSubmissions, setSubmission } = authSlice.actions; // these are the functions that can be called to change the redux store
+export const { setMode, setLogin, setLogout, setFriends, setPosts, setPost, setSubmissions, setSubmission, setCoins } = authSlice.actions; // these are the functions that can be called to change the redux store
 export default authSlice.reducer; // this is the reducer that will be used to change the redux store

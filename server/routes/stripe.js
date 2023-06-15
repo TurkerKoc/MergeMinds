@@ -1,10 +1,12 @@
 import express from "express";
 import Stripe from "stripe";
 import MergeUser from "../models/MergeUser.js"; // Adjust to the actual path of your User model
-
+import dotenv from 'dotenv';
+dotenv.config();
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 const router = express.Router();
 const endpointSecret = "whsec_0c57272d3b7a43cf59b9369c36f2b9f0d4a64ec8ecba4327490a33517bd01f28";
+
 
 // Webhook route should be placed before body parsing middleware
 // Webhook route should be placed before body parsing middleware
@@ -57,14 +59,12 @@ router.post(
   
   router.post("/create-checkout-session", async (req, res) => {
     const { userId, coinAmount } = req.body;
-  
     const customer = await stripe.customers.create({
       metadata: {
         userId: userId,
         coinAmount: coinAmount
       },
     });
-
     console.log(customer)
   
     const session = await stripe.checkout.sessions.create({
@@ -84,7 +84,7 @@ router.post(
         ],
         mode: "payment",
         customer: customer.id,
-        success_url: `${process.env.CLIENT_URL}/home`,
+        success_url: `${process.env.CLIENT_URL}/newsfeed`,
         cancel_url: `${process.env.CLIENT_URL}/token/${userId}`,
         metadata: {
             userId: userId,
