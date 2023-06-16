@@ -50,7 +50,7 @@ const Navbar = () => {
           fontWeight="bold"
           fontSize="clamp(1rem, 2rem, 2.25rem)" // clamp is a css function to set min, max and default value for a property
           color="test" // you can pass color name, hex code or rgb value
-          onClick={() => navigate("/home")} // navigate to home page when user clicks on logo
+          onClick={() => navigate("/newsfeed")} // navigate to home page when user clicks on logo
           sx={{ // to change color of logo when user hovers on it
             "&:hover": {
               color: primaryLight, // primary light color from theme

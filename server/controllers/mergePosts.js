@@ -11,7 +11,7 @@ export const createMergePost = async (req, res) => {
   const { userId, locationId, title, description, isHidden, prepaidApplicants, categoryId, priceId, picturePath } = req.body;
 
   // Validate request body data
-  if (!userId || !locationId || !title || !description || isHidden === undefined || prepaidApplicants === undefined || !categoryId || !priceId || !picturePath) {
+  if (!userId || !locationId || !title || !description || isHidden === undefined || prepaidApplicants === undefined || !categoryId || !priceId) {
       return res.status(400).json({ message: 'Missing required fields' });
   }
 
@@ -291,3 +291,21 @@ export const dislikePost = async (req, res) => {
     res.status(404).json({ message: err.message }); // return error if there is one
   }
 };
+
+export const getAllCategories = async (req, res) => {
+  try {
+    const categories = await Category.find();
+    res.status(200).json(categories);
+  } catch (err) {
+    res.status(404).json({ message: err.message });
+  }
+}
+
+export const getAllLocations = async (req, res) => {
+  try {
+    const locations = await Location.find();
+    res.status(200).json(locations);
+  } catch (err) {
+    res.status(404).json({ message: err.message });
+  }
+}
