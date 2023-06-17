@@ -9,7 +9,12 @@ import {
     Select,
     MenuItem,
     TextField,
+    IconButton,
   } from "@mui/material";
+  import {    
+    EditOutlined,
+    DeleteOutlined, 
+  } from "@mui/icons-material";
   import EditOutlinedIcon from "@mui/icons-material/EditOutlined"; // for perticular icons you can import them like this
   import WidgetWrapper from "components/WidgetWrapper";
   import { useState } from "react";
@@ -37,7 +42,7 @@ import { is } from "date-fns/locale";
     const [selectedCategory, setSelectedCategory] = useState("");
     const [selectedLocation, setSelectedLocation] = useState("");
     const [selectedIsHidden, setSelectedIsHidden] = useState("");
-    const [pictureName, setPictureName] = useState("");
+    const [image, setImage] = useState("");
 
     const getCategories = async () => {
       const response = await fetch(`http://localhost:3001/mergePosts/allCategories`, {
@@ -72,12 +77,12 @@ import { is } from "date-fns/locale";
       formData.append("prepaidApplicants", applicantNumber);
       formData.append("categoryId", selectedCategory);
       formData.append("priceId", "6484ca89b55d4d75a7d50d35");
-      formData.append("picturePath", pictureName);
-      formData.append('picture', pictureName);
+      if (image) {
+        formData.append("picturePath", image.name);
+        formData.append('picture', image);
+      }
 
       
-      
-  
       const response = await fetch(`http://localhost:3001/mergePosts`, {
         method: "POST",
         headers: { Authorization: `Bearer ${token}` },
@@ -86,6 +91,7 @@ import { is } from "date-fns/locale";
       const data = await response.json();
       
       dispatch(setPosts({ posts: data }));
+      setImage("");
       // setCategory("");
       // setApplicantNumber("");
       // setTitle("");
@@ -176,37 +182,43 @@ import { is } from "date-fns/locale";
             borderRadius="5px"
             p="1rem"
           >
-            <Dropzone // Dropzone is a library to handle file uploads from https://react-dropzone.js.org/
-              acceptedFiles=".jpg,.jpeg,.png" // acceptedFiles is a string to accept only these file types
-              multiple={false} // multiple is a boolean to accept multiple files or not
-              onDrop={(acceptedFiles) =>
-                //setFieldValue("picture", acceptedFiles[0]) // setFieldValue -> set the value of picture field to the first file that user uploads
-                setPictureName(acceptedFiles[0].name)
-              }
+            <Dropzone
+              acceptedFiles=".jpg,.jpeg,.png"
+              multiple={false}
+              onDrop={(acceptedFiles) => setImage(acceptedFiles[0])}
             >
-              {({ getRootProps, getInputProps }) => ( // these are the props that we get from Dropzone library to handle file uploads
-                <Box
-                  {...getRootProps()} // getRootProps is a function that returns props to be spread on the root element
-                  border={`2px dashed ${palette.primary.main}`}
-                  p="1rem"
-                  sx={{ "&:hover": { cursor: "pointer" } }}
-                >
-                  <input {...getInputProps()} /> 
-                  {!pictureName ? ( // if the user has not uploaded a picture then show this text
-                    <p>Add Picture Here</p>
-                  ) : ( // if the user has uploaded a picture then show file name
-                    <FlexBetween>
-                      <Typography>{pictureName}</Typography> 
-                      <EditOutlinedIcon />
-                    </FlexBetween>
-                  )}
-                </Box>
+              {({ getRootProps, getInputProps }) => (
+                <FlexBetween>
+                  <Box
+                    {...getRootProps()}
+                    border={`2px dashed ${palette.primary.main}`}
+                    p="1rem"
+                    width="100%"
+                    sx={{ "&:hover": { cursor: "pointer" } }}
+                  >
+                    <input {...getInputProps()} />
+                    {!image ? (
+                      <p>Add Image Here</p>
+                    ) : (
+                      <FlexBetween>
+                        <Typography>{image.name}</Typography>
+                        <EditOutlined />
+                      </FlexBetween>
+                    )}
+                  </Box>                  
+                  <IconButton
+                    onClick={() => setImage(null)}
+                    sx={{ width: "15%" }}
+                  >
+                    <DeleteOutlined />
+                  </IconButton>
+                </FlexBetween>
               )}
             </Dropzone>
           </Box>
   
           <Button
-            disabled={!description || !title || !applicantNumber || !category}
+            disabled={!description || !title || !applicantNumber || !category || !location || !selectedIsHidden}
             onClick={handlePost}
             sx={{
               color: palette.background.alt,
@@ -217,15 +229,7 @@ import { is } from "date-fns/locale";
           >
             POST
           </Button>
-        </Box>
-        <Typography>{selectedCategory}</Typography>
-        <Typography>{selectedLocation}</Typography>
-        <Typography>{selectedIsHidden}</Typography>
-        <Typography>{applicantNumber}</Typography>
-        <Typography>{title}</Typography>
-        <Typography>{description}</Typography>
-        <Typography>{pictureName}</Typography>  
-        <Typography>{id}</Typography>      
+        </Box> 
       </WidgetWrapper>    );
   };
   

@@ -6,12 +6,16 @@ import Person2Icon from '@mui/icons-material/Person2';
 import HomeIcon from '@mui/icons-material/Home';
 import EventIcon from '@mui/icons-material/Event';
 import { Message, Paid }from "@mui/icons-material";
+import { useNavigate } from "react-router-dom"; // useNavigate used for navigation between pages
+import { useSelector } from "react-redux";
 
 const MergeBlogWidget = () => {
   const { palette } = useTheme();
   const dark = palette.neutral.dark;
   const main = palette.neutral.main;
   const medium = palette.neutral.medium;
+  const navigate = useNavigate(); // we will use navigate to navigate between pages
+  const user = useSelector((state) => state.user);
 
   return (
     <WidgetWrapper>
@@ -24,6 +28,32 @@ const MergeBlogWidget = () => {
         MENU
       </Typography>
       <Box display="flex" flexDirection="column" gap="1.5rem">
+	  			<FlexBetween gap="1rem">
+					<Box
+						onClick={() => {
+							navigate(`/newsFeed`);
+							navigate(0);
+						}}
+						display="flex"  // Added display="flex"
+						alignItems="center" // Added alignItems="center"											
+					>
+						<HomeIcon />
+						<Typography
+							color={main}
+							variant="h5"
+							fontWeight="500"
+							sx={{
+								"&:hover": {
+									color: palette.primary.light,
+									cursor: "pointer",
+								},
+								marginLeft: "0.5rem"
+							}}
+						>
+							Explore
+						</Typography>
+					</Box>				
+				</FlexBetween>
 				<FlexBetween gap="1rem">				
 					<Box
 						// onClick={() => {
@@ -59,32 +89,6 @@ const MergeBlogWidget = () => {
 						display="flex"  // Added display="flex"
 						alignItems="center" // Added alignItems="center"											
 					>
-						<HomeIcon />
-						<Typography
-							color={main}
-							variant="h5"
-							fontWeight="500"
-							sx={{
-								"&:hover": {
-									color: palette.primary.light,
-									cursor: "pointer",
-								},
-								marginLeft: "0.5rem"
-							}}
-						>
-							Explore
-						</Typography>
-					</Box>				
-				</FlexBetween>
-				<FlexBetween gap="1rem">
-					<Box
-						// onClick={() => {
-						// 	navigate(`/profile/${friendId}`);
-						// 	navigate(0);
-						// }}
-						display="flex"  // Added display="flex"
-						alignItems="center" // Added alignItems="center"											
-					>
 						<Message />
 						<Typography
 							color={main}
@@ -104,10 +108,10 @@ const MergeBlogWidget = () => {
 				</FlexBetween>
 				<FlexBetween gap="1rem">
 					<Box
-						// onClick={() => {
-						// 	navigate(`/profile/${friendId}`);
-						// 	navigate(0);
-						// }}
+						onClick={() => {
+							navigate(`/token/${user._id}`)
+							navigate(0);
+						}}
 						display="flex"  // Added display="flex"
 						alignItems="center" // Added alignItems="center"											
 					>

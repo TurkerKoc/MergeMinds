@@ -1,6 +1,6 @@
 // difference between js and jsx: jsx contains react components
-import { Box, useMediaQuery } from "@mui/material";
-import { useSelector } from "react-redux";
+import { Box, useMediaQuery, Button, useTheme } from "@mui/material";
+import { useSelector, useDispatch } from "react-redux";
 import Navbar from "scenes/navbar";
 import UserWidget from "scenes/widgets/UserWidget";
 import MyPostWidget from "scenes/widgets/MyPostWidget";
@@ -10,10 +10,33 @@ import AdvertWidget from "scenes/widgets/AdvertWidget";
 import FriendListWidget from "scenes/widgets/FriendListWidget";
 import LinksWidget from "scenes/widgets/LinksWidget";
 import MergePostsWidget from "scenes/widgets/MergePostsWidget";
+import { setPosts } from "state";
 
 const NewsFeed = () => {
+  const { palette } = useTheme();
+  const mediumMain = palette.neutral.mediumMain;
+  const medium = palette.neutral.medium;
   const isNonMobileScreens = useMediaQuery("(min-width:1000px)");
   const { _id, picturePath } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+  const token = useSelector((state) => state.token);
+
+  const handleTopClick = async () => {
+    const response = await fetch(`http://localhost:3001/mergePosts/sortedByLikes`, {
+      method: "GET",
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    const posts = await response.json();
+    dispatch(setPosts({ posts }));
+  };
+  const handleNewClick = async () => {
+    const response = await fetch(`http://localhost:3001/mergePosts`, {
+      method: "GET",
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    const posts = await response.json();
+    dispatch(setPosts({ posts }));
+  };
 
   return (
     <Box>
@@ -32,6 +55,31 @@ const NewsFeed = () => {
           flexBasis={isNonMobileScreens ? "42%" : undefined}
           mt={isNonMobileScreens ? undefined : "1rem"}
         >
+          <Button
+            // disabled={!post}
+            onClick={handleNewClick}
+            sx={{
+              color: palette.background.alt,
+              backgroundColor: palette.primary.main,
+              borderRadius: "3rem",
+              mb: "1rem",
+            }}
+          >
+            New
+          </Button>
+          <Button
+            // disabled={!post}
+            onClick={handleTopClick}
+            sx={{
+              color: palette.background.alt,
+              backgroundColor: palette.primary.main,
+              borderRadius: "3rem",
+              mb: "1rem",
+              ml: "1rem",
+            }}
+          >
+            Top
+          </Button>
           <MergePostsWidget userId={_id} />
         </Box>
         {isNonMobileScreens && (
