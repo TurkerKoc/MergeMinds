@@ -6,7 +6,7 @@ import Navbar from "scenes/navbar";
 import MergeTokenWidget from "scenes/widgets/MergeTokenWidget";
 import MergeBlogWidget from "scenes/widgets/MergeBlogWidget";
 import AdvertWidget from "scenes/widgets/AdvertWidget";
-
+import LinksWidget from "scenes/widgets/LinksWidget";
 const MergeTokenPage = () => {
   // const [user, setUser] = useState(null);
   // const { userId } = useParams();
@@ -41,6 +41,9 @@ const MergeTokenPage = () => {
         gap="2rem"
         justifyContent="center"
       >
+        <Box flexBasis={isNonMobileScreens ? "26%" : undefined}> {/* flexBasis is a css property to set width of an element and 26% means 26% of parent element (%26 of page) */}
+          <LinksWidget />
+        </Box >
         <Box flexBasis={isNonMobileScreens ? "76%" : undefined}>
           <MergeTokenWidget userId={_id} />
         </Box>

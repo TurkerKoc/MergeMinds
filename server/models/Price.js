@@ -3,7 +3,8 @@ import mongoose from "mongoose";
 const priceSchema = mongoose.Schema(
   {
     name: String,
-		amount: Number
+		amount: Number,
+    price: Number,
   }
 );
 
