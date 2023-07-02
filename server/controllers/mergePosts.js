@@ -5,6 +5,38 @@ import Category from "../models/Category.js"; // for getting categories
 import Price from "../models/Price.js"; // for getting prices
 import Application from "../models/Application.js"; // for getting applications
 import mongoose from "mongoose";
+
+export const applyMergePost = async (req, res) => {
+  // Extract application details from request body
+  const { coverLetter, resumePath } = req.body;
+  const { userId, ideaPostId } = req.params;
+
+  console.log(coverLetter, resumePath, userId, ideaPostId);
+  // Validate request body data
+  if (!coverLetter || !resumePath || !userId || !ideaPostId) {
+    return res.status(400).json({ message: 'Missing required fields' });
+  }
+
+  try {
+    // Create a new application document
+    const newApplication = new Application({
+      content: coverLetter,
+      resumePath,
+      userId: mongoose.Types.ObjectId(userId),
+      ideaPostId: mongoose.Types.ObjectId(ideaPostId)
+    });
+
+    // Save the new application document
+    await newApplication.save();
+
+    return res.status(201).json(newApplication);
+  } catch (err) {
+    console.log(err);
+    res.status(409).json({ message: err.message }); // return error if there is one
+  }
+};
+
+
 /* CREATE */
 export const createMergePost = async (req, res) => {
   // Extract post details from request body

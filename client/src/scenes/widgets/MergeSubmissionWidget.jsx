@@ -23,7 +23,9 @@ import {
   import { useEffect } from "react";
   import Dropzone from "react-dropzone"; // Dropzone is a library to handle file uploads (like profile picture)
   import FlexBetween from "components/FlexBetween";
-import { is } from "date-fns/locale";
+  import { is } from "date-fns/locale";
+  import { useNavigate } from "react-router-dom";
+
   
   const MergeSubmissionWidget = ({id}) => {
     const dispatch = useDispatch();
@@ -43,6 +45,8 @@ import { is } from "date-fns/locale";
     const [selectedLocation, setSelectedLocation] = useState("");
     const [selectedIsHidden, setSelectedIsHidden] = useState("");
     const [image, setImage] = useState("");
+    const navigate = useNavigate();
+
 
     const getCategories = async () => {
       const response = await fetch(`http://localhost:3001/mergePosts/allCategories`, {
@@ -91,13 +95,7 @@ import { is } from "date-fns/locale";
       const data = await response.json();
       
       dispatch(setPosts({ posts: data }));
-      setImage("");
-      // setCategory("");
-      // setApplicantNumber("");
-      // setTitle("");
-      // //setDescription("");
-      // //setPost("");
-      // setSubmission("");
+      navigate("/newsfeed");
       
     };
 

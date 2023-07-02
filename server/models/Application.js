@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 const applicationSchema = mongoose.Schema(
   {
     content: String,
+    resumePath: String,
 		userId: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
