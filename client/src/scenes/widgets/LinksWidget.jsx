@@ -6,12 +6,15 @@ import Person2Icon from '@mui/icons-material/Person2';
 import HomeIcon from '@mui/icons-material/Home';
 import EventIcon from '@mui/icons-material/Event';
 import { Message, Paid }from "@mui/icons-material";
-
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux"; 
 const MergeBlogWidget = () => {
   const { palette } = useTheme();
+  const navigate = useNavigate(); 
   const dark = palette.neutral.dark;
   const main = palette.neutral.main;
   const medium = palette.neutral.medium;
+  const user = useSelector((state) => state.user);
 
   return (
     <WidgetWrapper>
@@ -130,10 +133,7 @@ const MergeBlogWidget = () => {
 				</FlexBetween>
 				<FlexBetween gap="1rem">
 					<Box
-						// onClick={() => {
-						// 	navigate(`/profile/${friendId}`);
-						// 	navigate(0);
-						// }}
+						onClick={() => navigate(`/webinar/${user._id}`)} 
 						display="flex"  // Added display="flex"
 						alignItems="center" // Added alignItems="center"					
 						sx={{ marginBottom: "1rem" }}						
