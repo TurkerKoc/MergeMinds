@@ -33,12 +33,8 @@ function App() {
         <ThemeProvider theme={theme}> {/* to set the theme for our app */}
           <CssBaseline /> {/* to reset the css and use the theme */}
           <Routes>
-            <Route path="/" element={<LoginPage />} /> {/* if the path is / then render the LoginPage component */}
+            <Route path="/" element={<Navigate to="/mergeLogin" />} /> {/* Redirects to /mergeLogin */}
             <Route path="/mergeLogin" element={<MergeLoginPage />} /> {/* if the path is / then render the LoginPage component */}
-            <Route /* if the path is /home then render the HomePage component */
-              path="/home"
-              element={isAuth ? <HomePage /> : <Navigate to="/" />}
-            />
             <Route /* if the path is /profile/:userId then render the ProfilePage component */
               path="/profile/:userId"
               element={isAuth ? <ProfilePage /> : <Navigate to="/" />}

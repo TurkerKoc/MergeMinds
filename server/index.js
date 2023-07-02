@@ -25,6 +25,15 @@ import { verifyToken } from "./middleware/auth.js";
 
 import { mergeRegister } from "./controllers/mergeAuth.js"; // for registering user
 import { createMergePost } from "./controllers/mergePosts.js";
+import { applyMergePost } from "./controllers/mergePosts.js";
+
+import User from "./models/User.js"; // for one time user creation
+import Post from "./models/Post.js"; // for one time post creation
+import MergeUser from "./models/MergeUser.js";
+import Location from "./models/Location.js";
+import Price from "./models/Price.js";
+import Category from "./models/Category.js";
+import { mergeUsers, users, posts, locations, prices, categories } from "./data/index.js"; // for one time user and post creation
 
 import User from "./models/User.js"; // for one time user creation
 import Post from "./models/Post.js"; // for one time post creation
@@ -61,26 +70,30 @@ const app = express(); // initialize express
 app.use(helmet()); // allow us to set security headers
 app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" })); 
 app.use(morgan("common")); // allow us to log requests
+app.use(bodyParser.json({ limit: "30mb", extended: true })); // allow us to parse request body
+app.use(bodyParser.urlencoded({ limit: "30mb", extended: true })); // allow us to parse request body with 30mb limit
 app.use(cors()); // allow us to enable cors
 app.use("/assets", express.static(path.join(__dirname, "public/assets"))); // allow us to serve static files (local storage but can bu converted to S3)
 
 /* FILE STORAGE */
+//all below file code taken from multer github repo -> when someone uploads a photo this will set the destination and filename which is public/assets
 const storage = multer.diskStorage({ 
   destination: function (req, file, cb) {
-    cb(null, "public/assets");
+    cb(null, "public/assets"); // set destination to public/assets
   },
   filename: function (req, file, cb) {
-    cb(null, file.originalname); 
+    cb(null, file.originalname); // set filename to original filename
   },
 });
-const upload = multer({ storage });
+const upload = multer({ storage }); // initialize multer with storage -> we will use this variable to upload files
 
 /* ROUTES WITH FILES */
-app.post("/auth/register", upload.single("picture"), register);
-app.post("/posts", verifyToken, upload.single("picture"), createPost); 
-app.post("/mergeAuth/register", upload.single("picture"), mergeRegister);
-app.post("/mergePosts", upload.single("picture"), createMergePost);
-
+//upload.single("picture") -> if you set picture it will be set in http request body as picture and multer will upload it to public/assets
+app.post("/auth/register", upload.single("picture"), register); // only the register route is defined here because it is the only route that needs to upload a file
+app.post("/posts", verifyToken, upload.single("picture"), createPost); // also this one has a file upload
+app.post("/mergeAuth/register", upload.single("picture"), mergeRegister); // only the register route is defined here because it is the only route that needs to upload a file
+app.post("/mergePosts", upload.single("picture"), createMergePost); // also this one has a file upload
+app.post("/mergePosts/apply/:ideaPostId/:userId", upload.single("resume"), applyMergePost); // also this one has a file upload
 /* STRIPE ROUTE */
 app.use("/stripe", stripeRoutes);
 
