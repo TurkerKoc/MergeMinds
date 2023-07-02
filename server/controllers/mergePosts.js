@@ -5,13 +5,45 @@ import Category from "../models/Category.js"; // for getting categories
 import Price from "../models/Price.js"; // for getting prices
 import Application from "../models/Application.js"; // for getting applications
 import mongoose from "mongoose";
+
+export const applyMergePost = async (req, res) => {
+  // Extract application details from request body
+  const { coverLetter, resumePath } = req.body;
+  const { userId, ideaPostId } = req.params;
+
+  console.log(coverLetter, resumePath, userId, ideaPostId);
+  // Validate request body data
+  if (!coverLetter || !resumePath || !userId || !ideaPostId) {
+    return res.status(400).json({ message: 'Missing required fields' });
+  }
+
+  try {
+    // Create a new application document
+    const newApplication = new Application({
+      content: coverLetter,
+      resumePath,
+      userId: mongoose.Types.ObjectId(userId),
+      ideaPostId: mongoose.Types.ObjectId(ideaPostId)
+    });
+
+    // Save the new application document
+    await newApplication.save();
+
+    return res.status(201).json(newApplication);
+  } catch (err) {
+    console.log(err);
+    res.status(409).json({ message: err.message }); // return error if there is one
+  }
+};
+
+
 /* CREATE */
 export const createMergePost = async (req, res) => {
   // Extract post details from request body
   const { userId, locationId, title, description, isHidden, prepaidApplicants, categoryId, priceId, picturePath } = req.body;
 
   // Validate request body data
-  if (!userId || !locationId || !title || !description || isHidden === undefined || prepaidApplicants === undefined || !categoryId || !priceId || !picturePath) {
+  if (!userId || !locationId || !title || !description || isHidden === undefined || prepaidApplicants === undefined || !categoryId || !priceId) {
       return res.status(400).json({ message: 'Missing required fields' });
   }
 
@@ -291,3 +323,155 @@ export const dislikePost = async (req, res) => {
     res.status(404).json({ message: err.message }); // return error if there is one
   }
 };
+
+export const getPostsSortedByLikes = async (req, res) => {
+  try {
+    const posts = await IdeaPost.find().populate([
+        {
+            path: 'userId',
+            select: 'name surname username email picturePath trustPoints',
+            model: MergeUser
+        },
+        {
+            path: 'Applications',
+            select: 'content userId',
+            model: Application,
+            populate: {
+                path: 'userId',
+                select: 'name surname picturePath',
+                model: MergeUser
+            }
+        },
+        {
+            path: 'categoryId',
+            select: 'domain',
+            model: Category
+        },
+        {
+            path: 'locationId',
+            select: 'name',
+            model: Location
+        },
+        {
+            path: 'priceId',
+            select: 'amount',
+            model: Price
+        }
+    ]).sort({ createdAt: -1 });
+    // Sort posts based on likes
+    posts.sort((a, b) => {
+      const aLikes = Array.from(a.likes.values()).filter(v => v).length;
+      const bLikes = Array.from(b.likes.values()).filter(v => v).length;
+      return bLikes - aLikes;
+    });
+    res.status(200).json(posts);
+  } catch (err) {
+      res.status(404).json({ message: err.message });
+  }
+};
+
+export const getPostsFilteredByCategory = async (req, res) => { 
+  try {
+    const { categoryId } = req.params;
+    
+    const posts = await IdeaPost.find({ categoryId }).populate([
+        {
+            path: 'userId',
+            select: 'name surname username email picturePath trustPoints',
+            model: MergeUser
+        },
+        {
+            path: 'Applications',
+            select: 'content userId',
+            model: Application,
+            populate: {
+                path: 'userId',
+                select: 'name surname picturePath',
+                model: MergeUser
+            }
+        },
+        {
+            path: 'categoryId',
+            select: 'domain',
+            model: Category
+        },
+        {
+            path: 'locationId',
+            select: 'name',
+            model: Location
+        },
+        {
+            path: 'priceId',
+            select: 'amount',
+            model: Price
+        }
+    ]);
+
+    res.status(200).json(posts);
+  } catch (err) {
+    res.status(404).json({ message: err.message });
+  }
+};
+
+export const getPostsFilteredByLocation = async (req, res) => { 
+  try {
+    const { locationId } = req.params;
+    
+    const posts = await IdeaPost.find({ locationId }).populate([
+        {
+            path: 'userId',
+            select: 'name surname username email picturePath trustPoints',
+            model: MergeUser
+        },
+        {
+            path: 'Applications',
+            select: 'content userId',
+            model: Application,
+            populate: {
+                path: 'userId',
+                select: 'name surname picturePath',
+                model: MergeUser
+            }
+        },
+        {
+            path: 'categoryId',
+            select: 'domain',
+            model: Category
+        },
+        {
+            path: 'locationId',
+            select: 'name',
+            model: Location
+        },
+        {
+            path: 'priceId',
+            select: 'amount',
+            model: Price
+        }
+    ]);
+
+    res.status(200).json(posts);
+  } catch (err) {
+    res.status(404).json({ message: err.message });
+  }
+};
+
+
+
+export const getAllCategories = async (req, res) => {
+  try {
+    const categories = await Category.find();
+    res.status(200).json(categories);
+  } catch (err) {
+    res.status(404).json({ message: err.message });
+  }
+}
+
+export const getAllLocations = async (req, res) => {
+  try {
+    const locations = await Location.find();
+    res.status(200).json(locations);
+  } catch (err) {
+    res.status(404).json({ message: err.message });
+  }
+}

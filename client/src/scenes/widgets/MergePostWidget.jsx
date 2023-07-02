@@ -13,7 +13,8 @@ import {
   import { useDispatch, useSelector } from "react-redux";
   import { setPost } from "state";
   import formatDistanceToNow from 'date-fns/formatDistanceToNow';
-  
+  import MergeApplyWidget from "scenes/widgets/MergeApplyWidget";
+
   const MergePostWidget = ({
     postId,
     postUserId,
@@ -33,53 +34,6 @@ import {
     Applications,
     createdAt,
   }) => {
-    // return (
-    //   <WidgetWrapper mb="2rem">
-    //     <Typography sx={{ mb: "1rem" }}>
-    //       {formatDistanceToNow(new Date(createdAt), { addSuffix: true })}
-    //     </Typography>
-    //     <Typography sx={{ mb: "1rem" }}>
-    //       Title: {title}
-    //     </Typography>
-    //     <Typography sx={{ mb: "1rem" }}>
-    //       Location: {location}
-    //     </Typography>
-    //     <Typography sx={{ mb: "1rem" }}>
-    //       Price: {priceId}
-    //     </Typography>
-    //     <Typography sx={{ mb: "1rem" }}>
-    //       Category: {categoryId}
-    //     </Typography>
-    //     <Typography sx={{ mb: "1rem" }}>
-    //       Shared Image: {picturePath}
-    //     </Typography>
-    //     <Typography sx={{ mb: "1rem" }}>
-    //       Description: {description}
-    //     </Typography>
-    //     <Typography sx={{ mb: "1rem" }}>
-    //       PreapaidApplicants: {prepaidApplicants}
-    //     </Typography>
-    //     <Typography sx={{ mb: "1rem" }}>
-    //       TrustPoints: {trustPoints}
-    //     </Typography>
-    //     <Typography sx={{ mb: "1rem" }}>
-    //       Name: {name}
-    //     </Typography>
-    //     <Typography sx={{ mb: "1rem" }}>
-    //       User Picture Path: {userPicturePath}
-    //     </Typography>
-    //     <Typography sx={{ mb: "1rem" }}>
-    //       LikeCount: {Object.keys(likes).length}
-    //     </Typography>
-    //     <Typography sx={{ mb: "1rem" }}>
-    //       DislikesCount: {Object.keys(dislikes).length}
-    //     </Typography>
-    //     <Typography sx={{ mb: "1rem" }}>
-    //       Number of Applications: {Object.keys(Applications).length}
-    //     </Typography>
-    //   </WidgetWrapper>
-    // );
-    const [isComments, setIsComments] = useState(false);
     const dispatch = useDispatch();
     const token = useSelector((state) => state.token);
     const loggedInUserId = useSelector((state) => state.user._id);
@@ -91,7 +45,16 @@ import {
     const main = palette.neutral.main;
     const primary = palette.primary.main;
     const dark = palette.primary.dark;
-  
+    const [openPopup, setOpenPopup] = useState(false);
+
+    const handleOpenPopup = () => {
+      setOpenPopup(true);
+    };
+
+    const handleClosePopup = () => {
+      setOpenPopup(false);
+    };
+
     const patchLike = async () => {
       const response = await fetch(`http://localhost:3001/mergePosts/${postId}/like`, {
         method: "PATCH",
@@ -131,7 +94,10 @@ import {
             <Typography color={palette.primary.dark} sx={{ ml: "1rem"}}>
               {priceId}
             </Typography>
-            <MonetizationOnIcon />
+            <div>
+              <MonetizationOnIcon onClick={handleOpenPopup} />
+              <MergeApplyWidget userId={loggedInUserId} ideaPostId={postId} open={openPopup} onClose={handleClosePopup} />
+            </div>            
           </FlexBetween>
         </FlexBetween>
         <Typography color={main} sx={{ mt: "1rem" }}>

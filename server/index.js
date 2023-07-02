@@ -23,6 +23,7 @@ import { verifyToken } from "./middleware/auth.js";
 
 import { mergeRegister } from "./controllers/mergeAuth.js"; // for registering user
 import { createMergePost } from "./controllers/mergePosts.js";
+import { applyMergePost } from "./controllers/mergePosts.js";
 
 import User from "./models/User.js"; // for one time user creation
 import Post from "./models/Post.js"; // for one time post creation
@@ -64,7 +65,7 @@ app.post("/auth/register", upload.single("picture"), register); // only the regi
 app.post("/posts", verifyToken, upload.single("picture"), createPost); // also this one has a file upload
 app.post("/mergeAuth/register", upload.single("picture"), mergeRegister); // only the register route is defined here because it is the only route that needs to upload a file
 app.post("/mergePosts", upload.single("picture"), createMergePost); // also this one has a file upload
-
+app.post("/mergePosts/apply/:ideaPostId/:userId", upload.single("resume"), applyMergePost); // also this one has a file upload
 /* STRIPE ROUTE */
 app.use("/stripe", stripeRoutes); // stripe route for payment
 
