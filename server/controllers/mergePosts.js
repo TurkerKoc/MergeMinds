@@ -152,6 +152,7 @@ export const getFeedPosts = async (req, res) => {
             model: Price
         }
     ]).sort({ createdAt: -1 });
+    console.log(posts)
     res.status(200).json(posts);
   } catch (err) {
       res.status(404).json({ message: err.message });

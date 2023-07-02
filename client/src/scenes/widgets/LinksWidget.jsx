@@ -11,10 +11,10 @@ import { useSelector } from "react-redux";
 
 const MergeBlogWidget = () => {
   const { palette } = useTheme();
+  const navigate = useNavigate(); 
   const dark = palette.neutral.dark;
   const main = palette.neutral.main;
   const medium = palette.neutral.medium;
-  const navigate = useNavigate(); // we will use navigate to navigate between pages
   const user = useSelector((state) => state.user);
 
   return (
@@ -134,10 +134,7 @@ const MergeBlogWidget = () => {
 				</FlexBetween>
 				<FlexBetween gap="1rem">
 					<Box
-						// onClick={() => {
-						// 	navigate(`/profile/${friendId}`);
-						// 	navigate(0);
-						// }}
+						onClick={() => navigate(`/webinar/${user._id}`)} 
 						display="flex"  // Added display="flex"
 						alignItems="center" // Added alignItems="center"					
 						sx={{ marginBottom: "1rem" }}						

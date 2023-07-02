@@ -1,64 +1,128 @@
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { setCoins, incrementCoinCount, decrementCoinCount } from "state";
+import { Box, Typography, Paper } from "@mui/material";
+import * as React from 'react';
+import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
+import CardMedia from '@mui/material/CardMedia';
+import Button from '@mui/material/Button';
 
-import React, { useState, useRef, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-import { loadStripe } from '@stripe/stripe-js';
-import { Typography, useTheme } from "@mui/material";
-import FlexBetween from "components/FlexBetween";
-import WidgetWrapper from "components/WidgetWrapper";
+const MergeTokenWidget = ({ userId }) => {
+  const dispatch = useDispatch();
+  const coins = useSelector((state) => state.coins);
+  const coinCounts = useSelector((state) => state.coinCounts); // added
+  const token = useSelector((state) => state.token);
+  const [totalCoins, setTotalCoins] = useState(0);
+  const [totalPrice, setTotalPrice] = useState(0);
 
-const PricingTable = () => {
-  const { palette } = useTheme();
-  const dark = palette.neutral.dark;
-  const main = palette.neutral.main;
-  const medium = palette.neutral.medium;
-  const iframeSrc = `
-    <script async src="https://js.stripe.com/v3/pricing-table.js"></script>
-    <stripe-pricing-table pricing-table-id="prctbl_1NIJ2CFeAkHftgQCbtamKdbo"
-    publishable-key="pk_test_51NIDePFeAkHftgQCcIP0TKwixTGI1pxkOaFk4g9s7JEIpqlCuZoE1bAART5xg7o5WcuDBqFJFEMjPzLeV9ofd6hA00GeD6UdL8">
-    </stripe-pricing-table>
-  `;
+  const getTokens = async () => {
+    const response = await fetch("http://localhost:3001/mergeTokens", {
+      method: "GET",
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    const data = await response.json();
+    dispatch(setCoins({ coins: data }));
+  };
+
+  // const handleCheckout = async (coinAmount) => {
+  //   console.log(coinAmount); // should log the amount of the clicked coin
+  //   const response = await fetch("http://localhost:3001/stripe/create-checkout-session", {
+  //     method: "POST",
+  //     headers: { 
+  //       'Content-Type': 'application/json',
+  //       Authorization: `Bearer ${token}` 
+  //     },
+  //     body: JSON.stringify({ userId, coinAmount })
+  //   });
+  //   const data = await response.json();
+  //   window.location.href = data.url;
+  // };
+
+  const handleCheckout = async () => {
+    console.log(`Total coins: ${totalCoins}, Total price: ${totalPrice}`);
+    const response = await fetch("http://localhost:3001/stripe/create-checkout-session", {
+      method: "POST",
+      headers: { 
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}` 
+      },
+      body: JSON.stringify({ userId, totalCoins, totalPrice }) 
+    });
+    const data = await response.json();
+    window.location.href = data.url;
+  };
 
 
+  const handleIncrement = (coinId, coinPrice) => { // added
+    dispatch(incrementCoinCount(coinId));
+    setTotalCoins(prevCount => prevCount + 1);
+    setTotalPrice(prevPrice => prevPrice + coinPrice);
+  };
 
-
-
-  const iframeRef = useRef(null);
+  const handleDecrement = (coinId, coinPrice) => { // added
+    dispatch(decrementCoinCount(coinId));
+    setTotalCoins(prevCount => prevCount > 0 ? prevCount - 1 : 0);
+    setTotalPrice(prevPrice => prevPrice > 0 ? prevPrice - coinPrice : 0);
+  };
 
   useEffect(() => {
-    if (iframeRef.current) {
-      // Adjust the iframe height to match its content
-      const { contentWindow, contentDocument } = iframeRef.current;
-      const height = contentDocument.documentElement.scrollHeight;
-      contentWindow.postMessage({ type: 'setHeight', height }, '*');
-    }
+    let count = 0;
+    let price = 0;
+    let total_coins = 0;
+  
+    coins.forEach(coin => {
+      count += coinCounts[coin._id] || 0; /// this 0 for default value when click on increment button from another coin it
+      total_coins += (coinCounts[coin._id] || 0) * coin.amount;
+      price += (coinCounts[coin._id] || 0) * coin.price;
+    });
+  
+    setTotalCoins(total_coins);
+    setTotalPrice(price);
+  }, [coins, coinCounts]);
 
-    
-
-
+  useEffect(() => {
+    getTokens();
   }, []);
 
-
   return (
-    <WidgetWrapper style={{ height: "fit-content" }}>
-      <FlexBetween>
-        <Typography color={dark} variant="h3" fontWeight="990" style={{ marginBottom: "1rem" }}>
-          Payment
+    <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
+      {coins.map(({ _id, name, amount, price, image, description }) => (
+        <Card key={_id} sx={{ m: 2, maxWidth: 500 }}>
+          <CardMedia
+            sx={{ height: 140 , width: 240 }}
+            image={image || "http://localhost:3001/assets/coin1.jpg"} // use a default image in case some coins don't have one
+            title={name}
+          />
+          <Typography gutterBottom variant="h5" component="div" sx={{ fontWeight: 'bold', textAlign: 'center', fontFamily: 'Arial, sans-serif', mt: 2 }}>{name}</Typography>
+          <Typography variant="body1" sx={{ textAlign: 'center', fontFamily: 'Arial, sans-serif' }}>Count: {coinCounts[_id]}</Typography> {/* added */}
+          <CardActions sx={{ justifyContent: 'center' }}>
+            <Button size="small" onClick={() => handleDecrement(_id, price)} variant="contained" sx={{ mt: 1, mb: 1, backgroundColor: '#f50057', color: '#fff', fontWeight: 'bold', fontFamily: 'Arial, sans-serif' }}>REMOVE</Button> {/* added */}
+            <Button size="small" onClick={() => handleIncrement(_id, price)} variant="contained" sx={{ mt: 1, mb: 1, backgroundColor: '#3f51b5', color: '#fff', fontWeight: 'bold', fontFamily: 'Arial, sans-serif' }}>ADD</Button> {/* added */}
+          </CardActions>
+        </Card>
+      ))}
+      {/* Checkout Section */}
+      <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', marginTop: 4 }}>
+      <Box sx={{ maxWidth: 500, padding: 2 }}>
+        <Typography variant="h5" component="div" sx={{ fontWeight: 'bold', textAlign: 'center', fontFamily: 'Arial, sans-serif', mt: 2 }}>
+          Checkout
         </Typography>
-      </FlexBetween>
-      <iframe
-        ref={iframeRef}
-        title="Payment Button"
-        srcDoc={iframeSrc}
-        width="100"
-        height="800"
-        style={{ width: "100%", height: "424px", borderRadius: "0.75rem" }}
-      />
-
-  
-
-  
-    </WidgetWrapper>
+        <Typography variant="body1" sx={{ textAlign: 'center', fontFamily: 'Arial, sans-serif', mt: 1 }}>
+          Total Coins: {totalCoins}
+        </Typography>
+        <Typography variant="body1" sx={{ textAlign: 'center', fontFamily: 'Arial, sans-serif', mt: 1 }}>
+          Total Price: {totalPrice} €
+        </Typography>
+        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
+          <Button onClick={handleCheckout} variant="contained" sx={{ backgroundColor: '#3f51b5', color: '#fff', fontWeight: 'bold', fontFamily: 'Arial, sans-serif' }}>
+            Checkout
+          </Button>
+        </Box>
+      </Box>
+    </Box>
+    </Box>
   );
 };
-
-export default PricingTable;
+export default MergeTokenWidget;

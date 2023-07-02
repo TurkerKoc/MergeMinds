@@ -16,6 +16,8 @@ import stripeRoutes from "./routes/stripe.js";
 import mergeAuthRoutes from "./routes/mergeAuth.js";
 import mergeUserRoutes from "./routes/mergeUsers.js";
 import mergePostRoutes from "./routes/mergePosts.js";
+import mergeTokensRoutes from "./routes/mergeTokens.js";
+import mergeWebinarRoutes from "./routes/mergeWebinars.js";
 
 import { register } from "./controllers/auth.js"; // for registering user
 import { createPost } from "./controllers/posts.js";
@@ -33,14 +35,40 @@ import Price from "./models/Price.js";
 import Category from "./models/Category.js";
 import { mergeUsers, users, posts, locations, prices, categories } from "./data/index.js"; // for one time user and post creation
 
+import User from "./models/User.js"; // for one time user creation
+import Post from "./models/Post.js"; // for one time post creation
+import MergeUser from "./models/MergeUser.js";
+import Location from "./models/Location.js";
+import Price from "./models/Price.js";
+import Webinar from "./models/Webinar.js";
+import Category from "./models/Category.js";
+import { mergeUsers, users, posts, locations, prices, categories } from "./data/index.js"; // for one time user and post creation
+
+
+
+/* ADD DUMMY WEBINAR DATA */
+const webinars = [
+  {
+    title: 'Webinar 1',
+    description: 'This is webinar 1',
+    url: 'http://webinar1.com',
+    start: new Date(2023, 7, 1, 9, 0), // this is August 1, 2023 at 9:00 AM
+    end: new Date(2023, 7, 1, 11, 0), // this is August 1, 2023 at 11:00 AM
+    priceId: mongoose.Types.ObjectId(),
+    userId: [mongoose.Types.ObjectId()],
+  },
+  // more webinars here...
+];
+
+
 /* CONFIGURATIONS */
 const __filename = fileURLToPath(import.meta.url); // get current file path
 const __dirname = path.dirname(__filename); // get directory name of current file path
 dotenv.config(); // initialize dotenv
 const app = express(); // initialize express
-app.use(express.json()); // allow us to parse json
+
 app.use(helmet()); // allow us to set security headers
-app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" })); // allow us to set security headers, cross origin resource sharing
+app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" })); 
 app.use(morgan("common")); // allow us to log requests
 app.use(bodyParser.json({ limit: "30mb", extended: true })); // allow us to parse request body
 app.use(bodyParser.urlencoded({ limit: "30mb", extended: true })); // allow us to parse request body with 30mb limit
@@ -67,28 +95,32 @@ app.post("/mergeAuth/register", upload.single("picture"), mergeRegister); // onl
 app.post("/mergePosts", upload.single("picture"), createMergePost); // also this one has a file upload
 app.post("/mergePosts/apply/:ideaPostId/:userId", upload.single("resume"), applyMergePost); // also this one has a file upload
 /* STRIPE ROUTE */
-app.use("/stripe", stripeRoutes); // stripe route for payment
+app.use("/stripe", stripeRoutes);
+
+app.use(bodyParser.json({ limit: "30mb", extended: true })); 
+app.use(bodyParser.urlencoded({ limit: "30mb", extended: true })); 
 
 /* ROUTES */
-app.use("/auth", authRoutes); // auth route for login and register
-app.use("/users", userRoutes); // user route for getting users
-app.use("/posts", postRoutes); // post route for getting posts
+app.use("/auth", authRoutes); 
+app.use("/users", userRoutes); 
+app.use("/posts", postRoutes); 
 
 /* MERGE ROUTES */
-app.use("/mergeUsers", mergeUserRoutes); // user route for getting users
-app.use("/mergeAuth", mergeAuthRoutes); // auth route for login and register
-app.use("/mergePosts", mergePostRoutes); // post route for getting posts
-
+app.use("/mergeUsers", mergeUserRoutes);
+app.use("/mergeAuth", mergeAuthRoutes);
+app.use("/mergePosts", mergePostRoutes);
+app.use("/mergeTokens", mergeTokensRoutes);
+app.use("/mergeWebinars", mergeWebinarRoutes); // added this line
 
 /* MONGOOSE SETUP */
-const PORT = process.env.PORT || 6001; // set port from environment variable or 6001
+const PORT = process.env.PORT || 6001; 
 mongoose
   .connect(process.env.MONGO_URL, {
-    useNewUrlParser: true, // allow us to parse connection string
-    useUnifiedTopology: true, // allow us to use new server discovery and monitoring engine
+    useNewUrlParser: true, 
+    useUnifiedTopology: true, 
   })
   .then(() => {
-    app.listen(PORT, () => console.log(`Server Port: ${PORT}`)); // listen to port after connection is established
+    app.listen(PORT, () => console.log(`Server Port: ${PORT}`));
 
     /* ADD DUMMY DATA ONE TIME */
     // User.insertMany(users);
@@ -96,6 +128,7 @@ mongoose
     // MergeUser.insertMany(mergeUsers);
     // Category.insertMany(categories);
     // Location.insertMany(locations);
-    // Price.insertMany(prices);    
+    // Price.insertMany(prices);  
+    // Webinar.insertMany(webinars); // added this line 
   })
-  .catch((error) => console.log(`${error} did not connect`)); // catch error if connection is not established
+  .catch((error) => console.log(`${error} did not connect`)); 

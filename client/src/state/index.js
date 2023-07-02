@@ -5,6 +5,10 @@ const initialState = {  // this is the initial state of the redux store
   user: null,
   token: null,
   posts: [],
+  coins: [],
+  webinars: [],
+  webinar: null, 
+  coinCounts: {},
 };
 
 export const authSlice = createSlice({ // this is the slice of the redux store -> think of it as functions that can be called to change the redux store
@@ -53,12 +57,80 @@ export const authSlice = createSlice({ // this is the slice of the redux store -
       updatedPosts.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
 
       state.posts = updatedPosts; // set posts to updated posts
-    }
+    },
+
+    // setCoins: (state, action) => { // set posts in redux store
+    //   state.coins = action.payload.coins;
+    // },
+
+    // setCoins: (state, action) => {
+    //   state.coins = action.payload.coins;
+
+    //   // initialize coinCounts whenever new coins are set
+    //   state.coinCounts = action.payload.coins.reduce((acc, coin) => ({ ...acc, [coin._id]: 1 }), {});
+    // },
+
+    // incrementCoinCount: (state, action) => { // added
+    //   state.coinCounts[action.payload] += 1;
+    // },
+
+    setWebinars: (state, action) => { // set webinars in redux store
+      state.webinars = action.payload;
+    },
+
+    setWebinar: (state, action) => {
+      console.log("Webinars:", state.webinars);
+      console.log("Action Payload:", action.payload);
+    
+      const updatedWebinars = state.webinars.map((webinar) => {
+        if (webinar.extendedProps._id === action.payload.extendedProps._id) {
+          return action.payload;
+        }
+        return webinar;
+      });
+    
+      console.log("Updated Webinars:", updatedWebinars);
+    
+      return { ...state, webinars: updatedWebinars, webinar: action.payload };
+    },
+    
 
 
+
+    setCoins: (state, action) => {
+      state.coins = action.payload.coins;
+      state.coinCounts = {};
+      // Initialize coinCounts for each coin
+      action.payload.coins.forEach(coin => {
+        if (!state.coinCounts[coin._id]) {
+          state.coinCounts[coin._id] = 0; // Initialize count as 1
+        }
+      });
+    },
+
+    incrementCoinCount: (state, action) => {
+      const coinId = action.payload;
+      if (state.coinCounts.hasOwnProperty(coinId)) {
+        state.coinCounts[coinId] += 1;
+      } else {
+        state.coinCounts[coinId] = 1;
+      }
+    },
+    
+    decrementCoinCount: (state, action) => {
+      const coinId = action.payload;
+      if (state.coinCounts.hasOwnProperty(coinId)) {
+        state.coinCounts[coinId] -= 1;
+        if (state.coinCounts[coinId] < 0) {
+          state.coinCounts[coinId] = 0;
+        }
+      }
+    },
 
   },
 });
 
-export const { setMode, setLogin, setLogout, setFriends, setPosts, setPost, setSubmissions, setSubmission } = authSlice.actions; // these are the functions that can be called to change the redux store
+// export const { setMode, setLogin, setLogout, setFriends, setPosts, setPost, setSubmissions, setSubmission, setCoins } = authSlice.actions; // these are the functions that can be called to change the redux store
+export const { setMode, setLogin, setLogout, setFriends, setPosts, setPost, setSubmissions, setSubmission, setCoins, incrementCoinCount, decrementCoinCount, setWebinars, setWebinar} = authSlice.actions; 
+
 export default authSlice.reducer; // this is the reducer that will be used to change the redux store

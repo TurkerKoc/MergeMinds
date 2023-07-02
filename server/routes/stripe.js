@@ -1,10 +1,12 @@
 import express from "express";
 import Stripe from "stripe";
 import MergeUser from "../models/MergeUser.js"; // Adjust to the actual path of your User model
-
+import dotenv from 'dotenv';
+dotenv.config();
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 const router = express.Router();
 const endpointSecret = "whsec_0c57272d3b7a43cf59b9369c36f2b9f0d4a64ec8ecba4327490a33517bd01f28";
+
 
 // Webhook route should be placed before body parsing middleware
 // Webhook route should be placed before body parsing middleware
@@ -34,7 +36,8 @@ router.post(
               .retrieve(session.customer)
               .then(async (customer) => {
                 try {
-                  updateUserCoinCount(customer.metadata.userId, Number(customer.metadata.coinAmount));
+                  console.log(customer.metadata.totalCoins)
+                  updateUserCoinCount(customer.metadata.userId, Number(customer.metadata.totalCoins));
                 } catch (err) {
                   console.log(err);
                 }
@@ -56,15 +59,14 @@ router.post(
   router.use(express.json()); // JSON body parsing middleware
   
   router.post("/create-checkout-session", async (req, res) => {
-    const { userId, coinAmount } = req.body;
-  
+    const { userId, totalCoins, totalPrice } = req.body;
     const customer = await stripe.customers.create({
       metadata: {
         userId: userId,
-        coinAmount: coinAmount
+        totalCoins: totalCoins,
+        totalPrice : totalPrice
       },
     });
-
     console.log(customer)
   
     const session = await stripe.checkout.sessions.create({
@@ -72,33 +74,34 @@ router.post(
         line_items: [
             {
             price_data: {
-                currency: "usd",
+                currency: "eur",
                 product_data: {
-                name: `MergeCoins ${coinAmount}`,
-                description: `Buy ${coinAmount} MergeCoins`,
+                name: `MergeCoins`,
+                description: `Buy ${totalCoins} MergeCoins`,
                 },
-                unit_amount: coinAmount * 100, // price per coin, adjust as necessary
+                unit_amount: totalPrice * 100, // price per coin, adjust as necessary
             },
             quantity: 1,
             },
         ],
         mode: "payment",
         customer: customer.id,
-        success_url: `${process.env.CLIENT_URL}/home`,
+        success_url: `${process.env.CLIENT_URL}/newsfeed`,
         cancel_url: `${process.env.CLIENT_URL}/token/${userId}`,
         metadata: {
             userId: userId,
-            coinAmount: coinAmount
+            totalCoins: totalCoins,
+            totalPrice : totalPrice
         },
     });
 
     res.send({ url: session.url });
   });
   // Function to update the user's coin count
-  const updateUserCoinCount = async (userId, coinAmount) => {
+  const updateUserCoinCount = async (userId, totalCoins) => {
     const user = await MergeUser.findById(userId);
   
-    user.mergeCoins += coinAmount; // assuming User model has a 'mergeCoin' field
+    user.mergeCoins += totalCoins; // assuming User model has a 'mergeCoin' field
   
     await user.save();
   };
