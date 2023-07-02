@@ -100,7 +100,8 @@ router.post(
   // Function to update the user's coin count
   const updateUserCoinCount = async (userId, totalCoins) => {
     const user = await MergeUser.findById(userId);
-  
+    console.log(user.mergeCoins);
+    console.log(totalCoins);
     user.mergeCoins += totalCoins; // assuming User model has a 'mergeCoin' field
   
     await user.save();

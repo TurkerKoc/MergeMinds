@@ -32,34 +32,9 @@ import Post from "./models/Post.js"; // for one time post creation
 import MergeUser from "./models/MergeUser.js";
 import Location from "./models/Location.js";
 import Price from "./models/Price.js";
-import Category from "./models/Category.js";
-import { mergeUsers, users, posts, locations, prices, categories } from "./data/index.js"; // for one time user and post creation
-
-import User from "./models/User.js"; // for one time user creation
-import Post from "./models/Post.js"; // for one time post creation
-import MergeUser from "./models/MergeUser.js";
-import Location from "./models/Location.js";
-import Price from "./models/Price.js";
 import Webinar from "./models/Webinar.js";
 import Category from "./models/Category.js";
-import { mergeUsers, users, posts, locations, prices, categories } from "./data/index.js"; // for one time user and post creation
-
-
-
-/* ADD DUMMY WEBINAR DATA */
-const webinars = [
-  {
-    title: 'Webinar 1',
-    description: 'This is webinar 1',
-    url: 'http://webinar1.com',
-    start: new Date(2023, 7, 1, 9, 0), // this is August 1, 2023 at 9:00 AM
-    end: new Date(2023, 7, 1, 11, 0), // this is August 1, 2023 at 11:00 AM
-    priceId: mongoose.Types.ObjectId(),
-    userId: [mongoose.Types.ObjectId()],
-  },
-  // more webinars here...
-];
-
+import { mergeUsers, users, posts, locations, prices, categories, webinars } from "./data/index.js"; // for one time user and post creation
 
 /* CONFIGURATIONS */
 const __filename = fileURLToPath(import.meta.url); // get current file path
@@ -70,8 +45,6 @@ const app = express(); // initialize express
 app.use(helmet()); // allow us to set security headers
 app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" })); 
 app.use(morgan("common")); // allow us to log requests
-app.use(bodyParser.json({ limit: "30mb", extended: true })); // allow us to parse request body
-app.use(bodyParser.urlencoded({ limit: "30mb", extended: true })); // allow us to parse request body with 30mb limit
 app.use(cors()); // allow us to enable cors
 app.use("/assets", express.static(path.join(__dirname, "public/assets"))); // allow us to serve static files (local storage but can bu converted to S3)
 

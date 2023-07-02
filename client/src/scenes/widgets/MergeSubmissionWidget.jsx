@@ -80,7 +80,7 @@ import {
       formData.append("isHidden", selectedIsHidden);
       formData.append("prepaidApplicants", applicantNumber);
       formData.append("categoryId", selectedCategory);
-      formData.append("priceId", "6484ca89b55d4d75a7d50d35");
+      formData.append("priceId", "64a1eb2e03e50005ceafe234");
       if (image) {
         formData.append("picturePath", image.name);
         formData.append('picture', image);

@@ -4,7 +4,7 @@ const webinarSchema = mongoose.Schema(
   {
     title: String,
 		description: String,
-		URL: String,
+		zoomLink: String,
 		start: Date,
 		end: Date,
 		price: Number,

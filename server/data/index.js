@@ -24,7 +24,28 @@ const categoryIds = [
 const priceIds = [
   new mongoose.Types.ObjectId(),
   new mongoose.Types.ObjectId(),
+  new mongoose.Types.ObjectId(),
+  new mongoose.Types.ObjectId(),
+  new mongoose.Types.ObjectId(),
+  new mongoose.Types.ObjectId(),
 ];
+
+const webinarIds = [  
+  new mongoose.Types.ObjectId(),
+];
+
+export const webinars = [
+  {
+    _id: webinarIds[0],
+    title: "Webinar 1",
+    description: "This is webinar 1",
+    zoomLink: "http://webinar1.com",
+    start: new Date(2023, 7, 1, 9, 0), // this is August 1, 2023 at 9:00 AM
+    end: new Date(2023, 7, 1, 11, 0), // this is August 1, 2023 at 11:00 AM
+    price: 2,
+    atendees: userIds[0],
+  }
+]
 
 export const locations = [
   {
@@ -40,13 +61,33 @@ export const locations = [
 export const prices = [
   {
     _id: priceIds[0],
-    name: "Free",
-    amount: 0,
+    name: "MergeCoins2",
+    amount: 2,
+    price: 2,
   },
   {
     _id: priceIds[1],
+    name: "MergeCoins4",
+    amount: 4,
+    price: 3,
+  },
+  {
+    _id: priceIds[2],
+    name: "MergeCoins6",
+    amount: 6,
+    price: 4,
+  },
+  {
+    _id: priceIds[3],
+    name: "Free",
+    amount: 0,
+    price: 0,
+  },
+  {
+    _id: priceIds[4],
     name: "IdeaPost",
-    amount: 2,
+    amount: 0,
+    price: 0,
   },
 ]
 
