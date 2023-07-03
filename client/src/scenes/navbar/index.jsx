@@ -44,7 +44,7 @@ const Navbar = () => {
 
   const fullName = `${user.name} ${user.surname}`; // grabbing user's full name to show it in navbar
   return (
-    <FlexBetween padding="1rem 6%" backgroundColor={alt}> {/* for box component you can pass additional css properties like padding, backgroundColor, etc. */}
+    <FlexBetween padding="1rem 2.5%" backgroundColor={alt}> {/* for box component you can pass additional css properties like padding, backgroundColor, etc. */}
       <FlexBetween gap="1.75rem"> {/* gap beteen items in navbar (like different divs) */}
         <Typography // Typography is a component from material ui library to show text in different styles (this one is for showing logo)
           fontWeight="bold"

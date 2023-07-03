@@ -24,11 +24,11 @@ const MergeBlogWidget = () => {
         variant="h5"
         fontWeight="500"
         sx={{ mb: "1.5rem" }}
-      >
+			>
         MENU
       </Typography>
       <Box display="flex" flexDirection="column" gap="1.5rem">
-	  			<FlexBetween gap="1rem">
+					<FlexBetween gap="1rem">
 					<Box
 						onClick={() => {
 							navigate(`/newsFeed`);
@@ -56,10 +56,10 @@ const MergeBlogWidget = () => {
 				</FlexBetween>
 				<FlexBetween gap="1rem">				
 					<Box
-						// onClick={() => {
-						// 	navigate(`/profile/${friendId}`);
-						// 	navigate(0);
-						// }}
+						onClick={() => {
+							navigate(`/mergeProfilePage/${user._id}`);
+							navigate(0);
+						}}
 						display="flex"  // Added display="flex"
 						alignItems="center" // Added alignItems="center"												
 					>

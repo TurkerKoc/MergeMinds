@@ -22,6 +22,7 @@ const MergeWebinarWidget = () => {
   const selectedWebinar = useSelector((state) => state.webinar); // Update: Retrieve selectedWebinar from the Redux store
   const [enrolled, setEnrolled] = useState(false);
   const [dialogWebinar, setDialogWebinar] = useState(null); // Add dialogWebinar state
+  const [notEnoughCoins, setNotEnoughCoins] = useState(false); // State to track not enough coins warning
 
   const getWebinars = async () => {
     const response = await fetch("http://localhost:3001/mergeWebinars", {
@@ -101,6 +102,7 @@ const MergeWebinarWidget = () => {
           console.error('Failed to enroll in webinar');
         }
       } else {
+        setNotEnoughCoins(true); // Show warning if not enough coins
         console.error('Not enough merge coins to enroll in this webinar');
       }
     } catch (error) {
@@ -120,34 +122,58 @@ const MergeWebinarWidget = () => {
 
   return (
     <Box style={{ padding: "2rem", minHeight: "80vh" }}>
+      {/* FullCalendar component */}
       <FullCalendar
         plugins={[dayGridPlugin, interactionPlugin]}
         initialView="dayGridMonth"
         events={webinars}
         eventClick={handleEventClick}
       />
-      <Dialog open={!!dialogWebinar} onClose={() => setDialogWebinar(null)}> {/* Update: Use setDialogWebinar(null) to close the dialog */}
+
+      {/* Warning Dialog */}
+      <Dialog open={notEnoughCoins} onClose={() => setNotEnoughCoins(false)}>
+        <DialogTitle>Not Enough Merge Coins</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            You don't have enough merge coins to enroll in this webinar.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setNotEnoughCoins(false)}>Close</Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Webinar Details Dialog */}
+      <Dialog open={!!dialogWebinar} onClose={() => setDialogWebinar(null)}>
         <DialogTitle>{selectedWebinar?.title}</DialogTitle>
         <DialogContent>
           <DialogContentText>{selectedWebinar?.extendedProps.description}</DialogContentText>
         </DialogContent>
         <DialogActions>
-        <Button onClick={() => setDialogWebinar(null)}>Close</Button> {/* Update: Use setDialogWebinar(null) to close the dialog */}
-        {!enrolled && dialogWebinar && (
-          // print dialogWebinar to console to see what it looks like
-          console.log('dialogWebinar', dialogWebinar),
-          <Button onClick={() => enrollInWebinar(dialogWebinar)}>Enroll</Button>
-        )}
-        {enrolled && dialogWebinar && (
-          <Button onClick={() => window.open(dialogWebinar.extendedProps.zoomLink, '_blank')}>
-            Open Zoom Link
-          </Button>
-        )}
-      </DialogActions>
-
+          <Button onClick={() => setDialogWebinar(null)}>Close</Button>
+          {!enrolled && dialogWebinar && (
+            <Button
+              onClick={() => {
+                if (mergeCoins >= dialogWebinar.extendedProps.price) {
+                  enrollInWebinar(dialogWebinar);
+                } else {
+                  setNotEnoughCoins(true);
+                }
+              }}
+            >
+              Enroll
+            </Button>
+          )}
+          {enrolled && dialogWebinar && (
+            <Button onClick={() => window.open(dialogWebinar.extendedProps.zoomLink, '_blank')}>
+              Open Zoom Link
+            </Button>
+          )}
+        </DialogActions>
       </Dialog>
     </Box>
   );
 };
 
 export default MergeWebinarWidget;
+

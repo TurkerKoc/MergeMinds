@@ -17,7 +17,7 @@ const MergeUser = ({ friendId, name, subtitle, userPicturePath, trustPoints }) =
         <UserImage image={userPicturePath} size="55px" />
         <Box
           onClick={() => {
-            navigate(`/profile/${friendId}`);
+            navigate(`/mergeProfilePage/${friendId}`);
             navigate(0);
           }}
         >

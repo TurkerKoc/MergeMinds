@@ -19,7 +19,7 @@ import { useScrollTrigger, Zoom, Fab } from "@mui/material";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import ScrollTop from "components/ScrollTop";
 
-const NewsFeed = () => {
+const NewsFeed = () => {  
   const { palette } = useTheme();
   const mediumMain = palette.neutral.mediumMain;
   const medium = palette.neutral.medium;
@@ -126,9 +126,6 @@ const NewsFeed = () => {
   //   const data = await response.json();
   //   dispatch(setPosts({ posts: data }));
   // };
-  const delay = ms => new Promise(
-    resolve => setTimeout(resolve, ms)
-  );
   const removeCategoryFilter = async (filter) => {
     setSelectedCategoryFilter("");
     const response = await fetch("http://localhost:3001/mergePosts", {
@@ -196,13 +193,12 @@ const NewsFeed = () => {
     <Box>
       <Navbar /> {/* Navbar is a component we created in mern-social-media/client/src/scenes/navbar/index.jsx */}
       <Box
-        width="100%"
-        padding="2rem 6%"
-        display={isNonMobileScreens ? "flex" : "block"} //block mode: each element in a new line, flex mode: all elements in one line
-        gap="0.5rem" // gap between elements
-        justifyContent="space-between"
+          display="flex"
+          justifyContent="space-between"
+          marginTop="2rem"
+          gap="2rem"
       >
-        <Box flexBasis={isNonMobileScreens ? "26%" : undefined}> {/* flexBasis is a css property to set width of an element and 26% means 26% of parent element (%26 of page) */}
+        <Box flexBasis={isNonMobileScreens ? "26%" : undefined} paddingLeft="2rem" paddingRight="2rem"> {/* flexBasis is a css property to set width of an element and 26% means 26% of parent element (%26 of page) */}
           <LinksWidget />         
         </Box >
         <Box
@@ -387,7 +383,7 @@ const NewsFeed = () => {
           </ScrollTop>
         </Box>
         {isNonMobileScreens && (
-          <Box flexBasis="26%">
+          <Box flexBasis="26%" paddingRight="2rem">
             <MergeBlogWidget />
             <Box m="2rem 0" />
             <AdvertWidget />

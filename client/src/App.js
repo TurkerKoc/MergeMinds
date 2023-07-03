@@ -1,8 +1,5 @@
 import { BrowserRouter, Navigate, Routes, Route } from "react-router-dom"; // for routing
-import HomePage from "scenes/homePage"; // for home page
-import LoginPage from "scenes/loginPage"; // for login page
 import MergeLoginPage from "scenes/mergeLoginPage"; // for login page
-import ProfilePage from "scenes/profilePage"; // for profile page
 import SubmissionPage from "scenes/submissionPage"; // for submission page
 import NewsFeed from "scenes/newsFeed";
 import { useMemo } from "react"; // for memoization
@@ -12,6 +9,8 @@ import { createTheme } from "@mui/material/styles"; // for material ui
 import { themeSettings } from "./theme"; // for theme settings (light and dark mode) -> created in theme.js
 import MergeTokenPage from "scenes/tokenPage";
 import MergeWebinarPage from "scenes/webinarPage";
+import MergeProfilePage from "scenes/mergeProfilePage";
+import MergeMyIdeasPage from "scenes/mergeMyIdeasPage";
 // import { useDispatch } from "react-redux"; // useDispatch used for dispatching actions to redux store
 // import { setError } from "state"; // setError is an action from state.js
 
@@ -35,10 +34,6 @@ function App() {
           <Routes>
             <Route path="/" element={<Navigate to="/mergeLogin" />} /> {/* Redirects to /mergeLogin */}
             <Route path="/mergeLogin" element={<MergeLoginPage />} /> {/* if the path is / then render the LoginPage component */}
-            <Route /* if the path is /profile/:userId then render the ProfilePage component */
-              path="/profile/:userId"
-              element={isAuth ? <ProfilePage /> : <Navigate to="/" />}
-            />
             <Route /* if the path is /submission then render the SubmissionPage component */
               path="/submission/:userId"
               element={isAuth ? <SubmissionPage /> : <Navigate to="/" />}
@@ -54,6 +49,14 @@ function App() {
             <Route /* if the path is /submission then render the SubmissionPage component */
               path="/newsfeed"
               element={isAuth ? <NewsFeed /> : <Navigate to="/mergeLogin" />}
+            />
+            <Route /* if the path is /submission then render the SubmissionPage component */
+              path="/mergeProfilePage/:userId"
+              element={isAuth ? <MergeProfilePage /> : <Navigate to="/mergeLogin" />}
+            />
+            <Route /* if the path is /mergeMyIdeasPage then render the ProfilePage component */
+              path="/mergeMyIdeas"
+              element={isAuth ? <MergeMyIdeasPage /> : <Navigate to="/mergeLogin" />}
             />
           </Routes>
         </ThemeProvider>
