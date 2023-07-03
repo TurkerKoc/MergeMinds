@@ -11,6 +11,7 @@ import MergeTokenPage from "scenes/tokenPage";
 import MergeWebinarPage from "scenes/webinarPage";
 import MergeProfilePage from "scenes/mergeProfilePage";
 import MergeMyIdeasPage from "scenes/mergeMyIdeasPage";
+import MergeMyApplicationsPage from "scenes/mergeMyApplicationsPage";
 // import { useDispatch } from "react-redux"; // useDispatch used for dispatching actions to redux store
 // import { setError } from "state"; // setError is an action from state.js
 
@@ -57,6 +58,10 @@ function App() {
             <Route /* if the path is /mergeMyIdeasPage then render the ProfilePage component */
               path="/mergeMyIdeas"
               element={isAuth ? <MergeMyIdeasPage /> : <Navigate to="/mergeLogin" />}
+            />
+            <Route /* if the path is /mergeMyIdeasPage then render the ProfilePage component */
+              path="/mergeMyApplications"
+              element={isAuth ? <MergeMyApplicationsPage /> : <Navigate to="/mergeLogin" />}
             />
           </Routes>
         </ThemeProvider>

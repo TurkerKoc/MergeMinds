@@ -6,6 +6,90 @@ import Price from "../models/Price.js"; // for getting prices
 import Application from "../models/Application.js"; // for getting applications
 import mongoose from "mongoose";
 
+export const getUserApplications = async ( req, res ) => {
+  try {
+    const { userId } = req.params;
+
+    // Find the applications by userId
+    const applications = await Application.find({ userId });
+
+    // Extract the ideaPostIds from the applications
+    const ideaPostIds = applications.map((application) => application.ideaPostId);
+
+    // Find the IdeaPosts by ideaPostIds
+    const ideaPosts = await IdeaPost.find({ _id: { $in: ideaPostIds } }).populate([
+    {
+      path: 'userId',
+      select: 'name surname username email picturePath trustPoints',
+      model: MergeUser
+    },
+    {
+        path: 'Applications',
+        select: 'content userId',
+        model: Application,
+        populate: {
+            path: 'userId',
+            select: 'name surname picturePath',
+            model: MergeUser
+        }
+    },
+    {
+        path: 'categoryId',
+        select: 'domain',
+        model: Category
+    },
+    {
+        path: 'locationId',
+        select: 'name',
+        model: Location
+    },
+    {
+        path: 'priceId',
+        select: 'amount',
+        model: Price
+    }
+  ]).sort({ createdAt: -1 });
+    res.json(ideaPosts);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const getApplicants = async (req, res) => {
+  const { postId } = req.params;
+  try {
+    // Find the IdeaPost by postId
+    const ideaPost = await IdeaPost.findById(postId);
+
+    if (!ideaPost) {
+      return res.status(404).json({ message: "Idea post not found" });
+    }
+
+    // Get the applicant user details including their picture path
+    const applicants = await Application.find({ ideaPostId: postId })
+        .populate({
+          path: "userId",
+          select: "picturePath",
+          model: MergeUser,
+        })
+        .select("userId")
+        .lean(); // Add .lean() to convert Mongoose documents to plain JavaScript objects
+
+        // Restructure the response to nest the user details under the "user" field
+        const modifiedApplicants = applicants.map((applicant) => ({
+          _id: applicant._id,
+          user: applicant.userId,
+        }));
+
+
+        res.json(modifiedApplicants);
+    } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 export const applyMergePost = async (req, res) => {
   // Extract application details from request body
   const { coverLetter, resumePath } = req.body;

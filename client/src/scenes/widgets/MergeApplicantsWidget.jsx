@@ -42,7 +42,7 @@ const MergeApplicantsWidget = ({ PostId }) => {
                     {users && (users.map((user) => (
                         <Avatar
                             key={user._id}
-                            src={user.picturePath}
+                            src={`http://localhost:3001/assets/${user.picturePath}`}
                         />
                     )))}
                 </AvatarGroup>

@@ -53,10 +53,10 @@ const PersonalNavigatorWidget = () => {
                 </FlexBetween>
                 <FlexBetween gap="1rem">
                     <Box
-                        // onClick={() => {
-                        // 	navigate(`/profile/${friendId}`);
-                        // 	TODO: navigate to My Applications
-                        // }}
+                        onClick={() => {
+                            navigate(`/mergeMyApplications`);
+                        	// TODO: navigate to My Applications
+                        }}
                         display="flex"  // Added display="flex"
                         alignItems="center" // Added alignItems="center"
                         sx={{ marginBottom: "1rem" }}						

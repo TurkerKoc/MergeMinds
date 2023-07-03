@@ -107,7 +107,7 @@ const Navbar = () => {
               }}
               input={<InputBase />}
             >
-              <MenuItem value={fullName}> {/* not actually a menu item (can't select), just to show user's full name */}
+              <MenuItem onClick={() => navigate(`/mergeProfilePage/${user._id}`)} value={fullName}> {/* not actually a menu item (can't select), just to show user's full name */}
                 <Typography>{fullName}</Typography> {/* show name in dropdown menu */}
               </MenuItem>
               <MenuItem onClick={() => dispatch(setLogout())}>Log Out</MenuItem> {/* dispatch setLogout action when user clicks on log out */}
@@ -182,7 +182,7 @@ const Navbar = () => {
                 }}
                 input={<InputBase />}
               >
-                <MenuItem value={fullName}>
+                <MenuItem onClick={() => navigate(`/mergeProfilePage/${user._id}`)} value={fullName}  >
                   <Typography>{fullName}</Typography>
                 </MenuItem>
                 <MenuItem onClick={() => dispatch(setLogout())}>

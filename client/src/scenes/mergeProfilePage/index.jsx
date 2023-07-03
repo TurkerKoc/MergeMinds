@@ -44,7 +44,7 @@ const MergeProfilePage = () => {
                 <Box flexBasis={isNonMobileScreens ? "26%" : undefined}
                     paddingRight="2rem" mb={5}
                 >
-                    <UserCard/>
+                    <UserCard userId={userId}/>
                 </Box>
             </Box>
         </Box>

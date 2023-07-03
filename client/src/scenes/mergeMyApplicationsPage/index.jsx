@@ -14,8 +14,9 @@ import MergeMyIdeasWidget from "scenes/widgets/MergeMyIdeasWidget";
 import { Flex } from "@chakra-ui/react";
 import FlexBetween from "components/FlexBetween";
 import UserCard from "scenes/widgets/UserCardWidget";
+import MergeMyApplicationsWidget from "scenes/widgets/MergeMyApplicationsWidget";
 
-const MergeMyIdeasPage = () => {
+const MergeMyApplicationsPage = () => {
   const isNonMobileScreens = useMediaQuery("(min-width:1000px)");
   const { _id } = useSelector((state) => state.user);  
 
@@ -31,13 +32,13 @@ const MergeMyIdeasPage = () => {
         <Box flexBasis={isNonMobileScreens ? "26%" : undefined} paddingLeft="2rem" paddingRight="2rem"> {/* flexBasis is a css property to set width of an element and 26% means 26% of parent element (%26 of page) */}
           <LinksWidget />
           <Box m="2rem 0" />
-          <PersonalNavigatorWidget />
+					<PersonalNavigatorWidget />
         </Box >
         <Box
           flexBasis={isNonMobileScreens ? "42%" : undefined}
           mt={isNonMobileScreens ? undefined : "1rem"}
         >
-          <MergeMyIdeasWidget />
+          <MergeMyApplicationsWidget userId={_id} />
         </Box>
         {isNonMobileScreens && (
           <Box flexBasis="26%" paddingRight="2rem" paddingLeft="2rem">
@@ -53,4 +54,4 @@ const MergeMyIdeasPage = () => {
   );
 };
 
-export default MergeMyIdeasPage;
+export default MergeMyApplicationsPage;

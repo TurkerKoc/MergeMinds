@@ -6,9 +6,8 @@ import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import WidgetWrapper from 'components/WidgetWrapper';
 
-const UserCardWidget = () => {
+const UserCardWidget = ({userId}) => {
   const { palette } = useTheme();
-  const { userId } = useParams();
   const token = useSelector((state) => state.token);
   const [user, setUser] = useState(null);
 
