@@ -27,6 +27,7 @@ import { useDispatch, useSelector } from "react-redux"; // useDispatch used for 
 import { setMode, setLogout } from "state"; // setMode and setLogout are actions from state.js
 import { useNavigate } from "react-router-dom"; // useNavigate used for navigation between pages
 import FlexBetween from "components/FlexBetween"; // FlexBetween is a component we created in mern-social-media/client/src/components/FlexBetween.jsx 
+import Badge from '@mui/material/Badge';
 
 const Navbar = () => {
   const [isMobileMenuToggled, setIsMobileMenuToggled] = useState(false); // isMobileMenuToggled is a state and setIsMobileMenuToggled is a function to change the state
@@ -64,7 +65,7 @@ const Navbar = () => {
 
       {/* DESKTOP NAV */}
       {isNonMobileScreens ? ( // if screen is not mobile then show these icons
-        <FlexBetween gap="2rem"> {/* gap from search bar -> 2rem is equal to 32px */}
+        <FlexBetween gap="2rem"> {/* gap from search bar -> 2rem is equal to 32px */}        
           <Button 
             variant="contained" 
             color="primary" 
@@ -79,14 +80,11 @@ const Navbar = () => {
             ) : (
               <LightMode sx={{ color: dark, fontSize: "25px" }} /> // dark mode icon will be dark color when theme.palette.mode is light
             )}
-          </IconButton>
-          <div 
-            onClick={() => navigate(`/token/${user._id}`)} 
-            style={{ cursor: "pointer" }}
-          >
-            <Paid sx={{ fontSize: "25px" }} />
-          </div>
-          <Message sx={{ fontSize: "25px" }} /> 
+          </IconButton>   
+          <Badge badgeContent={user.mergeCoins} color="warning">
+            <Paid onClick={() => navigate(`/token/${user._id}`)}  sx={{ fontSize: "25px" }} />
+          </Badge>             
+          <Message sx={{ fontSize: "23px" }} /> 
           {/* <Notifications sx={{ fontSize: "25px" }} />
           <Help sx={{ fontSize: "25px" }} /> */}
           <FormControl variant="standard" value={fullName}> {/* Dropdown menu for user's full name and log out */}

@@ -14,7 +14,13 @@ import {
   import { setPost } from "state";
   import formatDistanceToNow from 'date-fns/formatDistanceToNow';
   import MergeApplyWidget from "scenes/widgets/MergeApplyWidget";
-
+  import Badge from '@mui/material/Badge';
+  import {
+    Button, // Button is a component from material ui library
+  } from "@mui/material";
+  import { Tooltip } from '@mui/material';
+  import CoinIcon from '@mui/icons-material/LocalAtm';
+  import{ Paid } from "@mui/icons-material"; 
   const MergePostWidget = ({
     postId,
     postUserId,
@@ -91,13 +97,17 @@ import {
             trustPoints={trustPoints}
           />
           <FlexBetween gap="0.25rem" sx={{ marginRight: '0.5rem' }}>
-            <Typography color={palette.primary.dark} sx={{ ml: "1rem"}}>
-              {priceId}
-            </Typography>
-            <div>
-              <MonetizationOnIcon onClick={handleOpenPopup} />
-              <MergeApplyWidget userId={loggedInUserId} ideaPostId={postId} open={openPopup} onClose={handleClosePopup} />
-            </div>            
+              <Button 
+                variant="contained"                 
+                onClick={handleOpenPopup}// navigate to submission page when user clicks on submit button
+                sx={{ fontSize: "11px" }}
+              >
+                Apply
+              </Button>
+              <MergeApplyWidget userId={loggedInUserId} ideaPostId={postId} open={openPopup} onClose={handleClosePopup} />       
+              <Badge badgeContent={priceId + 1} color="warning">
+                <Paid sx={{ fontSize: "25px" }}/>
+              </Badge>  
           </FlexBetween>
         </FlexBetween>
         <Typography color={main} sx={{ mt: "1rem" }}>
