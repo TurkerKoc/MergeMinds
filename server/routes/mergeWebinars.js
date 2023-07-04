@@ -10,6 +10,6 @@ router.get("/", getWebinars); // get feed posts
 
 /* UPDATE */
 router.patch("/enroll/:webinarId/:userId", verifyToken, enrollInWebinar); // enroll user in webinar
-router.patch("/user/:userId", verifyToken, updateUserCoins); // update user coins
+router.patch("/user/:userId", updateUserCoins); // update user coins
 
 export default router;

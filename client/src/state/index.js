@@ -26,6 +26,9 @@ export const authSlice = createSlice({ // this is the slice of the redux store -
       state.user = null;
       state.token = null;
     },
+    setUser: (state, action) => { // set user and token in redux store
+      state.user = action.payload.user; // payload is the data that is passed to the function
+    },
     setFriends: (state, action) => { // set friends of user in redux store
       if (state.user) { 
         state.user.friends = action.payload.friends;
@@ -131,6 +134,6 @@ export const authSlice = createSlice({ // this is the slice of the redux store -
 });
 
 // export const { setMode, setLogin, setLogout, setFriends, setPosts, setPost, setSubmissions, setSubmission, setCoins } = authSlice.actions; // these are the functions that can be called to change the redux store
-export const { setMode, setLogin, setLogout, setFriends, setPosts, setPost, setSubmissions, setSubmission, setCoins, incrementCoinCount, decrementCoinCount, setWebinars, setWebinar} = authSlice.actions; 
+export const { setUser, setMode, setLogin, setLogout, setFriends, setPosts, setPost, setSubmissions, setSubmission, setCoins, incrementCoinCount, decrementCoinCount, setWebinars, setWebinar} = authSlice.actions; 
 
 export default authSlice.reducer; // this is the reducer that will be used to change the redux store

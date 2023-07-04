@@ -21,6 +21,8 @@ import {
   import { Tooltip } from '@mui/material';
   import CoinIcon from '@mui/icons-material/LocalAtm';
   import{ Paid } from "@mui/icons-material"; 
+  import { useEffect } from "react";
+  import CheckCircleIcon from '@mui/icons-material/CheckCircle';
   const MergePostWidget = ({
     postId,
     postUserId,
@@ -43,6 +45,7 @@ import {
     const dispatch = useDispatch();
     const token = useSelector((state) => state.token);
     const loggedInUserId = useSelector((state) => state.user._id);
+    const loggedInUserCoins = useSelector((state) => state.user.mergeCoins);
     const isLiked = Boolean(likes[loggedInUserId]);
     const likeCount = Object.keys(likes).length;
     const DislikesCount = Object.keys(dislikes).length;
@@ -52,6 +55,7 @@ import {
     const primary = palette.primary.main;
     const dark = palette.primary.dark;
     const [openPopup, setOpenPopup] = useState(false);
+    const [isApplied, setIsApplied] = useState(false);
 
     const handleOpenPopup = () => {
       setOpenPopup(true);
@@ -60,6 +64,19 @@ import {
     const handleClosePopup = () => {
       setOpenPopup(false);
     };
+
+    const getApplicants = async () => {
+      try {
+          const res = await fetch(`http://localhost:3001/mergePosts/${postId}/applicants`);
+          const data = await res.json();
+          //TO DO traverse this data and for each user append it to users array.
+          if(data.some(item => item.user._id === loggedInUserId)) {
+            setIsApplied(true);
+          }
+      } catch (error) {
+          console.error(error);
+      }
+  };
 
     const patchLike = async () => {
       const response = await fetch(`http://localhost:3001/mergePosts/${postId}/like`, {
@@ -85,6 +102,10 @@ import {
       const updatedPost = await response.json();
       dispatch(setPost({ post: updatedPost }));
     };
+
+    useEffect(() => {
+      getApplicants(); // Fetch the applicants when the component mounts
+    }, []);
   
     return (
       <WidgetWrapper mb="2rem">
@@ -96,19 +117,26 @@ import {
             userPicturePath={userPicturePath}
             trustPoints={trustPoints}
           />
-          <FlexBetween gap="0.25rem" sx={{ marginRight: '0.5rem' }}>
+          {!isApplied && (
+            <FlexBetween gap="0.25rem" sx={{ marginRight: '0.5rem' }}>
               <Button 
-                variant="contained"                 
                 onClick={handleOpenPopup}// navigate to submission page when user clicks on submit button
-                sx={{ fontSize: "11px" }}
+                sx={{ fontSize: "15px", display: 'flex', gap: '5px' }}
               >
-                Apply
+                <span style={{ textTransform: 'lowercase' }}>
+                  <span style={{ textTransform: 'capitalize' }}>a</span>pply
+                </span>
+                <Badge badgeContent={priceId} color="warning">
+                  <Paid sx={{ fontSize:"25px" }}/>
+                </Badge>  
               </Button>
-              <MergeApplyWidget userId={loggedInUserId} ideaPostId={postId} open={openPopup} onClose={handleClosePopup} />       
-              <Badge badgeContent={priceId + 1} color="warning">
-                <Paid sx={{ fontSize: "25px" }}/>
-              </Badge>  
-          </FlexBetween>
+              <MergeApplyWidget userMergeCoins={loggedInUserCoins} applicationPrice={priceId} userId={loggedInUserId} ideaPostId={postId} open={openPopup} onClose={handleClosePopup} isApplied={isApplied} setIsApplied={setIsApplied}/>       
+            </FlexBetween>
+          )}
+          {isApplied && (
+            <CheckCircleIcon sx={{ fontSize: "30px", color: primary }}/>
+          )}
+
         </FlexBetween>
         <Typography color={main} sx={{ mt: "1rem" }}>
           <strong>{title}</strong>

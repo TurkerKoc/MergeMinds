@@ -6,6 +6,8 @@ import interactionPlugin from "@fullcalendar/interaction"; // needed for eventCl
 import { Box, Typography, Paper } from "@mui/material";
 import { setWebinars, setWebinar } from 'state'; // Update this to point to your correct action
 import Dialog from '@mui/material/Dialog';
+import Badge from '@mui/material/Badge';
+import{ Paid } from "@mui/icons-material";
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
@@ -40,6 +42,7 @@ const MergeWebinarWidget = () => {
         backgroundColor: isEnrolled ? 'green' : 'blue', // change color based on whether user is enrolled
         extendedProps: { // store additional fields
           description: webinar.description,
+          zoomLink: webinar.zoomLink,
           price: webinar.price,
           atendees: webinar.atendees.map(id => id.toString()), // if userId is an array of ObjectIDs
           _id: webinar._id.toString(), // convert ObjectId to string
@@ -150,7 +153,7 @@ const MergeWebinarWidget = () => {
           <DialogContentText>{selectedWebinar?.extendedProps.description}</DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setDialogWebinar(null)}>Close</Button>
+          <Button onClick={() => setDialogWebinar(null)}sx={{ fontSize: "15px", display: 'flex', gap: '5px' }} >Close</Button>
           {!enrolled && dialogWebinar && (
             <Button
               onClick={() => {
@@ -159,13 +162,18 @@ const MergeWebinarWidget = () => {
                 } else {
                   setNotEnoughCoins(true);
                 }
-              }}
+              } } sx={{ fontSize: "15px", display: 'flex', gap: '3px' }}
             >
-              Enroll
+                <span style={{ textTransform: 'lowercase' }}>
+                  <span style={{ textTransform: 'capitalize' }}>E</span>nroll
+                </span>
+              <Badge badgeContent={dialogWebinar.extendedProps.price} color="warning">
+                <Paid sx={{ fontSize: "25px", marginLeft: "5px" }} />
+              </Badge>
             </Button>
           )}
           {enrolled && dialogWebinar && (
-            <Button onClick={() => window.open(dialogWebinar.extendedProps.zoomLink, '_blank')}>
+            <Button onClick={() => window.open(dialogWebinar.extendedProps.zoomLink)}>
               Open Zoom Link
             </Button>
           )}
@@ -176,4 +184,7 @@ const MergeWebinarWidget = () => {
 };
 
 export default MergeWebinarWidget;
+
+
+
 

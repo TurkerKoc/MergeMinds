@@ -90,8 +90,8 @@ app.post("/mergePosts/apply/:ideaPostId/:userId", upload.single("resume"), apply
 /* STRIPE ROUTE */
 app.use("/stripe", stripeRoutes);
 
-app.use(bodyParser.json({ limit: "30mb", extended: true })); 
-app.use(bodyParser.urlencoded({ limit: "30mb", extended: true })); 
+// app.use(bodyParser.json({ limit: "30mb", extended: true })); 
+// app.use(bodyParser.urlencoded({ limit: "30mb", extended: true })); 
 
 /* ROUTES */
 app.use("/auth", authRoutes); 
