@@ -63,8 +63,8 @@ const app = express(); // initialize express
 app.use(helmet()); // allow us to set security headers
 app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" })); 
 app.use(morgan("common")); // allow us to log requests
-app.use(bodyParser.json({ limit: "30mb", extended: true })); // allow us to parse request body
-app.use(bodyParser.urlencoded({ limit: "30mb", extended: true })); // allow us to parse request body with 30mb limit
+// app.use(bodyParser.json({ limit: "30mb", extended: true })); // allow us to parse request body
+// app.use(bodyParser.urlencoded({ limit: "30mb", extended: true })); // allow us to parse request body with 30mb limit
 app.use(cors()); // allow us to enable cors
 app.use("/assets", express.static(path.join(__dirname, "public/assets"))); // allow us to serve static files (local storage but can bu converted to S3)
 
@@ -90,8 +90,8 @@ app.post("/mergePosts/apply/:ideaPostId/:userId", upload.single("resume"), apply
 /* STRIPE ROUTE */
 app.use("/stripe", stripeRoutes);
 
-// app.use(bodyParser.json({ limit: "30mb", extended: true })); 
-// app.use(bodyParser.urlencoded({ limit: "30mb", extended: true })); 
+app.use(bodyParser.json({ limit: "30mb", extended: true })); 
+app.use(bodyParser.urlencoded({ limit: "30mb", extended: true })); 
 
 /* ROUTES */
 app.use("/auth", authRoutes); 

@@ -8,6 +8,7 @@ import AdvertWidget from "scenes/widgets/AdvertWidget";
 import LinksWidget from "scenes/widgets/LinksWidget";
 import MergePostsWidget from "scenes/widgets/MergePostsWidget";
 import { setPosts } from "state";
+import { setUser } from "state";
 import FlexBetween from "components/FlexBetween";
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
@@ -35,6 +36,17 @@ const NewsFeed = () => {
   const [selectedButton, setSelectedButton] = useState('new');
 
   const posts = useSelector((state) => state.posts);
+
+  const getMergeUser = async () => {
+    const response = await fetch(`http://localhost:3001/mergeUsers/${_id}`, {
+      method: "GET",
+    });
+    const mergeUser = await response.json(); // we will get the logged in user from backend (backend will send the logged in user as json)
+    if(response.ok) {
+      dispatch(setUser({ user: mergeUser }));
+    }
+  };
+
   const handleTopClick = async () => {
     // const response = await fetch(`http://localhost:3001/mergePosts/sortedByLikes`, {
     //   method: "GET",
@@ -187,6 +199,7 @@ const NewsFeed = () => {
   useEffect(() => {
     getAllCategories();
     getAllLocations();
+    getMergeUser();
   }, []);
 
   return (
