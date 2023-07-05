@@ -16,7 +16,7 @@ export const mergeRegister = async (req, res) => { // async function to register
       webSiteLink
     } = req.body; // get all data from request body
 
-    console.log(req.body);
+    // console.log(req.body);
     const salt = await bcrypt.genSalt(); // generate salt for password hashing
     const passwordHash = await bcrypt.hash(password, salt); // hash password with salt
 

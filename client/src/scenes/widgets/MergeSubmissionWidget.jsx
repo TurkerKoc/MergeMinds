@@ -20,21 +20,24 @@ import {
   import { useState } from "react";
   import { useDispatch, useSelector } from "react-redux";
   import { setPosts } from "state";
+  import { setUser } from "state";
   import { useEffect } from "react";
   import Dropzone from "react-dropzone"; // Dropzone is a library to handle file uploads (like profile picture)
   import FlexBetween from "components/FlexBetween";
   import { is } from "date-fns/locale";
   import { useNavigate } from "react-router-dom";
-
+  import{ Paid } from "@mui/icons-material"; 
+  import Badge from '@mui/material/Badge';
   
   const MergeSubmissionWidget = ({id}) => {
     const dispatch = useDispatch();
-    const { user } = useSelector((state) => state.user);
+    const { mergeCoins } = useSelector((state) => state.user);
     const token = useSelector((state) => state.token);
     const { palette } = useTheme();
     const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
     const mediumMain = palette.neutral.mediumMain;
-  
+    const [formError, setFormError] = useState(null);
+
     const [category, setCategory] = useState("");
     const [location, setLocation] = useState("");
     const [applicantNumber, setApplicantNumber] = useState("");
@@ -45,6 +48,7 @@ import {
     const [selectedLocation, setSelectedLocation] = useState("");
     const [selectedIsHidden, setSelectedIsHidden] = useState("");
     const [image, setImage] = useState("");
+    const submissionPrice = 4;
     const navigate = useNavigate();
 
 
@@ -72,6 +76,14 @@ import {
     }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
     const handlePost = async () => {
+      const userMergeCoins = mergeCoins;
+      const updatedMergeCoins = userMergeCoins - submissionPrice;
+      if(updatedMergeCoins < 0) {
+        setFormError("You do not have enough MergeCoins to apply to this post.");
+        return;
+      }
+
+
       const formData = new FormData();
       formData.append("userId", id);
       formData.append("locationId", selectedLocation);
@@ -86,17 +98,39 @@ import {
         formData.append('picture', image);
       }
 
-      
-      const response = await fetch(`http://localhost:3001/mergePosts`, {
-        method: "POST",
-        headers: { Authorization: `Bearer ${token}` },
-        body: formData,
-      });
-      const data = await response.json();
-      
-      dispatch(setPosts({ posts: data }));
-      navigate("/newsfeed");
-      
+      try {
+        const response = await fetch(`http://localhost:3001/mergePosts`, {
+          method: "POST",
+          headers: { Authorization: `Bearer ${token}` },
+          body: formData,
+        });
+        
+        const data = await response.json();
+        if(response.ok) {
+          dispatch(setPosts({ posts: data }));
+        } else {
+          setFormError("An error occurred while submitting the form.");
+        }
+  
+        const curData = {mergeCoins: updatedMergeCoins};
+        const mergeUserResponse = await fetch(`http://localhost:3001/mergeUsers/mergeCoins/${id}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(curData), // we will send the form data as json
+        });
+        const mergeUser = await mergeUserResponse.json(); // we will get the logged in user from backend (backend will send the logged in user as json)
+        console.log(mergeUser.user);
+        if (mergeUserResponse.ok) {
+          dispatch(setUser({ user: mergeUser.user }));
+        } 
+        else {
+          setFormError("An error occurred while submitting the form.");
+        }
+        navigate("/newsfeed");
+      } catch (error) {
+        console.log(error);
+        setFormError("An error occurred while submitting the form.");
+      }      
     };
 
     return (
@@ -214,18 +248,25 @@ import {
               )}
             </Dropzone>
           </Box>
-  
+          {formError && (
+                <Typography color="error" sx={{ m: "1rem 0" }}>
+                  {formError}
+                </Typography>
+              )}
           <Button
             disabled={!description || !title || !applicantNumber || !category || !location || !selectedIsHidden}
             onClick={handlePost}
+            variant="contained"
             sx={{
-              color: palette.background.alt,
-              backgroundColor: palette.primary.main,
               borderRadius: "3rem",
               mt: "1rem",
+              display: 'flex', gap: '5px'
             }}
           >
-            POST
+                post
+                <Badge badgeContent={submissionPrice} color="warning">
+                  <Paid sx={{ fontSize:"25px" }}/>
+                </Badge>  
           </Button>
         </Box> 
       </WidgetWrapper>    );

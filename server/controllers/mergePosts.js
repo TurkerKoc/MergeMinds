@@ -95,7 +95,7 @@ export const applyMergePost = async (req, res) => {
   const { coverLetter, resumePath } = req.body;
   const { userId, ideaPostId } = req.params;
 
-  console.log(coverLetter, resumePath, userId, ideaPostId);
+  // console.log(coverLetter, resumePath, userId, ideaPostId);
   // Validate request body data
   if (!coverLetter || !resumePath || !userId || !ideaPostId) {
     return res.status(400).json({ message: 'Missing required fields' });
@@ -236,7 +236,7 @@ export const getFeedPosts = async (req, res) => {
             model: Price
         }
     ]).sort({ createdAt: -1 });
-    console.log(posts)
+    // console.log(posts)
     res.status(200).json(posts);
   } catch (err) {
       res.status(404).json({ message: err.message });
@@ -245,7 +245,7 @@ export const getFeedPosts = async (req, res) => {
 
 export const getUserPosts = async (req, res) => {
   try {
-    console.log(req.params)
+    // console.log(req.params)
     const { userId } = req.params; // get userId from request parameters
     const userPosts = await IdeaPost.find({ userId: mongoose.Types.ObjectId(userId) }).populate([
       {

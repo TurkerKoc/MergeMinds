@@ -26,8 +26,8 @@ export const authSlice = createSlice({ // this is the slice of the redux store -
       state.user = null;
       state.token = null;
     },
-    setUser: (state, action) => { // set user and token in redux store
-      state.user = action.payload.user; // payload is the data that is passed to the function
+    setUser: (state, action) => {
+      state.user = action.payload.user;
     },
     setFriends: (state, action) => { // set friends of user in redux store
       if (state.user) { 
@@ -82,8 +82,8 @@ export const authSlice = createSlice({ // this is the slice of the redux store -
     },
 
     setWebinar: (state, action) => {
-      console.log("Webinars:", state.webinars);
-      console.log("Action Payload:", action.payload);
+      // console.log("Webinars:", state.webinars);
+      // console.log("Action Payload:", action.payload);
     
       const updatedWebinars = state.webinars.map((webinar) => {
         if (webinar.extendedProps._id === action.payload.extendedProps._id) {
@@ -92,7 +92,7 @@ export const authSlice = createSlice({ // this is the slice of the redux store -
         return webinar;
       });
     
-      console.log("Updated Webinars:", updatedWebinars);
+      // console.log("Updated Webinars:", updatedWebinars);
     
       return { ...state, webinars: updatedWebinars, webinar: action.payload };
     },

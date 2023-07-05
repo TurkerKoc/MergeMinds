@@ -57,6 +57,9 @@ import {
     const [openPopup, setOpenPopup] = useState(false);
     const [isApplied, setIsApplied] = useState(false);
 
+    const handleApply = () => {
+      setIsApplied(true);
+    };
     const handleOpenPopup = () => {
       setOpenPopup(true);
     };
@@ -130,7 +133,7 @@ import {
                   <Paid sx={{ fontSize:"25px" }}/>
                 </Badge>  
               </Button>
-              <MergeApplyWidget userMergeCoins={loggedInUserCoins} applicationPrice={priceId} userId={loggedInUserId} ideaPostId={postId} open={openPopup} onClose={handleClosePopup} isApplied={isApplied} setIsApplied={setIsApplied}/>       
+              <MergeApplyWidget userMergeCoins={loggedInUserCoins} applicationPrice={priceId} userId={loggedInUserId} ideaPostId={postId} open={openPopup} onClose={handleClosePopup} onResult={handleApply}/>       
             </FlexBetween>
           )}
           {isApplied && (

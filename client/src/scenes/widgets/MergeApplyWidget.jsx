@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "state"; // setLogin is an action from state.js
 
 
+
 const applySchema = yup.object().shape({
   coverLetter: yup.string().required("Cover letter is required"),
   resume: yup
@@ -25,11 +26,13 @@ const initialValuesApply = {
   resume: null,
 };
 
-const MergeApplyWidget = ({ userMergeCoins, applicationPrice, open, onClose, userId, ideaPostId, isApplied, setIsApplied }) => {
+const MergeApplyWidget = ({ userMergeCoins, applicationPrice, open, onClose, userId, ideaPostId, onResult }) => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const { palette } = useTheme();
   const [formError, setFormError] = useState(null);
-  const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.user);
+  const {token} = useSelector((state) => state.token);
+  const dispatch = useDispatch(); // we will use dispatch to dispatch actions to redux store
 
   const handleFormSubmit = async (values, onSubmitProps) => {
     const updatedMergeCoins = userMergeCoins - applicationPrice;
@@ -60,21 +63,17 @@ const MergeApplyWidget = ({ userMergeCoins, applicationPrice, open, onClose, use
           setFormError("An error occurred while submitting the form.");
         }
 
-        const curData = new FormData();
-        curData.append("mergeCoins", updatedMergeCoins); 
-        const updateUserCoinResponse = await fetch(`http://localhost:3001/mergeWebinars/user/${userId}`, {
+        const curData = {mergeCoins: updatedMergeCoins};
+        const mergeUserResponse = await fetch(`http://localhost:3001/mergeUsers/mergeCoins/${userId}`, {
           method: "PATCH",
-          body: curData,
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(curData), // we will send the form data as json
         });
-
-        if (updateUserCoinResponse.ok) {
-          const curUser = await updateUserCoinResponse.json();  
-          dispatch(
-            setUser({ // setLogin is an action from state.js
-              user: curUser,
-            })
-          );
-          setIsApplied(true);
+        const mergeUser = await mergeUserResponse.json(); // we will get the logged in user from backend (backend will send the logged in user as json)
+        console.log(mergeUser.user);
+        if (mergeUserResponse.ok) {
+          dispatch(setUser({ user: mergeUser.user }));
+          onResult();
           onClose();
         } else {
           setFormError("An error occurred while submitting the form.");

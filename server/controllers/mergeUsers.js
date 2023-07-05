@@ -1,5 +1,38 @@
 import MergeUser from "../models/MergeUser.js"; // import User model
 
+export const updateUserCoins = async (req, res) => {
+  try {
+    const { userId } = req.params; // get id from request parameters
+    const { mergeCoins } = req.body; // get coins from request body
+    // console.log(userId);
+    const user = await MergeUser.findById(userId); // find user by id
+    user.mergeCoins = mergeCoins; // set user coins to coins
+    await user.save(); // save user to database
+    delete user.password; // delete password from user object to not send it as response
+    res.status(200).json({user}); // return user
+  } catch (err) {
+    res.status(404).json({ message: err.message }); // return error message
+  }
+};
+
+/* LOGGING IN */
+export const login = async (req, res) => {
+  try {
+    const { email, password } = req.body; // get email and password from request body
+    const user = await User.findOne({ email: email }); // find user with email
+    if (!user) return res.status(400).json({ msg: "User does not exist. " }); // if user does not exist send error message
+
+    const isMatch = await bcrypt.compare(password, user.password); // compare password with hashed password
+    if (!isMatch) return res.status(400).json({ msg: "Invalid credentials. " }); // if password does not match send error message
+
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET); // generate token with user id
+    delete user.password; // delete password from user object to not send it as response
+    res.status(200).json({ token, user }); // send token and user as response
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: err.message }); // if error send error message as response
+  }
+};
 /* READ */
 export const getMergeUser = async (req, res) => {
 	try {
