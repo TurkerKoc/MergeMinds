@@ -8,7 +8,7 @@ import UserCard from "scenes/widgets/UserCardWidget";
 import SummaryWidget from "scenes/widgets/SummaryWidget";
 import ChatWidget from "../widgets/ChatWidget";
 import {useContext} from "react";
-import {ChatContext} from "../../components/ChatContext";
+// import {ChatContext} from "../../components/ChatContext";
 
 const MergeDirectMessages = () => {
     console.log("MergeDirectMessages")
@@ -34,7 +34,7 @@ const MergeDirectMessages = () => {
                 gap="2rem"
             >
                 <Box flexBasis={isNonMobileScreens ? "26%" : undefined}
-                     paddingLeft="2rem" paddingRight="2rem">
+                    paddingLeft="2rem" paddingRight="2rem">
                     <LinksWidget/>
                     <Box m="2rem 0" />
                     {myProfile && <PersonalNavigator/>} {/* Conditionally render PersonalNavigator */}
@@ -45,7 +45,7 @@ const MergeDirectMessages = () => {
                     <ChatWidget/>
                 </Box>
                 <Box flexBasis={isNonMobileScreens ? "26%" : undefined}
-                     paddingRight="2rem" mb={5}
+                    paddingRight="2rem" mb={5}
                 >
                     <UserCard userId={userId}/>
                 </Box>

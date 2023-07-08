@@ -58,15 +58,23 @@ const webinars = [
 
 
 /* CONFIGURATIONS */
-const __filename = fileURLToPath(import.meta.url); // get current file path
-const __dirname = path.dirname(__filename); // get directory name of current file path
-dotenv.config(); // initialize dotenv
-const app = express(); // initialize express
+dotenv.config();
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-// Create HTTP server
+const app = express();
 const server = createServer(app);
-const io = new Server(server);
+const io = new Server(server, {
+  cors: {
+    origin: "http://localhost:3000",
+    methods: ["GET", "POST"],
+    allowedHeaders: ["my-custom-header"],
+    credentials: true,
+  },
+});
+
+
 
 app.use(helmet()); // allow us to set security headers
 app.use(helmet.crossOriginResourcePolicy({policy: "cross-origin"}));
@@ -115,27 +123,27 @@ app.use("/mergeWebinars", mergeWebinarRoutes); // added this line
 app.use("/mergeChat", mergeChatRoutes);
 app.use("/mergeMessages", mergeMessageRoutes);
 
-
-
-
-/* MONGOOSE SETUP */
-const PORT = process.env.PORT || 6001;
-
-// Attach Socket.IO to the HTTP server
 io.on("connection", (socket) => {
     console.log("A user connected");
 
     // Handle events from the client
-    socket.on("chat message", (message) => {
-        // Broadcast the message to other connected clients
-        socket.broadcast.emit("chat message", message);
+    socket.on("msg", ({ message, currentChatId }) => {
+        console.log("mesage received")
+        console.log("message: ", message)
+        console.log("currentChatId: ", currentChatId)
+      // Broadcast the message to other connected clients
+        socket.broadcast.emit("msg", { message: message, receivedChatId: currentChatId });
     });
 
     // Handle disconnection
-    socket.on("disconnect", () => {
+    socket.on("shutdown", () => {
         console.log("A user disconnected");
     });
 });
+
+/* MONGOOSE SETUP */
+const PORT = process.env.PORT || 6001;
+
 
 
 mongoose
@@ -156,7 +164,6 @@ mongoose
         // Webinar.insertMany(webinars); // added this line
     })
     .catch((error) => console.log(`${error} did not connect`));
-
 
 
 

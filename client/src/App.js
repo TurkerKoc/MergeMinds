@@ -13,7 +13,7 @@ import MergeProfilePage from "scenes/mergeProfilePage";
 import MergeDirectMessages from "scenes/mergeDirectMessages";
 import MergeMyIdeasPage from "scenes/mergeMyIdeasPage";
 import MergeMyApplicationsPage from "scenes/mergeMyApplicationsPage";
-import {ChatContextProvider} from "./components/ChatContext";
+// import {ChatContextProvider} from "./components/ChatContext";
 // import { useDispatch } from "react-redux"; // useDispatch used for dispatching actions to redux store
 // import { setError } from "state"; // setError is an action from state.js
 

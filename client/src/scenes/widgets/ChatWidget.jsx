@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {useParams} from "react-router-dom";
 import {
@@ -27,7 +27,8 @@ const ChatWidget = () => {
     const [currentChatId, setCurrentChatId] = useState("");
     const [chatHistory, setChatHistory] = useState({contact: null, messages: []});
     const [showContacts, setShowContacts] = useState(true);
-    const socket = io("http://localhost:3001"); // Replace with your server URL
+    const [socket, setSocket] = useState(null);
+    const chatBoxRef = useRef(null);
 
     const getChats = async () => {
         try {
@@ -93,18 +94,17 @@ const ChatWidget = () => {
         setChatHistory({contact, messages: []});
         await fetchChatHistory(contact);
         setShowContacts(false);
+        setSocket(io("http://localhost:3001")); // Replace with your server URL
     };
 
     const handleBackClick = () => {
         setShowContacts(true);
-        socket.emit("disconnect");
-
+        socket.emit("shutdown");
     };
 
     const handleSendMessage = async () => {
+        console.log("here");
         try {
-            socket.emit("chat message", { text: message, chatId: currentChatId });
-
             console.log(chatHistory);
             const response = await fetch("http://localhost:3001/mergeMessages", {
                 method: "POST",
@@ -121,6 +121,8 @@ const ChatWidget = () => {
 
             if (response.ok) {
                 const sentMessage = await response.json();
+                console.log("Sending message:", message);
+                socket.emit("msg", { message: sentMessage, currentChatId: currentChatId });
                 setChatHistory((prevChatHistory) => ({
                     ...prevChatHistory,
                     messages: [...prevChatHistory.messages, sentMessage],
@@ -158,24 +160,29 @@ const ChatWidget = () => {
 
 
     useEffect(() => {
-        // ...
+        if(socket) { 
+            // ...
 
-        // Listen for new messages
-        socket.on("chat message", (message) => {
-            if (message.chatId === currentChatId) {
-                setChatHistory((prevChatHistory) => ({
-                    ...prevChatHistory,
-                    messages: [...prevChatHistory.messages, message],
-                }));
-            }
-        });
+            // Listen for new messages
+            socket.on("msg", (message, receivedChatId) => {
+                console.log("Received message:", message);
+                console.log(message.receivedChatId, currentChatId)
+                if (message.receivedChatId === currentChatId) {
+                    console.log(message.message);
+                    setChatHistory((prevChatHistory) => ({
+                        ...prevChatHistory,
+                        messages: [...prevChatHistory.messages, message.message],
+                    }));
+                }
+            });
 
-        // ...
+            // ...
 
-        return () => {
-            // Clean up the socket connection when component unmounts
-            socket.disconnect();
-        };
+            return () => {
+                // Clean up the socket connection when component unmounts
+                socket.disconnect();
+            };
+        }
     }, [currentChatId]);
 
 
@@ -217,6 +224,12 @@ const ChatWidget = () => {
         }
     }, [contacts, isContactsFetched]);
 
+    useEffect(() => {
+        // Scroll the chat box to the bottom when chatHistory.messages change
+        if (chatBoxRef.current) {
+          chatBoxRef.current.scrollTop = chatBoxRef.current.scrollHeight;
+        }
+      }, [chatHistory.messages]);
     return (
         <WidgetWrapper>
             <Box p={2} color={palette.text.primary}>
@@ -263,7 +276,7 @@ const ChatWidget = () => {
                         </Button>
                         {chatHistory.contact && (
                             <React.Fragment>
-                                <Box maxHeight="300px" overflow="auto" my={2}>
+                                <Box maxHeight="300px" overflow="auto" my={2} ref={chatBoxRef}>
                                     {chatHistory.messages.map((message) => (
                                         <Box
                                             key={message._id}
@@ -277,13 +290,13 @@ const ChatWidget = () => {
                                             <Box
                                                 p={1}
                                                 bgcolor={
-                                                    message.senderId === userId ? "primary.main" : "grey.200"
+                                                    message.senderId === userId ? "primary.main" : "neutral.medium"
                                                 }
                                                 borderRadius={16}
                                             >
                                                 <Typography
                                                     style={{
-                                                        color: message.senderId === userId ? "white" : "inherit",
+                                                        color: message.senderId === userId ? "black" : "black",
                                                         textAlign: message.senderId === userId ? "right" : "left",
                                                     }}
                                                 >
@@ -292,7 +305,7 @@ const ChatWidget = () => {
                                                 <Typography
                                                     variant="caption"
                                                     style={{
-                                                        color: message.senderId === userId ? "white" : "inherit",
+                                                        color: message.senderId === userId ? "black" : "black",
                                                         textAlign: message.senderId === userId ? "right" : "left",
                                                     }}
                                                 >

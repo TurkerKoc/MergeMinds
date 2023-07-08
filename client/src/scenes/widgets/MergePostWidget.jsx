@@ -133,7 +133,7 @@ import {
                   <Paid sx={{ fontSize:"25px" }}/>
                 </Badge>  
               </Button>
-              <MergeApplyWidget userMergeCoins={loggedInUserCoins} applicationPrice={priceId} userId={loggedInUserId} ideaPostId={postId} open={openPopup} onClose={handleClosePopup} onResult={handleApply}/>       
+              <MergeApplyWidget userMergeCoins={loggedInUserCoins} applicationPrice={priceId} userId={loggedInUserId} ideaPostId={postId} ideaPostUserId={postUserId} open={openPopup} onClose={handleClosePopup} onResult={handleApply}/>       
             </FlexBetween>
           )}
           {isApplied && (
