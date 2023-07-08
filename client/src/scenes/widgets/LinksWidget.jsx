@@ -82,10 +82,10 @@ const MergeBlogWidget = () => {
 				</FlexBetween>
 				<FlexBetween gap="1rem">
 					<Box
-						// onClick={() => {
-						// 	navigate(`/profile/${friendId}`);
-						// 	navigate(0);
-						// }}
+						onClick={() => {
+							navigate(`/mergeDirectMessages/${user._id}`);
+							navigate(0);
+						}}
 						display="flex"  // Added display="flex"
 						alignItems="center" // Added alignItems="center"											
 					>
