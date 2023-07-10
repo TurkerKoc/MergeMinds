@@ -20,6 +20,7 @@ import mergeTokensRoutes from "./routes/mergeTokens.js";
 import mergeWebinarRoutes from "./routes/mergeWebinars.js";
 import mergeChatRoutes from "./routes/chatRoutes.js";
 import mergeMessageRoutes from "./routes/messageRoutes.js";
+import mergeSponsoredContentRoutes from "./routes/sponsoredContentRoutes.js";
 
 import {register} from "./controllers/auth.js"; // for registering user
 import {createPost} from "./controllers/posts.js";
@@ -122,6 +123,7 @@ app.use("/mergeTokens", mergeTokensRoutes);
 app.use("/mergeWebinars", mergeWebinarRoutes); // added this line
 app.use("/mergeChat", mergeChatRoutes);
 app.use("/mergeMessages", mergeMessageRoutes);
+app.use("/mergeSponsoredContent", mergeSponsoredContentRoutes);
 
 io.on("connection", (socket) => {
     console.log("A user connected");
