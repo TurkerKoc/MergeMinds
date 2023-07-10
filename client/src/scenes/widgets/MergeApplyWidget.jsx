@@ -98,7 +98,7 @@ const MergeApplyWidget = ({ userMergeCoins, applicationPrice, open, onClose, use
         }
 
         //create message
-        const curTextMessage = "User has applied to your post.\nCover Letter: \n" + values.coverLetter + "\nResume: " + values.resume[0].name + "\n";
+        const curTextMessage = "Hi, I want to apply your Idea!!\n\nMy Cover Letter:\n" + values.coverLetter;
         const messageData = {chatId: chatInfo._id, senderId: userId, text: curTextMessage};
         const messageResponse = await fetch(`http://localhost:3001/mergeMessages/`, {
           method: "POST",
@@ -107,6 +107,20 @@ const MergeApplyWidget = ({ userMergeCoins, applicationPrice, open, onClose, use
         });
 
         if(messageResponse.ok) {
+          onClose();
+        }
+        else {
+          setFormError("An error occurred while submitting the form.");
+        }  
+        const curTextMessage2 =  "http://localhost:3001/assets/" + values.resume[0].name;
+        const messageData2 = {chatId: chatInfo._id, senderId: userId, text: curTextMessage2};
+        const messageResponse2 = await fetch(`http://localhost:3001/mergeMessages/`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(messageData2), // we will send the form data as json
+        });
+
+        if(messageResponse2.ok) {
           onClose();
         }
         else {

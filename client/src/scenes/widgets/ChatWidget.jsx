@@ -10,6 +10,7 @@ import {
     TextField,
     Button,
 } from "@mui/material";
+import FlexBetween from "components/FlexBetween";
 
 import WidgetWrapper from "components/WidgetWrapper";
 import { io } from "socket.io-client";
@@ -26,6 +27,7 @@ const ChatWidget = () => {
     const token = useSelector((state) => state.token);
     const [user, setUser] = useState(null);
     const [contacts, setContacts] = useState([]);
+    const [curContact, setCurContact] = useState(null);
     const [isContactsFetched, setIsContactsFetched] = useState(false);
     const dispatch = useDispatch();
     const [message, setMessage] = useState("");
@@ -96,6 +98,7 @@ const ChatWidget = () => {
     };
 
     const handleContactClick = async (contact) => {
+        setCurContact(contact);
         setCurrentChatId("");
         setChatHistory({ contact, messages: [] });
         await fetchChatHistory(contact);
@@ -104,6 +107,7 @@ const ChatWidget = () => {
     };
 
     const handleBackClick = () => {
+        setCurContact(null);
         setShowContacts(true);
         socket.emit("shutdown");
     };
@@ -238,7 +242,7 @@ const ChatWidget = () => {
     }, [chatHistory.messages]);
     return (
         <WidgetWrapper>
-            <Box p={2} color={palette.text.primary} height="750px">
+            <Box p={2} color={palette.text.primary} maxHeight="750px">
                 {showContacts ? (
                     <React.Fragment>
                         <Box display="flex" alignItems="center" gap="1rem">
@@ -277,9 +281,22 @@ const ChatWidget = () => {
                     </React.Fragment>
                 ) : (
                     <React.Fragment>
-                        <Button onClick={handleBackClick} variant="contained" color="primary">
-                            Back
-                        </Button>
+                        <FlexBetween gap="0.5rem" alignItems="left">
+                            <Button onClick={handleBackClick} variant="contained" color="primary">
+                                Back
+                            </Button>
+                            <FlexBetween gap="0.25rem" sx={{ marginBottom: '1rem' }}>
+                                {curContact && (
+                                    <><Typography style={{ fontWeight: 'bold', fontSize: '20px' }}>
+                                        {curContact.name}{" "}{curContact.surname}
+                                    </Typography><Avatar
+                                            src={`http://localhost:3001/assets/${curContact.picturePath}`}
+                                            alt={`${curContact.name} ${curContact.surname}`}
+                                            style={{ marginRight: "8px", marginLeft: "8px" }} /></>
+                                )}
+                            </FlexBetween>
+                        </FlexBetween>
+
                         {chatHistory.contact && (
                             <React.Fragment>
                                 <Box maxHeight="550px" overflow="auto" my={2} ref={chatBoxRef}>
@@ -293,6 +310,13 @@ const ChatWidget = () => {
                                             }
                                             mb={1}
                                         >
+                                            {curContact && message.senderId !== userId && (
+                                                <Avatar
+                                                    src={`http://localhost:3001/assets/${curContact.picturePath}`}
+                                                    alt={`${curContact.name} ${curContact.surname}`}
+                                                    style={{ marginRight: "8px", width: "35px", height: "35px" }}
+                                                />
+                                            )}
                                             {message.text && message.text.startsWith('http://localhost:3001/') ? (
                                                 <Box
                                                     p={1}
@@ -307,7 +331,7 @@ const ChatWidget = () => {
                                                             textAlign: message.senderId === userId ? "right" : "left",
                                                         }}
                                                     >
-                                                        "Click this message to open the document."
+                                                        Click this message to open resume of the user.
                                                     </Typography>
                                                     <Document
                                                         file={message.text}
@@ -338,7 +362,7 @@ const ChatWidget = () => {
                                                     bgcolor={
                                                         message.senderId === userId ? "primary.main" : "neutral.medium"
                                                     }
-                                                    borderRadius={16}
+                                                    borderRadius={5}
                                                 >
                                                     <Typography
                                                         style={{
@@ -346,7 +370,12 @@ const ChatWidget = () => {
                                                             textAlign: message.senderId === userId ? "right" : "left",
                                                         }}
                                                     >
-                                                        {message.text}
+                                                        {message.text.split('\n').map((line, index) => (
+                                                            <React.Fragment key={index}>
+                                                                {line}
+                                                                <br />
+                                                            </React.Fragment>
+                                                        ))}
                                                     </Typography>
                                                     <Typography
                                                         variant="caption"
@@ -358,6 +387,14 @@ const ChatWidget = () => {
                                                         {new Date(message.createdAt).toLocaleString()}
                                                     </Typography>
                                                 </Box>
+                                            )}
+                                            {message.senderId === userId && (
+                                                <Avatar
+                                                    src={`http://localhost:3001/assets/${user.picturePath}`}
+                                                    alt={`${user.name} ${user.surname}`}
+                                                    style={{ marginLeft: "8px", marginRight: "8px", width: "35px", height: "35px" }}
+                                                    ml="1rem"
+                                                />
                                             )}
                                         </Box>
                                     ))}
