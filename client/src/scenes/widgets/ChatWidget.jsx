@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
-import {useDispatch, useSelector} from "react-redux";
-import {useParams} from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
 import {
     Box,
     Typography,
@@ -13,11 +13,16 @@ import {
 
 import WidgetWrapper from "components/WidgetWrapper";
 import { io } from "socket.io-client";
+import { Document, Page, pdfjs } from 'react-pdf';
+import { useNavigate } from "react-router-dom"; // useNavigate used for navigation between pages
 
+pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
+pdfjs.GlobalWorkerOptions.disableAutoFetch = true;
+pdfjs.GlobalWorkerOptions.disableStream = true;
 
 const ChatWidget = () => {
-    const {palette} = useTheme();
-    const {userId} = useParams();
+    const { palette } = useTheme();
+    const { userId } = useParams();
     const token = useSelector((state) => state.token);
     const [user, setUser] = useState(null);
     const [contacts, setContacts] = useState([]);
@@ -25,10 +30,11 @@ const ChatWidget = () => {
     const dispatch = useDispatch();
     const [message, setMessage] = useState("");
     const [currentChatId, setCurrentChatId] = useState("");
-    const [chatHistory, setChatHistory] = useState({contact: null, messages: []});
+    const [chatHistory, setChatHistory] = useState({ contact: null, messages: [] });
     const [showContacts, setShowContacts] = useState(true);
     const [socket, setSocket] = useState(null);
     const chatBoxRef = useRef(null);
+    const navigate = useNavigate();
 
     const getChats = async () => {
         try {
@@ -77,7 +83,7 @@ const ChatWidget = () => {
                 if (messagesResponse.ok) {
                     const chatMessages = await messagesResponse.json();
                     setCurrentChatId(chatId);
-                    setChatHistory({contact, messages: chatMessages});
+                    setChatHistory({ contact, messages: chatMessages });
                 } else {
                     console.error("Error fetching chat messages:", messagesResponse.status);
                 }
@@ -91,7 +97,7 @@ const ChatWidget = () => {
 
     const handleContactClick = async (contact) => {
         setCurrentChatId("");
-        setChatHistory({contact, messages: []});
+        setChatHistory({ contact, messages: [] });
         await fetchChatHistory(contact);
         setShowContacts(false);
         setSocket(io("http://localhost:3001")); // Replace with your server URL
@@ -108,7 +114,7 @@ const ChatWidget = () => {
             console.log(chatHistory);
             const response = await fetch("http://localhost:3001/mergeMessages", {
                 method: "POST",
-                headers: {"Content-Type": "application/json"},
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     senderId: userId,
                     text: message,
@@ -141,7 +147,7 @@ const ChatWidget = () => {
             try {
                 const response = await fetch(`http://localhost:3001/mergeUsers/${userId}`, {
                     method: "GET",
-                    headers: {Authorization: `Bearer ${token}`},
+                    headers: { Authorization: `Bearer ${token}` },
                 });
 
                 if (response.ok) {
@@ -160,7 +166,7 @@ const ChatWidget = () => {
 
 
     useEffect(() => {
-        if(socket) { 
+        if (socket) {
             // ...
 
             // Listen for new messages
@@ -193,7 +199,7 @@ const ChatWidget = () => {
             const contactId = typeof contact === "object" ? contact._id : contact;
             const response = await fetch(`http://localhost:3001/mergeUsers/${contactId}`, {
                 method: "GET",
-                headers: {Authorization: `Bearer ${token}`},
+                headers: { Authorization: `Bearer ${token}` },
             });
             if (response.ok) {
                 const contactData = await response.json();
@@ -227,16 +233,16 @@ const ChatWidget = () => {
     useEffect(() => {
         // Scroll the chat box to the bottom when chatHistory.messages change
         if (chatBoxRef.current) {
-          chatBoxRef.current.scrollTop = chatBoxRef.current.scrollHeight;
+            chatBoxRef.current.scrollTop = chatBoxRef.current.scrollHeight;
         }
-      }, [chatHistory.messages]);
+    }, [chatHistory.messages]);
     return (
         <WidgetWrapper>
-            <Box p={2} color={palette.text.primary}>
+            <Box p={2} color={palette.text.primary} height="750px">
                 {showContacts ? (
                     <React.Fragment>
                         <Box display="flex" alignItems="center" gap="1rem">
-                            <Typography style={{fontSize: "24px"}} variant="h6">
+                            <Typography style={{ fontSize: "24px" }} variant="h6">
                                 {title}
                             </Typography>
                         </Box>
@@ -253,13 +259,13 @@ const ChatWidget = () => {
                                             component={Link}
                                             to={`/profile/${contact._id}`}
                                             onClick={() => handleContactClick(contact)}
-                                            style={{cursor: "pointer"}}
+                                            style={{ cursor: "pointer" }}
                                         >
                                             <Avatar
                                                 src={`http://localhost:3001/assets/${contact.picturePath}`}
                                                 alt={contact.name}
                                             />
-                                            <Typography style={{fontSize: "24px"}} variant="h6">
+                                            <Typography style={{ fontSize: "24px" }} variant="h6">
                                                 {`${contact.name} ${contact.surname}`}
                                             </Typography>
                                         </Box>
@@ -276,7 +282,7 @@ const ChatWidget = () => {
                         </Button>
                         {chatHistory.contact && (
                             <React.Fragment>
-                                <Box maxHeight="300px" overflow="auto" my={2} ref={chatBoxRef}>
+                                <Box maxHeight="550px" overflow="auto" my={2} ref={chatBoxRef}>
                                     {chatHistory.messages.map((message) => (
                                         <Box
                                             key={message._id}
@@ -287,31 +293,72 @@ const ChatWidget = () => {
                                             }
                                             mb={1}
                                         >
-                                            <Box
-                                                p={1}
-                                                bgcolor={
-                                                    message.senderId === userId ? "primary.main" : "neutral.medium"
-                                                }
-                                                borderRadius={16}
-                                            >
-                                                <Typography
-                                                    style={{
-                                                        color: message.senderId === userId ? "black" : "black",
-                                                        textAlign: message.senderId === userId ? "right" : "left",
-                                                    }}
+                                            {message.text && message.text.startsWith('http://localhost:3001/') ? (
+                                                <Box
+                                                    p={1}
+                                                    bgcolor={
+                                                        message.senderId === userId ? "primary.main" : "neutral.medium"
+                                                    }
+                                                    borderRadius={3}
+                                                    onClick={() => window.open(message.text, "_blank")}>
+                                                    <Typography
+                                                        style={{
+                                                            color: message.senderId === userId ? "black" : "black",
+                                                            textAlign: message.senderId === userId ? "right" : "left",
+                                                        }}
+                                                    >
+                                                        "Click this message to open the document."
+                                                    </Typography>
+                                                    <Document
+                                                        file={message.text}
+                                                    >
+                                                        <Page
+                                                            pageNumber={1}
+                                                            width={300}
+                                                            renderAnnotationLayer={false}
+                                                            renderInteractiveForms={false}
+                                                            renderTextLayer={false} // Disable text layer rendering
+                                                            onLoadError={console.error} // Handle any potential load errors
+                                                            onRenderError={console.error} // Handle any potential render errors
+                                                        />
+                                                    </Document>
+                                                    <Typography
+                                                        variant="caption"
+                                                        style={{
+                                                            color: message.senderId === userId ? "black" : "black",
+                                                            textAlign: message.senderId === userId ? "right" : "left",
+                                                        }}
+                                                    >
+                                                        {new Date(message.createdAt).toLocaleString()}
+                                                    </Typography>
+                                                </Box>
+                                            ) : (
+                                                <Box
+                                                    p={1}
+                                                    bgcolor={
+                                                        message.senderId === userId ? "primary.main" : "neutral.medium"
+                                                    }
+                                                    borderRadius={16}
                                                 >
-                                                    {message.text}
-                                                </Typography>
-                                                <Typography
-                                                    variant="caption"
-                                                    style={{
-                                                        color: message.senderId === userId ? "black" : "black",
-                                                        textAlign: message.senderId === userId ? "right" : "left",
-                                                    }}
-                                                >
-                                                    {new Date(message.createdAt).toLocaleString()}
-                                                </Typography>
-                                            </Box>
+                                                    <Typography
+                                                        style={{
+                                                            color: message.senderId === userId ? "black" : "black",
+                                                            textAlign: message.senderId === userId ? "right" : "left",
+                                                        }}
+                                                    >
+                                                        {message.text}
+                                                    </Typography>
+                                                    <Typography
+                                                        variant="caption"
+                                                        style={{
+                                                            color: message.senderId === userId ? "black" : "black",
+                                                            textAlign: message.senderId === userId ? "right" : "left",
+                                                        }}
+                                                    >
+                                                        {new Date(message.createdAt).toLocaleString()}
+                                                    </Typography>
+                                                </Box>
+                                            )}
                                         </Box>
                                     ))}
                                 </Box>
@@ -321,7 +368,7 @@ const ChatWidget = () => {
                                     variant="outlined"
                                     label="Message"
                                     fullWidth
-                                    style={{marginBottom: "8px"}}
+                                    style={{ marginBottom: "8px" }}
                                 />
                                 <Button onClick={handleSendMessage} variant="contained" color="primary">
                                     Send
