@@ -26,7 +26,7 @@ const initialValuesApply = {
   resume: null,
 };
 
-const MergeApplyWidget = ({ userMergeCoins, applicationPrice, open, onClose, userId, ideaPostId, onResult }) => {
+const MergeApplyWidget = ({ userMergeCoins, applicationPrice, open, onClose, userId, ideaPostId, ideaPostUserId, onResult }) => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const { palette } = useTheme();
   const [formError, setFormError] = useState(null);
@@ -52,6 +52,7 @@ const MergeApplyWidget = ({ userMergeCoins, applicationPrice, open, onClose, use
       formData.append("resumePath", values.resume[0].name);
   
       try {
+        //Create application
         const response = await fetch(`http://localhost:3001/mergePosts/apply/${ideaPostId}/${userId}`, {
           method: "POST",
           body: formData,
@@ -63,6 +64,7 @@ const MergeApplyWidget = ({ userMergeCoins, applicationPrice, open, onClose, use
           setFormError("An error occurred while submitting the form.");
         }
 
+        //Update mergeCoins
         const curData = {mergeCoins: updatedMergeCoins};
         const mergeUserResponse = await fetch(`http://localhost:3001/mergeUsers/mergeCoins/${userId}`, {
           method: "PATCH",
@@ -78,7 +80,52 @@ const MergeApplyWidget = ({ userMergeCoins, applicationPrice, open, onClose, use
         } else {
           setFormError("An error occurred while submitting the form.");
         }
-          
+        
+        //create chat
+        console.log("Creating chat: ", ideaPostUserId, userId)
+        const chatData = {firstId: ideaPostUserId, secondId: userId};
+        const chatResponse = await fetch(`http://localhost:3001/mergeChat/`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(chatData), // we will send the form data as json
+        });
+        const chatInfo = await chatResponse.json(); // we will get the logged in user from backend (backend will send the logged in user as json)
+
+        if(chatResponse.ok) {
+          onClose();
+        } else {
+          setFormError("An error occurred while submitting the form.");
+        }
+
+        //create message
+        const curTextMessage = "Hi, I want to apply your Idea!!\n\nMy Cover Letter:\n" + values.coverLetter;
+        const messageData = {chatId: chatInfo._id, senderId: userId, text: curTextMessage};
+        const messageResponse = await fetch(`http://localhost:3001/mergeMessages/`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(messageData), // we will send the form data as json
+        });
+
+        if(messageResponse.ok) {
+          onClose();
+        }
+        else {
+          setFormError("An error occurred while submitting the form.");
+        }  
+        const curTextMessage2 =  "http://localhost:3001/assets/" + values.resume[0].name;
+        const messageData2 = {chatId: chatInfo._id, senderId: userId, text: curTextMessage2};
+        const messageResponse2 = await fetch(`http://localhost:3001/mergeMessages/`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(messageData2), // we will send the form data as json
+        });
+
+        if(messageResponse2.ok) {
+          onClose();
+        }
+        else {
+          setFormError("An error occurred while submitting the form.");
+        }  
       } catch (error) {
         setFormError("An error occurred while submitting the form.");
       }

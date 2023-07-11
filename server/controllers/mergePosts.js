@@ -202,46 +202,106 @@ export const createMergePost = async (req, res) => {
 //     res.status(404).json({ message: err.message });
 //   }
 // };
-export const getFeedPosts = async (req, res) => { 
-  try {
-    const posts = await IdeaPost.find().populate([
-        {
-            path: 'userId',
-            select: 'name surname username email picturePath trustPoints',
-            model: MergeUser
-        },
-        {
-            path: 'Applications',
-            select: 'content userId',
-            model: Application,
-            populate: {
-                path: 'userId',
-                select: 'name surname picturePath',
-                model: MergeUser
+import SponsoredContent from '../models/SponsoredContent.js';
+
+export const getFeedPosts = async (req, res) => {
+    try {
+        const ideaPosts = await IdeaPost.find()
+            .populate([
+                {
+                    path: 'userId',
+                    select: 'name surname username email picturePath trustPoints',
+                    model: MergeUser,
+                },
+                {
+                    path: 'Applications',
+                    select: 'content userId',
+                    model: Application,
+                    populate: {
+                        path: 'userId',
+                        select: 'name surname picturePath',
+                        model: MergeUser,
+                    },
+                },
+                {
+                    path: 'categoryId',
+                    select: 'domain',
+                    model: Category,
+                },
+                {
+                    path: 'locationId',
+                    select: 'name',
+                    model: Location,
+                },
+                {
+                    path: 'priceId',
+                    select: 'amount',
+                    model: Price,
+                },
+            ])
+            .sort({ createdAt: -1 });
+        console.log(ideaPosts);
+
+        const sponsoredContent = await SponsoredContent.find()
+            .populate([
+                {
+                    path: 'userId',
+                    select: 'name surname username email picturePath trustPoints',
+                    model: MergeUser,
+                },
+                {
+                    path: 'Applications',
+                    select: 'content userId',
+                    model: Application,
+                    populate: {
+                        path: 'userId',
+                        select: 'name surname picturePath',
+                        model: MergeUser,
+                    },
+                },
+                {
+                    path: 'categoryId',
+                    select: 'domain',
+                    model: Category,
+                },
+                {
+                    path: 'locationId',
+                    select: 'name',
+                    model: Location,
+                },
+                {
+                    path: 'priceId',
+                    select: 'amount',
+                    model: Price,
+                },
+            ])
+            .sort({ createdAt: -1 });
+        console.log(sponsoredContent);
+
+        // Randomize the order of sponsored content
+        const randomizedSponsoredContent = sponsoredContent.sort(() => Math.random() - 0.5);
+
+        const feedPosts = [];
+
+        let sponsoredIndex = 0;
+        let postCount = 0;
+
+        // Iterate through each IdeaPost and add sponsored content among every 5 posts
+        for (const ideaPost of ideaPosts) {
+            if (postCount % 5 === 0 && sponsoredIndex < randomizedSponsoredContent.length && postCount !== 0) {
+                feedPosts.push(randomizedSponsoredContent[sponsoredIndex]);
+                sponsoredIndex++;
             }
-        },
-        {
-            path: 'categoryId',
-            select: 'domain',
-            model: Category
-        },
-        {
-            path: 'locationId',
-            select: 'name',
-            model: Location
-        },
-        {
-            path: 'priceId',
-            select: 'amount',
-            model: Price
+            feedPosts.push(ideaPost);
+            postCount++;
         }
-    ]).sort({ createdAt: -1 });
-    // console.log(posts)
-    res.status(200).json(posts);
-  } catch (err) {
-      res.status(404).json({ message: err.message });
-  }
+
+        res.status(200).json(feedPosts);
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to get feed posts' });
+    }
 };
+
 
 export const getUserPosts = async (req, res) => {
   try {

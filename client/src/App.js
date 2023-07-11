@@ -10,8 +10,10 @@ import { themeSettings } from "./theme"; // for theme settings (light and dark m
 import MergeTokenPage from "scenes/tokenPage";
 import MergeWebinarPage from "scenes/webinarPage";
 import MergeProfilePage from "scenes/mergeProfilePage";
+import MergeDirectMessages from "scenes/mergeDirectMessages";
 import MergeMyIdeasPage from "scenes/mergeMyIdeasPage";
 import MergeMyApplicationsPage from "scenes/mergeMyApplicationsPage";
+// import {ChatContextProvider} from "./components/ChatContext";
 // import { useDispatch } from "react-redux"; // useDispatch used for dispatching actions to redux store
 // import { setError } from "state"; // setError is an action from state.js
 
@@ -54,6 +56,10 @@ function App() {
             <Route /* if the path is /submission then render the SubmissionPage component */
               path="/mergeProfilePage/:userId"
               element={isAuth ? <MergeProfilePage /> : <Navigate to="/mergeLogin" />}
+            />
+            <Route /* if the path is /submission then render the SubmissionPage component */
+                path="/mergeDirectMessages/:userId"
+                element={isAuth ? <MergeDirectMessages /> : <Navigate to="/mergeDirectMessages" />}
             />
             <Route /* if the path is /mergeMyIdeasPage then render the ProfilePage component */
               path="/mergeMyIdeas"

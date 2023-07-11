@@ -62,9 +62,44 @@ const NewsFeed = () => {
     console.log(sorted);
     console.log(posts);
     // setSortedPosts(sorted);
-    dispatch(setPosts({ posts: sorted }));
+
+    let result = randomizeSponsoredContent(sorted);
+    dispatch(setPosts({ posts: result }));
 
   };
+
+  function randomizeSponsoredContent(sorted) {
+    console.log("sorted");
+    console.log(sorted);
+    const nonAdminPosts = sorted.filter(post => post.userId.username !== 'admin');
+    const adminPosts = sorted.filter(post => post.userId.username === 'admin');
+    const nonAdminCount = nonAdminPosts.length;
+    const adminCount = adminPosts.length;
+
+    let result = [];
+    let adminIndex = 0;
+    let mod = nonAdminCount > 10 ? 10 : nonAdminCount -1;
+    for (let i = 0; i < nonAdminCount; i++) {
+      if (i % mod === 0 && adminIndex < adminCount && i !== 0) {
+        const randomIndex = getRandomIndex(i - mod, i, result);
+        // console.log(randomIndex);
+        // console.log(result);
+        result.splice(randomIndex, 0, adminPosts[adminIndex]);
+        adminIndex++;
+      }
+      else if(i === nonAdminCount - 1 && adminIndex < adminCount) {
+        const randomIndex = getRandomIndex(i - (i%mod), i, result);
+        // console.log(randomIndex);
+        // console.log(result);
+        result.splice(randomIndex, 0, adminPosts[adminIndex]);
+        adminIndex++;
+      }
+      result.push(nonAdminPosts[i]);
+    }
+    console.log(result);
+    return result;
+  }
+
   const handleNewClick = async () => {
     console.log('handleNewClick');
     setSelectedButton('new');
@@ -74,15 +109,24 @@ const NewsFeed = () => {
       return createdAtB - createdAtA;
     });
     console.log('sorted', sorted);
-    dispatch(setPosts({ posts: sorted }));
-    // const response = await fetch(`http://localhost:3001/mergePosts`, {
-    //   method: "GET",
-    //   headers: { Authorization: `Bearer ${token}` }
-    // });
-    // const posts = await response.json();
-    // dispatch(setPosts({ posts }));
+
+    let result = randomizeSponsoredContent(sorted);
+    dispatch(setPosts({ posts: result }));
   };
-  
+
+  const getRandomIndex = (min, max, result) => {
+    let randomIndex;
+    do {
+      randomIndex = Math.floor(Math.random() * (max - min) + min);
+    } while (result.includes(randomIndex));
+
+    return randomIndex;
+  };
+
+  // console.log(randomIndex);
+
+
+
 
   const handleCategoryAutocompleteChange = async (option) => {
     setSelectedCategoryFilter(option);
@@ -94,16 +138,17 @@ const NewsFeed = () => {
 
     if (option && option._id) {            
       var filtered = data.filter((post) => {
-        return post.categoryId?._id === option._id;
+        return post.userId?.username === "admin" || post.categoryId?._id === option._id;
       });
       console.log('filtered Category', filtered);   
       if(selectedLocationFilter !== "") {
         filtered = filtered.filter((post) => {
-          return post.locationId?._id === selectedLocationFilter._id;
+          return post.userId?.name === 'admin' || post.locationId?._id === selectedLocationFilter._id;
         });
         console.log('filtered Location', filtered);
       }
-      dispatch(setPosts({ posts: filtered }));
+      let result = randomizeSponsoredContent(filtered);
+      dispatch(setPosts({ posts: result }));
     }
   };
   const handleLocationAutocompleteChange = async (option) => {   
@@ -116,16 +161,17 @@ const NewsFeed = () => {
 
     if (option && option._id) {
       var filtered = data.filter((post) => {
-        return post.locationId?._id === option._id;
+        return post.locationId?._id === option._id || post.userId?.username === 'admin';
       });
       console.log('filtered Location', filtered);
       if(selectedCategoryFilter !== "") {
         filtered = filtered.filter((post) => {
-          return post.categoryId?._id === selectedCategoryFilter._id;
+          return post.categoryId?._id === selectedCategoryFilter._id || post.userId?.username === 'admin';
         });
       }
       console.log('filtered category', filtered);
-      dispatch(setPosts({ posts: filtered }));
+      let result = randomizeSponsoredContent(filtered);
+      dispatch(setPosts({ posts: result }));
     }
   };
 
@@ -185,7 +231,10 @@ const NewsFeed = () => {
       headers: { Authorization: `Bearer ${token}` }    
     });
     const categories = await response.json();
-    setCategories(categories);
+    //TO DO delete category with category.domain === 'admin'
+    const filteredCategories = categories.filter(category => category.domain !== 'Admin');
+
+    setCategories(filteredCategories);
   }
   const getAllLocations = async () => {
     const response = await fetch(`http://localhost:3001/mergePosts/allLocations`, {
@@ -193,7 +242,9 @@ const NewsFeed = () => {
       headers: { Authorization: `Bearer ${token}` }    
     });
     const locations = await response.json();
-    setLocations(locations);
+    const filteredLocations = locations.filter(location => location.name !== 'Admin');
+
+    setLocations(filteredLocations);
   }
 
   useEffect(() => {
