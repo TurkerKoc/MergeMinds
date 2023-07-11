@@ -5,6 +5,12 @@ import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Box, useTheme, Typography, List, ListItem, Link } from "@mui/material";
 import { setUserWebinars } from "state";
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import Button from '@mui/material/Button';
 
 
 const MergeMyWebinarWidget = () => {
@@ -15,10 +21,23 @@ const MergeMyWebinarWidget = () => {
     const medium = palette.neutral.medium;
     // const [userWebinars, setUserWebinars] = useState([]);
     const userWebinars = useSelector((state) => state.userWebinars);
+    const [selectedWebinar, setSelectedWebinar] = useState(null);
 
 
     const token = useSelector((state) => state.token);
     const { _id } = useSelector((state) => state.user);
+
+    // open the dialog box when a webinar is selected
+    const handleWebinarClick = (webinar) => {
+        setSelectedWebinar(webinar);
+    }
+
+    // close the dialog box
+    const handleClose = () => {
+        setSelectedWebinar(null);
+    }
+
+
 
     useEffect(() => {
         const getUserWebinars = async () => {
@@ -39,27 +58,56 @@ const MergeMyWebinarWidget = () => {
 
     return (
         <WidgetWrapper>
+          <Typography
+            color={palette.neutral.dark}
+            variant="h5"
+            fontWeight="500"
+            sx={{ mb: "0.5rem" }}
+          >
+            My Webinars
+          </Typography>
+        <Box>
+        <List>
+          {userWebinars.map((webinar) => (
+          <ListItem 
+              key={webinar._id} 
+              onClick={() => handleWebinarClick(webinar)}
+              variant="contained"
+              color='primary'
+              sx={{
+                cursor: "pointer",
+                "&:hover": {
+                },
+              }}
+          >
             <Typography
-                color={palette.neutral.dark}
-                variant="h5"
-                fontWeight="500"
-                sx={{ mb: "1.5rem" }}
+              color={palette.primary }
+              variant="h6"
+              fontWeight="bold"
+              sx={{ mb: "0.5rem", color: 'primary.main' }}
             >
-                My Webinars
+            {webinar.title}
             </Typography>
-            <Box>
-                <List>
-                    {userWebinars.map((webinar) => (
-                        <ListItem key={webinar._id}>
-                            <Link href={webinar.zoomLink} target="_blank" rel="noopener noreferrer">
-                                {webinar.title}
-                            </Link>
-                        </ListItem>
-                    ))}
-                </List>
-            </Box>
+          </ListItem>
+          ))}
+        </List>
+        </Box>
+        <Dialog open={!!selectedWebinar} onClose={handleClose}>
+            <DialogTitle>{selectedWebinar?.title}</DialogTitle>
+            <DialogContent>
+              <DialogContentText>{selectedWebinar?.description}</DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleClose} sx={{ fontSize: "14px", display: 'flex', gap: '3px' }} color="primary">
+                Close
+              </Button>
+              <Button onClick={() => window.open(selectedWebinar?.zoomLink, "_blank")} sx={{ fontSize: "14px", display: 'flex', gap: '3px' }} color="primary">
+                Open
+              </Button>
+            </DialogActions>
+          </Dialog>
         </WidgetWrapper>
-    );
-};
-
+      );
+    };
+    
 export default MergeMyWebinarWidget;

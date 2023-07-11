@@ -171,7 +171,7 @@ const MergeWebinarWidget = () => {
           <DialogContentText>{selectedWebinar?.extendedProps.description}</DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setDialogWebinar(null)}sx={{ fontSize: "15px", display: 'flex', gap: '5px' }} >Close</Button>
+          <Button onClick={() => setDialogWebinar(null) } sx={{ fontSize: "14px", display: 'flex', gap: '3px' }} >Close</Button>
           {!enrolled && dialogWebinar && (
             <Button
               onClick={() => {
@@ -180,9 +180,9 @@ const MergeWebinarWidget = () => {
                 } else {
                   setNotEnoughCoins(true);
                 }
-              } } sx={{ fontSize: "15px", display: 'flex', gap: '3px' }}
+              } } sx={{ fontSize: "14px", display: 'flex', gap: '3px' }}
             >
-                <span style={{ textTransform: 'lowercase' }}>
+                <span style={{ textTransform: 'uppercase' }}>
                   <span style={{ textTransform: 'capitalize' }}>E</span>nroll
                 </span>
               <Badge badgeContent={dialogWebinar.extendedProps.price} color="warning">
@@ -191,8 +191,8 @@ const MergeWebinarWidget = () => {
             </Button>
           )}
           {enrolled && dialogWebinar && (
-            <Button onClick={() => window.open(dialogWebinar.extendedProps.zoomLink)}>
-              Open Zoom Link
+            <Button onClick={() => window.open(dialogWebinar.extendedProps.zoomLink) } sx={{ fontSize: "14px", display: 'flex', gap: '3px' }}>
+              Open
             </Button>
           )}
         </DialogActions>
