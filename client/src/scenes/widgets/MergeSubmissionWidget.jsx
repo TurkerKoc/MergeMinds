@@ -28,9 +28,11 @@ import { is } from "date-fns/locale";
 import { useNavigate } from "react-router-dom";
 import { Paid } from "@mui/icons-material";
 import Badge from '@mui/material/Badge';
+import { Tooltip } from '@mui/material';
+import HelpIcon from '@mui/icons-material/Help';
 import { set } from "date-fns";
 
-const MergeSubmissionWidget = ({ id }) => {
+const MergeSubmissionWidget = ({id, savedDraftData}) => {
   const dispatch = useDispatch();
   const { mergeCoins } = useSelector((state) => state.user);
   const token = useSelector((state) => state.token);
@@ -74,6 +76,41 @@ const MergeSubmissionWidget = ({ id }) => {
     }
     setSelectedIsHidden(value);
   };
+
+  useEffect(() => {
+    if (savedDraftData) {
+      setSelectedCategory(savedDraftData.selectedCategory || "");
+      setSelectedLocation(savedDraftData.selectedLocation || "");
+      setSelectedIsHidden(savedDraftData.selectedIsHidden || "");
+      setApplicantNumber(savedDraftData.applicantNumber || "");
+      setTitle(savedDraftData.title || "");
+      setSubmission(savedDraftData.description || "");
+      setImage(savedDraftData.image || "");
+    }
+  }, [id, savedDraftData]); 
+
+  useEffect(() => {
+    const formData = {
+      selectedCategory,
+      selectedLocation,
+      selectedIsHidden,
+      applicantNumber,
+      title,
+      description,
+      image,
+    };
+
+    localStorage.setItem("submissionFormData", JSON.stringify(formData));
+  }, [
+    selectedCategory,
+    selectedLocation,
+    selectedIsHidden,
+    applicantNumber,
+    title,
+    description,
+    image,
+  ]);
+
   const getCategories = async () => {
     const response = await fetch(`http://localhost:3001/mergePosts/allCategories`, {
       method: "GET",
@@ -148,6 +185,7 @@ const MergeSubmissionWidget = ({ id }) => {
       else {
         setFormError("An error occurred while submitting the form.");
       }
+      localStorage.removeItem('submissionFormData');
       navigate("/newsfeed");
     } catch (error) {
       console.log(error);
@@ -158,7 +196,7 @@ const MergeSubmissionWidget = ({ id }) => {
   return (
     <WidgetWrapper>
       <Box>
-        <Typography>Choose Category</Typography>
+        <Typography sx={{ marginBottom: '1rem' }}>Choose Category</Typography>
         {Array.isArray(category) && category.length > 0 ? (
           <Select
             value={selectedCategory}
@@ -174,7 +212,7 @@ const MergeSubmissionWidget = ({ id }) => {
         ) : (
           <Typography>No categories found.</Typography>
         )}
-        <Typography>Choose Location</Typography>
+        <Typography sx={{ marginBottom: '1rem' }}>Choose Location</Typography>
         {Array.isArray(location) && location.length > 0 ? (
           <Select
             value={selectedLocation}
@@ -190,7 +228,15 @@ const MergeSubmissionWidget = ({ id }) => {
         ) : (
           <Typography>No categories found.</Typography>
         )}
-        <Typography>Do you want your post as Hidden?</Typography>
+        <Typography sx={{ display: 'flex', alignItems: 'center', marginBottom: '1rem' }}>Do you want your post as Hidden?
+          <Tooltip title={<Typography style={{ fontSize: '0.8rem' }}>
+              Enabling the hidden post selection feature ensures that only 
+              individuals who have applied for your idea can access and view 
+              its description, keeping it hidden from others.
+          </Typography>} >
+              <HelpIcon style={{ fontSize: '1.1rem', marginLeft: '0.5rem' }}/>
+          </Tooltip>
+        </Typography>
         <Select
           value={selectedIsHidden}
           onChange={(e) => handleIsHiddenChange(e.target.value)}
@@ -206,7 +252,7 @@ const MergeSubmissionWidget = ({ id }) => {
             {"No"}
           </MenuItem>
         </Select>
-        <Typography>Prepaid Applicant Number</Typography>
+        <Typography sx={{ marginBottom: '1rem' }}>Prepaid Applicant Number</Typography>
         <FlexBetween gap="0.5rem" alignItems="center">
           <TextField
             value={applicantNumber}
@@ -217,7 +263,7 @@ const MergeSubmissionWidget = ({ id }) => {
             <Paid sx={{ fontSize: "25px", mb: 2 }} />
           </Badge>
         </FlexBetween>
-        <Typography>Title</Typography>
+        <Typography sx={{ marginBottom: '1rem' }}>Title</Typography>
         <TextField
           placeholder="Type catching attention title here..."
           value={title}
@@ -225,7 +271,7 @@ const MergeSubmissionWidget = ({ id }) => {
           sx={{ width: "100%", mb: 2 }}
         />
 
-        <Typography>Description</Typography>
+        <Typography sx={{ marginBottom: '1rem' }}>Description</Typography>
         <TextField
           placeholder="Describe your idea here..."
           value={description}

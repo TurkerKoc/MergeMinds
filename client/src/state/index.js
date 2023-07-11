@@ -8,6 +8,7 @@ const initialState = {  // this is the initial state of the redux store
   coins: [],
   webinars: [],
   webinar: null, 
+  userWebinars: [],
   coinCounts: {},
 };
 
@@ -91,12 +92,15 @@ export const authSlice = createSlice({ // this is the slice of the redux store -
         }
         return webinar;
       });
-    
       // console.log("Updated Webinars:", updatedWebinars);
     
       return { ...state, webinars: updatedWebinars, webinar: action.payload };
     },
     
+
+    setUserWebinars: (state, action) => {
+      state.userWebinars = action.payload;
+    },
 
 
 
@@ -134,6 +138,6 @@ export const authSlice = createSlice({ // this is the slice of the redux store -
 });
 
 // export const { setMode, setLogin, setLogout, setFriends, setPosts, setPost, setSubmissions, setSubmission, setCoins } = authSlice.actions; // these are the functions that can be called to change the redux store
-export const { setUser, setMode, setLogin, setLogout, setFriends, setPosts, setPost, setSubmissions, setSubmission, setCoins, incrementCoinCount, decrementCoinCount, setWebinars, setWebinar} = authSlice.actions; 
+export const { setUser, setMode, setLogin, setLogout, setFriends, setPosts, setPost, setSubmissions, setSubmission, setCoins, incrementCoinCount, decrementCoinCount, setWebinars, setWebinar, setUserWebinars} = authSlice.actions; 
 
 export default authSlice.reducer; // this is the reducer that will be used to change the redux store

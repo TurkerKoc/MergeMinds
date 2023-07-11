@@ -14,6 +14,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Button from '@mui/material/Button';
 import { set } from 'date-fns';
+import { setUser, setUserWebinars } from "state";
 
 
 const MergeWebinarWidget = () => {
@@ -23,8 +24,10 @@ const MergeWebinarWidget = () => {
   const token = useSelector((state) => state.token);
   const selectedWebinar = useSelector((state) => state.webinar); // Update: Retrieve selectedWebinar from the Redux store
   const [enrolled, setEnrolled] = useState(false);
+  // const [userWebinars, setUserWebinars] = useState([]);
   const [dialogWebinar, setDialogWebinar] = useState(null); // Add dialogWebinar state
   const [notEnoughCoins, setNotEnoughCoins] = useState(false); // State to track not enough coins warning
+  const userWebinars = useSelector((state) => state.userWebinars);
 
   const getWebinars = async () => {
     const response = await fetch("http://localhost:3001/mergeWebinars", {
@@ -101,9 +104,24 @@ const MergeWebinarWidget = () => {
           } else {
             console.error('Failed to update user coins');
           }
+          
         } else {
           console.error('Failed to enroll in webinar');
         }
+        const curData = {mergeCoins: updatedMergeCoins};
+        const mergeUserResponse = await fetch(`http://localhost:3001/mergeUsers/mergeCoins/${_id}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(curData), // we will send the form data as json
+        });
+        const mergeUser = await mergeUserResponse.json(); // we will get the logged in user from backend (backend will send the logged in user as json)
+        if (mergeUserResponse.ok) {
+          dispatch(setUser({ user: mergeUser.user }));
+          //TODO append current webinar to userWebinars in state
+          dispatch(setUserWebinars([...userWebinars, webinar]));
+          getWebinars();
+        }
+        // Update MergeCoins in Redux store
       } else {
         setNotEnoughCoins(true); // Show warning if not enough coins
         console.error('Not enough merge coins to enroll in this webinar');
@@ -184,7 +202,4 @@ const MergeWebinarWidget = () => {
 };
 
 export default MergeWebinarWidget;
-
-
-
 

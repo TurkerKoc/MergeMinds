@@ -102,6 +102,11 @@ export const applyMergePost = async (req, res) => {
   }
 
   try {
+    // Check if the userId matches the userId of the ideaPost
+    const ideaPost = await IdeaPost.findById(ideaPostId);
+    if (ideaPost.userId.toString() === userId) {
+      return res.status(400).json({ message: 'You cannot apply to your own idea' });
+    }
     // Create a new application document
     const newApplication = new Application({
       content: coverLetter,

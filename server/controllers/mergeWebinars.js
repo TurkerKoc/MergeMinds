@@ -16,6 +16,16 @@ export const getWebinars = async (req, res) => {
 
 };
 
+export const getUserWebinars = async (req, res) => {
+  try {
+    const userWebinars = await Webinar.find({ atendees: req.params.userId }).sort({ createdAt: -1 });
+    res.status(200).json(userWebinars);
+  } catch (error) {
+    res.status(500).json({ message: "Could not get user's webinars" });
+  }
+};
+
+
 export const enrollInWebinar = async (req, res) => {
   try {
     // console.log("Enrolling in webinar");

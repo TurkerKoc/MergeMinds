@@ -42,6 +42,8 @@ const NewsFeed = () => {
 
     const posts = useSelector((state) => state.posts);
 
+    localStorage.setItem("lastVisited", "newsfeed");
+    
     const getMergeUser = async () => {
         const response = await fetch(`http://localhost:3001/mergeUsers/${_id}`, {
             method: "GET",

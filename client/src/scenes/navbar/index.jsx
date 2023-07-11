@@ -81,9 +81,11 @@ const Navbar = () => {
               <LightMode sx={{ color: dark, fontSize: "25px" }} /> // dark mode icon will be dark color when theme.palette.mode is light
             )}
           </IconButton>   
-          <Badge badgeContent={user.mergeCoins} color="warning">
-            <Paid onClick={() => navigate(`/token/${user._id}`)}  sx={{ fontSize: "25px" }} />
-          </Badge>             
+          <IconButton>
+            <Badge badgeContent={user.mergeCoins} color="warning" max={999}>
+              <Paid onClick={() => navigate(`/token/${user._id}`)}  sx={{ fontSize: "25px" }} />
+            </Badge>
+          </IconButton>              
           <Message sx={{ fontSize: "23px" }} /> 
           {/* <Notifications sx={{ fontSize: "25px" }} />
           <Help sx={{ fontSize: "25px" }} /> */}

@@ -14,6 +14,14 @@ import AdvertWidget from "scenes/widgets/AdvertWidget";
 const SubmissionPage = () => {
   const user = useSelector((state) => state.user);
   const isNonMobileScreens = useMediaQuery("(min-width:1000px)");
+  const [savedDraftData, setSavedDraftData] = useState(() => {
+    const savedFormData = localStorage.getItem('submissionFormData');
+    if (savedFormData) {
+      return JSON.parse(savedFormData);
+    }
+    return null;
+  });
+  localStorage.setItem("lastVisited", "submission");
 
   if (!user) return null;
 
@@ -34,14 +42,14 @@ const SubmissionPage = () => {
           flexBasis={isNonMobileScreens ? "42%" : undefined}
           mt={isNonMobileScreens ? undefined : "2rem"}
         >
-          <MergeSubmissionWidget id={user._id} />
+          <MergeSubmissionWidget id={user._id} savedDraftData={savedDraftData || {}} />
         </Box>
         {isNonMobileScreens && (
           <Box flexBasis="26%">
-              <MergeBlogWidget />
-              <Box m="2rem 0" />
-              <AdvertWidget />
-              <Box m="2rem 0" />
+            <MergeBlogWidget />
+            <Box m="2rem 0" />
+            <AdvertWidget />
+            <Box m="2rem 0" />
           </Box>
         )}
       </Box>

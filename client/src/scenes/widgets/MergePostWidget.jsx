@@ -115,6 +115,8 @@ const MergePostWidget = ({
     useEffect(() => {
         getApplicants(); // Fetch the applicants when the component mounts
     }, []);
+    // Check if the logged-in user is the owner of the idea post
+    const isOwner = postUserId === loggedInUserId;
 
     return (
         <WidgetWrapper mb="2rem">
@@ -127,7 +129,7 @@ const MergePostWidget = ({
                     userPicturePath={userPicturePath}
                     trustPoints={trustPoints}
                 />
-                {!isApplied && (
+                {!isOwner && !isApplied && (
                     <FlexBetween gap="0.25rem" sx={{marginRight: '0.5rem'}}>
                         <Button
                             onClick={handleOpenPopup}// navigate to submission page when user clicks on submit button
