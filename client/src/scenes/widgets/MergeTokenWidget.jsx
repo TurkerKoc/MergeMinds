@@ -46,7 +46,7 @@ const MergeTokenWidget = ({ userId }) => {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}` 
       },
-      body: JSON.stringify({ userId, totalCoins, totalPrice }) 
+      body: JSON.stringify({ userId, totalCoins, totalPrice, lastVisited }) 
     });
     const data = await response.json();
     window.location.href = data.url;

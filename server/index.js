@@ -126,20 +126,20 @@ app.use("/mergeMessages", mergeMessageRoutes);
 app.use("/mergeSponsoredContent", mergeSponsoredContentRoutes);
 
 io.on("connection", (socket) => {
-    console.log("A user connected");
+    // console.log("A user connected");
 
     // Handle events from the client
     socket.on("msg", ({ message, currentChatId }) => {
-        console.log("mesage received")
-        console.log("message: ", message)
-        console.log("currentChatId: ", currentChatId)
+        // console.log("mesage received")
+        // console.log("message: ", message)
+        // console.log("currentChatId: ", currentChatId)
       // Broadcast the message to other connected clients
         socket.broadcast.emit("msg", { message: message, receivedChatId: currentChatId });
     });
 
     // Handle disconnection
     socket.on("shutdown", () => {
-        console.log("A user disconnected");
+        // console.log("A user disconnected");
     });
 });
 

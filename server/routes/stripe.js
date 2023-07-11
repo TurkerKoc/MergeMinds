@@ -60,7 +60,7 @@ router.post(
   
   router.post("/create-checkout-session", async (req, res) => {
     const { userId, totalCoins, totalPrice } = req.body;
-    //let lastVisited = req.body.lastVisited;
+    let lastVisited = req.body.lastVisited;
     const customer = await stripe.customers.create({
       metadata: {
         userId: userId,
@@ -69,12 +69,12 @@ router.post(
       },
     });
 
-    // if(lastVisited === "submission") {
-    //   lastVisited = `submission/${userId}`;
-    // }
-    // else if(lastVisited === "webinar") {
-    //   lastVisited = `webinar/${userId}`;
-    // }
+    if(lastVisited === "submission") {
+      lastVisited = `submission/${userId}`;
+    }
+    else if(lastVisited === "webinar") {
+      lastVisited = `webinar/${userId}`;
+    }
 
     const session = await stripe.checkout.sessions.create({
         payment_method_types: ["card"],
@@ -93,8 +93,8 @@ router.post(
         ],
         mode: "payment",
         customer: customer.id,
-        //success_url: `${process.env.CLIENT_URL}/${lastVisited}`,
-        success_url: `${process.env.CLIENT_URL}/newsfeed`,
+        success_url: `${process.env.CLIENT_URL}/${lastVisited}`,
+        // success_url: `${process.env.CLIENT_URL}/newsfeed`,
         cancel_url: `${process.env.CLIENT_URL}/token/${userId}`,
         metadata: {
             userId: userId,

@@ -2,21 +2,21 @@ import chatModel from "../models/Chat.js";
 
 export const createChat = async (req, res) => {
     const { firstId, secondId, coverLetter, resumePath } = req.body;
-    console.log("firstId", firstId);
-    console.log("secondId", secondId);
+    // console.log("firstId", firstId);
+    // console.log("secondId", secondId);
     try{        
         const chat = await chatModel.findOne({
             members: { $all: [firstId, secondId] }
         })
-        console.log("current chat", chat);
+        // console.log("current chat", chat);
         if(chat){
             res.status(200).json(chat);
         }else{
-            console.log("creating new chat");
+            // console.log("creating new chat");
             const newChat = new chatModel({
                 members: [firstId, secondId]
             })
-            console.log("new chat", newChat);
+            // console.log("new chat", newChat);
             const response = await newChat.save();
             res.status(200).json(response);
         }

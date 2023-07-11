@@ -68,23 +68,20 @@ export const getApplicants = async (req, res) => {
 
     // Get the applicant user details including their picture path
     const applicants = await Application.find({ ideaPostId: postId })
-        .populate({
-          path: "userId",
-          select: "picturePath",
-          model: MergeUser,
-        })
-        .select("userId")
-        .lean(); // Add .lean() to convert Mongoose documents to plain JavaScript objects
+      .populate({
+        path: "userId",
+        model: MergeUser,
+      })
+      .lean();
 
-        // Restructure the response to nest the user details under the "user" field
-        const modifiedApplicants = applicants.map((applicant) => ({
-          _id: applicant._id,
-          user: applicant.userId,
-        }));
+    // Restructure the response to include all user data
+    const modifiedApplicants = applicants.map((applicant) => ({
+      _id: applicant._id,
+      user: applicant.userId,
+    }));
 
-
-        res.json(modifiedApplicants);
-    } catch (error) {
+    res.json(modifiedApplicants);
+  } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal server error" });
   }
@@ -117,6 +114,12 @@ export const applyMergePost = async (req, res) => {
 
     // Save the new application document
     await newApplication.save();
+
+    // if post has prepaid applicants, decrement the prepaid applicants
+    if(ideaPost.prepaidApplicants > 0) {
+      ideaPost.prepaidApplicants--;
+      await ideaPost.save();
+    }
 
     return res.status(201).json(newApplication);
   } catch (err) {
@@ -245,7 +248,7 @@ export const getFeedPosts = async (req, res) => {
                 },
             ])
             .sort({ createdAt: -1 });
-        console.log(ideaPosts);
+        // console.log(ideaPosts);
 
         const sponsoredContent = await SponsoredContent.find()
             .populate([
@@ -281,7 +284,7 @@ export const getFeedPosts = async (req, res) => {
                 },
             ])
             .sort({ createdAt: -1 });
-        console.log(sponsoredContent);
+        // console.log(sponsoredContent);
 
         // Randomize the order of sponsored content
         const randomizedSponsoredContent = sponsoredContent.sort(() => Math.random() - 0.5);

@@ -34,7 +34,7 @@ import { set } from "date-fns";
 
 const MergeSubmissionWidget = ({id, savedDraftData}) => {
   const dispatch = useDispatch();
-  const { mergeCoins } = useSelector((state) => state.user);
+  const { mergeCoins, _id } = useSelector((state) => state.user);
   const token = useSelector((state) => state.token);
   const { palette } = useTheme();
   const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
@@ -53,6 +53,16 @@ const MergeSubmissionWidget = ({id, savedDraftData}) => {
   const [image, setImage] = useState("");
   const [submissionPrice, setSubmissionPrice] = useState(4);
   const navigate = useNavigate();
+
+  const getMergeUser = async () => {
+    const response = await fetch(`http://localhost:3001/mergeUsers/${_id}`, {
+        method: "GET",
+    });
+    const mergeUser = await response.json(); // we will get the logged in user from backend (backend will send the logged in user as json)
+    if (response.ok) {
+        dispatch(setUser({user: mergeUser}));
+    }
+};
 
   const handleApplicantNumberChange = (value) => {
     if (value === "") {
@@ -84,8 +94,7 @@ const MergeSubmissionWidget = ({id, savedDraftData}) => {
       setSelectedIsHidden(savedDraftData.selectedIsHidden || "");
       setApplicantNumber(savedDraftData.applicantNumber || "");
       setTitle(savedDraftData.title || "");
-      setSubmission(savedDraftData.description || "");
-      setImage(savedDraftData.image || "");
+      setSubmission(savedDraftData.description || "");      
     }
   }, [id, savedDraftData]); 
 
@@ -97,7 +106,6 @@ const MergeSubmissionWidget = ({id, savedDraftData}) => {
       applicantNumber,
       title,
       description,
-      image,
     };
 
     localStorage.setItem("submissionFormData", JSON.stringify(formData));
@@ -108,7 +116,6 @@ const MergeSubmissionWidget = ({id, savedDraftData}) => {
     applicantNumber,
     title,
     description,
-    image,
   ]);
 
   const getCategories = async () => {
@@ -117,7 +124,9 @@ const MergeSubmissionWidget = ({id, savedDraftData}) => {
       headers: { Authorization: `Bearer ${token}` },
     });
     const categories = await response.json();
-    setCategory(categories);
+    const filteredCategories = categories.filter(category => category.domain !== 'Admin');
+
+    setCategory(filteredCategories);
   };
 
   const getLocations = async () => {
@@ -126,12 +135,14 @@ const MergeSubmissionWidget = ({id, savedDraftData}) => {
       headers: { Authorization: `Bearer ${token}` },
     });
     const locations = await response.json();
-    setLocation(locations);
+    const filteredLocations = locations.filter(location => location.name !== 'Admin');
+    setLocation(filteredLocations);
   };
 
   useEffect(() => {
     getCategories();
     getLocations();
+    getMergeUser();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handlePost = async () => {
