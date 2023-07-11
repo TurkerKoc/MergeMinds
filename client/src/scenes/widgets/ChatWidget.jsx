@@ -195,6 +195,24 @@ const ChatWidget = () => {
         }
     }, [currentChatId]);
 
+    //If you want to fetch chat history periodically, you can use the following code:
+
+    // useEffect(() => {
+    //     // Fetch chat history initially
+    //     if (curContact) {
+    //         fetchChatHistory(curContact);
+    //     }
+    //
+    //     // Fetch chat history every 5 seconds
+    //     const interval = setInterval(() => {
+    //         if (curContact) {
+    //             fetchChatHistory(curContact);
+    //         }
+    //     }, 1000);
+    //
+    //     // Clean up interval when component unmounts or curContact changes
+    //     return () => clearInterval(interval);
+    // }, [curContact]);
 
     const title = "Direct Messages";
 
