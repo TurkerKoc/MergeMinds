@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from "react-router-dom"; 
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from "@fullcalendar/interaction"; // needed for eventClick
@@ -19,6 +20,7 @@ import { setUser, setUserWebinars } from "state";
 
 const MergeWebinarWidget = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate(); 
   const webinars = useSelector((state) => state.webinars);
   const { mergeCoins, _id } = useSelector((state) => state.user);
   const token = useSelector((state) => state.token);
@@ -161,6 +163,8 @@ const MergeWebinarWidget = () => {
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setNotEnoughCoins(false)}>Close</Button>
+          {/* add buy button to redirect to buy merge coins page */}
+          <Button onClick={() => navigate(`/token/${_id}`) }>Buy Merge Coins</Button>
         </DialogActions>
       </Dialog>
 
