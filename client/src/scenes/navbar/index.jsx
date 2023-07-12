@@ -85,8 +85,10 @@ const Navbar = () => {
             <Badge badgeContent={user.mergeCoins} color="warning" max={999}>
               <Paid onClick={() => navigate(`/token/${user._id}`)}  sx={{ fontSize: "25px" }} />
             </Badge>
-          </IconButton>              
-          <Message sx={{ fontSize: "23px" }} /> 
+          </IconButton>
+          <IconButton>             
+            <Message onClick={() => navigate(`/mergeDirectMessages/${user._id}`)} sx={{ fontSize: "23px" }} /> 
+          </IconButton>
           {/* <Notifications sx={{ fontSize: "25px" }} />
           <Help sx={{ fontSize: "25px" }} /> */}
           <FormControl variant="standard" value={fullName}> {/* Dropdown menu for user's full name and log out */}

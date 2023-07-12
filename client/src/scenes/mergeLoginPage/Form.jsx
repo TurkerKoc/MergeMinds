@@ -25,7 +25,7 @@ const registerSchema = yup.object().shape({ //required is a yup function to show
   password: yup.string().required("required"),
   profileSummary: yup.string().required("required"),
   websiteLink: yup.string(),
-  picture: yup.string().required("required"), 
+  picture: yup.mixed().required("required"), 
 });
 
 // yup validation schema for login form
@@ -226,7 +226,16 @@ const Form = () => {
                         sx={{ "&:hover": { cursor: "pointer" } }}
                       >
                         <input {...getInputProps()} /> 
-                        {!values.picture ? ( // if the user has not uploaded a picture then show this text
+                        <input 
+                          tabIndex={-1} 
+                          autoComplete="off" 
+                          style={{ position: 'absolute', opacity: 0 }} 
+                          value={values.picture ? values.picture.name : ''} 
+                          onBlur={handleBlur} 
+                          onChange={handleChange} 
+                          name="picture"
+                        />
+                                          {!values.picture ? ( // if the user has not uploaded a picture then show this text
                           <p>Add Picture Here</p>
                         ) : ( // if the user has uploaded a picture then show file name
                           <FlexBetween>
@@ -234,10 +243,15 @@ const Form = () => {
                             <EditOutlinedIcon />
                           </FlexBetween>
                         )}
+
                       </Box>
                     )}
                   </Dropzone>
+                                  {touched.picture && errors.picture ? (  
+                  <Typography color="error">{errors.picture}</Typography>  
+                ) : null}
                 </Box>
+
               </>
             )} {/* end of isRegister */}
 
@@ -312,3 +326,4 @@ const Form = () => {
 };
 
 export default Form;
+
