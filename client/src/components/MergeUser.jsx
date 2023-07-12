@@ -15,23 +15,12 @@ const MergeUser = ({ friendId, name, subtitle, userPicturePath, trustPoints }) =
     <FlexBetween>
       <FlexBetween gap="1rem">
         <UserImage image={userPicturePath} size="55px" />
-        <Box
-          onClick={() => {
-            navigate(`/mergeProfilePage/${friendId}`);
-            navigate(0);
-          }}
-        >
+        <Box>
 					<FlexBetween gap="0.75rem" mt="0.50rem" sx={{ display: 'flex', justifyContent: 'flex-end'}}>
 						<Typography
 							color={main}
 							variant="h5"
 							fontWeight="500"
-							sx={{
-								"&:hover": {
-									color: palette.primary.light,
-									cursor: "pointer",
-								},
-							}}
 						>
 							{name}
 						</Typography>
