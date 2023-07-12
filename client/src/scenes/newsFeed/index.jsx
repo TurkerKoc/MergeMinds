@@ -539,9 +539,6 @@ const NewsFeed = () => {
                     <Box flexBasis="26%" paddingRight="2rem">
                         <MergeBlogWidget />
                         <Box m="2rem 0" />
-                        <AdvertWidget />
-                        <Box m="2rem 0" />
-                        {/* <FriendListWidget userId={_id} /> */}
                     </Box>
                 )}
             </Box>
