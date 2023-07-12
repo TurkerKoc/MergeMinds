@@ -4,23 +4,37 @@ import FlexBetween from "./FlexBetween";
 import UserImage from "./UserImage";
 import Rating from '@mui/material/Rating';
 
-const MergeUser = ({ friendId, name, subtitle, userPicturePath, trustPoints }) => {
+const MergeUser = ({ friendId, name, subtitle, userPicturePath, trustPoints, isApplied, isOwner }) => {
   const navigate = useNavigate();
 
   const { palette } = useTheme();
   const main = palette.neutral.main;
   const medium = palette.neutral.medium;
-
+  const handleClick = () => {
+    if (isApplied || isOwner) {
+      navigate(`/mergeProfilePage/${friendId}`);
+      navigate(0);
+    }
+  };
+    
   return (
     <FlexBetween>
       <FlexBetween gap="1rem">
         <UserImage image={userPicturePath} size="55px" />
-        <Box>
+        <Box
+          onClick={() => {handleClick()}}
+        >
 					<FlexBetween gap="0.75rem" mt="0.50rem" sx={{ display: 'flex', justifyContent: 'flex-end'}}>
 						<Typography
 							color={main}
 							variant="h5"
 							fontWeight="500"
+							sx={{
+								"&:hover": {
+									color: palette.primary.light,
+									cursor: "pointer",
+								},
+							}}
 						>
 							{name}
 						</Typography>

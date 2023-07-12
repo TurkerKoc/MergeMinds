@@ -156,7 +156,7 @@ const MergeTokenWidget = ({ userId }) => {
           </Box>
           </Card>
           <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', mt: 1 }}>
-          <Button onClick={handleCheckout} variant="contained" sx={{ fontWeight: 'bold', fontFamily: 'Arial, sans-serif', width: '70%'}}>
+          <Button onClick={handleCheckout} variant="contained" sx={{ fontWeight: 'bold', fontFamily: 'Arial, sans-serif', width: '70%', mb: '1rem'}}>
             Proceed to Checkout
           </Button>
         </Box>

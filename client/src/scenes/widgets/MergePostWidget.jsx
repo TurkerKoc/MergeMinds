@@ -128,6 +128,8 @@ const MergePostWidget = ({
                         subtitle={formatDistanceToNow(new Date(createdAt), { addSuffix: true })}
                         userPicturePath={userPicturePath}
                         trustPoints={trustPoints}
+                        isApplied={isApplied}
+                        isOwner={isOwner}
                     />
                     {!isOwner && !isApplied && (
                         <FlexBetween gap="0.25rem" sx={{ marginRight: '0.5rem' }}>
