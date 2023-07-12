@@ -263,7 +263,15 @@ const MergeSubmissionWidget = ({id, savedDraftData}) => {
             {"No"}
           </MenuItem>
         </Select>
-        <Typography sx={{ marginBottom: '1rem' }}>Prepaid Applicant Number</Typography>
+        <Typography sx={{ display: 'flex', alignItems: 'center', marginBottom: '1rem' }}>
+          Prepaid Applicant Number
+          <Tooltip title={<Typography style={{ fontSize: '0.8rem' }}>
+          This represents the maximum number of applicants who can apply for your idea without spending mergecoins.
+          The idea owner covers application fees for these applicants.
+          </Typography>} >
+              <HelpIcon style={{ fontSize: '1.1rem', marginLeft: '0.5rem' }}/>
+          </Tooltip>
+        </Typography>
         <FlexBetween gap="0.5rem" alignItems="center">
           <TextField
             value={applicantNumber}
