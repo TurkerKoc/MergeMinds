@@ -170,6 +170,13 @@ const MergeWebinarWidget = () => {
         <DialogContent>
           <DialogContentText>{selectedWebinar?.extendedProps.description}</DialogContentText>
         </DialogContent>
+        <DialogContentText sx={{ fontWeight: 'bold', mt:'0.5rem', ml: '2rem'}}>
+            Date: {new Date(selectedWebinar?.start).toLocaleDateString("en-US", {
+              year: "numeric",
+              month: "2-digit",
+              day: "2-digit"
+            })}
+          </DialogContentText>
         <DialogActions>
           <Button onClick={() => setDialogWebinar(null) } sx={{ fontSize: "14px", display: 'flex', gap: '3px' }} >Close</Button>
           {!enrolled && dialogWebinar && (

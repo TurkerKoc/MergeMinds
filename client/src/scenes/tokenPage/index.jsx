@@ -35,13 +35,13 @@ const MergeTokenPage = () => {
     <Box>
       <Navbar />
       <Box
-        width="100%"
-        padding="2rem 6%"
-        display={isNonMobileScreens ? "flex" : "block"}
-        gap="2rem"
-        justifyContent="center"
-      >
-        <Box flexBasis={isNonMobileScreens ? "26%" : undefined}> {/* flexBasis is a css property to set width of an element and 26% means 26% of parent element (%26 of page) */}
+                display="flex"
+                justifyContent="space-between"
+                marginTop="2rem"
+                gap="2rem"
+            >
+        <Box flexBasis={isNonMobileScreens ? "26%" : undefined} paddingLeft="2rem"
+                    paddingRight="2rem"> 
           <LinksWidget />
         </Box >
         <Box flexBasis={isNonMobileScreens ? "76%" : undefined}>

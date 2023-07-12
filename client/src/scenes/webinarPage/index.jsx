@@ -11,7 +11,7 @@ import MergeMyWebinarWidget from "scenes/widgets/MergeMyWebinarWidget";
 import { Merge } from "@mui/icons-material";
 
 const MergeWebinarPage = () => {
-    const isNonMobileScreens = useMediaQuery("(min-width:300px)");
+    const isNonMobileScreens = useMediaQuery("(min-width:1000px)");
     const {_id, picturePath} = useSelector((state) => state.user);
     localStorage.setItem("lastVisited", "webinar");
 
@@ -19,13 +19,13 @@ const MergeWebinarPage = () => {
       <Box>
         <Navbar />
         <Box
-          width="100%"
-          padding="2rem 6%"
-          display={isNonMobileScreens ? "flex" : "block"}
-          gap="2rem"
-          justifyContent="center"
-        >
-          <Box flexBasis={isNonMobileScreens ? "26%" : undefined}> {/* flexBasis is a css property to set width of an element and 26% means 26% of parent element (%26 of page) */}
+                display="flex"
+                justifyContent="space-between"
+                marginTop="2rem"
+                gap="2rem"
+            >
+          <Box flexBasis={isNonMobileScreens ? "26%" : undefined} paddingLeft="2rem"
+                    paddingRight="2rem"> {/* flexBasis is a css property to set width of an element and 26% means 26% of parent element (%26 of page) */}
             <LinksWidget />
             <Box m="2rem 0" />
             <MergeMyWebinarWidget/>
