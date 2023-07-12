@@ -93,7 +93,7 @@ router.post(
         ],
         mode: "payment",
         customer: customer.id,
-        success_url: `${process.env.CLIENT_URL}/${lastVisited}`,
+        success_url: `${process.env.CLIENT_URL}/${lastVisited}?payment=success`,
         // success_url: `${process.env.CLIENT_URL}/newsfeed`,
         cancel_url: `${process.env.CLIENT_URL}/token/${userId}`,
         metadata: {

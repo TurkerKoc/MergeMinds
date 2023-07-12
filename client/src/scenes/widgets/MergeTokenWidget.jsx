@@ -49,6 +49,7 @@ const MergeTokenWidget = ({ userId }) => {
       body: JSON.stringify({ userId, totalCoins, totalPrice, lastVisited }) 
     });
     const data = await response.json();
+    console.log("stripe url -------->>> ", data.url)
     window.location.href = data.url;
   };
 

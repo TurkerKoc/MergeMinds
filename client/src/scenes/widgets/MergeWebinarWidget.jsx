@@ -31,6 +31,17 @@ const MergeWebinarWidget = () => {
   const [notEnoughCoins, setNotEnoughCoins] = useState(false); // State to track not enough coins warning
   const userWebinars = useSelector((state) => state.userWebinars);
 
+  const getMergeUser = async () => {
+    const response = await fetch(`http://localhost:3001/mergeUsers/${_id}`, {
+        method: "GET",
+    });
+    const mergeUser = await response.json(); // we will get the logged in user from backend (backend will send the logged in user as json)
+    if (response.ok) {
+        dispatch(setUser({user: mergeUser}));
+    }
+};
+
+
   const getWebinars = async () => {
     const response = await fetch("http://localhost:3001/mergeWebinars", {
       method: "GET",
@@ -137,6 +148,7 @@ const MergeWebinarWidget = () => {
   useEffect(() => {
     console.log('Webinars from Redux:', webinars);
     getWebinars();
+    getMergeUser();
   }, []); // Empty dependency array to run the effect once after component mounts
 
 
