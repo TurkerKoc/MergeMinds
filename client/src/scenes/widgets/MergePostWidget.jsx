@@ -124,7 +124,7 @@ const MergePostWidget = ({
                 <FlexBetween gap="1rem" alignItems="flex-start">
                     <MergeUser
                         friendId={postUserId}
-                        name={name}
+                        name={name.split(' ')[0] + ' ' + name.split(' ')[1][0] + '.'}
                         subtitle={formatDistanceToNow(new Date(createdAt), { addSuffix: true })}
                         userPicturePath={userPicturePath}
                         trustPoints={trustPoints}
@@ -158,15 +158,19 @@ const MergePostWidget = ({
                 <strong>{title}</strong>
             </Typography>
             <Typography color={main} sx={{ mt: "1rem", mb: "1rem" }}>
-                {isHidden && !isOwner && !isApplied ? <span style={{ filter: "blur(5px)" }}>{description}</span> : description}
+                {isHidden && !isOwner && !isApplied ? <span style={{ filter: "blur(5px)", pointerEvents: "none", userSelect: "none" }}>{description}</span> : description}
             </Typography>
             {picturePath && (
                 <img
                     width="100%"
                     height="auto"
                     alt="post"
-                    style={{ borderRadius: "0.75rem", marginTop: "0.75rem", filter: isHidden && !isOwner && !isApplied ? "blur(30px)" : "none" }}
-                    onClick={() => handlePictureClick()}
+                    style={{
+                        borderRadius: "0.75rem",
+                        marginTop: "0.75rem",
+                        filter: isHidden && !isOwner && !isApplied ? "blur(30px)" : "none",
+                        pointerEvents: isHidden && !isOwner && !isApplied ? "none" : "auto",
+                    }} onClick={() => handlePictureClick()}
                     src={`http://localhost:3001/assets/${picturePath}`}
                 />
             )}

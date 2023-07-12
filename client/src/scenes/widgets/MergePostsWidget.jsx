@@ -4,9 +4,10 @@ import { setPosts } from "state";
 import MergePostWidget from "./MergePostWidget";
 import { Merge } from "@mui/icons-material";
 
-const MergePostsWidget = ({ userId, isProfile = false }) => {
+const MergePostsWidget = ({ userId, isProfile = false, postsToShow }) => {
 	const dispatch = useDispatch();
   const posts = useSelector((state) => state.posts);
+  const displayedPosts = posts.slice(0, postsToShow); // Get the specified number of posts to display
   const token = useSelector((state) => state.token);
   function randomizeSponsoredContent(sorted) {
     // console.log("sorted");
@@ -79,7 +80,7 @@ const MergePostsWidget = ({ userId, isProfile = false }) => {
 
   return (
     <>
-      {posts.map(
+      {displayedPosts.map(
         ({
           _id,
           userId,

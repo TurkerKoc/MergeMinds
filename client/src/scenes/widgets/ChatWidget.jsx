@@ -38,6 +38,8 @@ const ChatWidget = () => {
     const chatBoxRef = useRef(null);
     const navigate = useNavigate();
 
+
+
     const getChats = async () => {
         try {
             const response = await fetch(`http://localhost:3001/mergeChat/${userId}`, {
@@ -236,6 +238,12 @@ const ChatWidget = () => {
         }
     };
 
+    const handleKeyDown = (e) => {
+        if (e.key === "Enter") {
+            handleSendMessage();
+        }
+    };
+
     useEffect(() => {
         const fetchContacts = async () => {
             if (contacts.length > 0) {
@@ -305,12 +313,14 @@ const ChatWidget = () => {
                             </Button>
                             <FlexBetween gap="0.25rem" sx={{ marginBottom: '1rem' }}>
                                 {curContact && (
-                                    <><Typography style={{ fontWeight: 'bold', fontSize: '20px' }}>
+                                    <><Button
+                                    onClick={() => navigate(`/mergeProfilePage/${curContact._id}`)}
+                                    ><Typography style={{ fontWeight: 'bold', fontSize: '20px' }}>
                                         {curContact.name}{" "}{curContact.surname}
                                     </Typography><Avatar
                                             src={`http://localhost:3001/assets/${curContact.picturePath}`}
                                             alt={`${curContact.name} ${curContact.surname}`}
-                                            style={{ marginRight: "8px", marginLeft: "8px" }} /></>
+                                            style={{ marginRight: "8px", marginLeft: "8px" }} /></Button></>
                                 )}
                             </FlexBetween>
                         </FlexBetween>
@@ -420,14 +430,18 @@ const ChatWidget = () => {
                                 <TextField
                                     value={message}
                                     onChange={(e) => setMessage(e.target.value)}
+                                    onKeyDown={handleKeyDown} // Add keydown event listener
                                     variant="outlined"
                                     label="Message"
                                     fullWidth
                                     style={{ marginBottom: "8px" }}
                                 />
-                                <Button onClick={handleSendMessage} variant="contained" color="primary">
-                                    Send
-                                </Button>
+                                <Box display="flex" justifyContent="flex-end" sx={{ mb: '1rem' }}>
+                                    <Button onClick={handleSendMessage} variant="contained" color="primary">
+                                        Send
+                                    </Button>
+                                </Box>
+
                             </React.Fragment>
                         )}
                     </React.Fragment>
