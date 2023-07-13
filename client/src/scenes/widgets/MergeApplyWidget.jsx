@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button , DialogContentText} from '@mui/material';
 import { Box, TextField, useMediaQuery, Typography, useTheme } from "@mui/material";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import { Formik } from "formik";
@@ -9,7 +9,7 @@ import FlexBetween from "components/FlexBetween";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "state"; // setLogin is an action from state.js
-
+import { useNavigate } from "react-router-dom"; 
 
 
 const applySchema = yup.object().shape({
@@ -32,13 +32,16 @@ const MergeApplyWidget = ({ userMergeCoins, applicationPrice, open, onClose, use
   const [formError, setFormError] = useState(null);
   const { user } = useSelector((state) => state.user);
   const {token} = useSelector((state) => state.token);
+  const navigate = useNavigate(); 
   const dispatch = useDispatch(); // we will use dispatch to dispatch actions to redux store
-
+  const [notEnoughCoins, setNotEnoughCoins] = useState(false); // State to track not enough coins warning
+ 
   const handleFormSubmit = async (values, onSubmitProps) => {
     const updatedMergeCoins = userMergeCoins - applicationPrice;
     console.log(updatedMergeCoins);
     if(updatedMergeCoins < 0) {
-      setFormError("You do not have enough MergeCoins to apply to this post.");
+      setNotEnoughCoins(true); // Show warning if not enough coins
+      //setFormError("You do not have enough MergeCoins to apply to this post.");
     }
     else { 
       if (!values.resume || !values.resume[0] || !values.resume[0].name) {
@@ -135,6 +138,20 @@ const MergeApplyWidget = ({ userMergeCoins, applicationPrice, open, onClose, use
   };
 
   return (
+    <div>
+    <Dialog open={notEnoughCoins} onClose={() => setNotEnoughCoins(false)}>
+    <DialogTitle>Not Enough Merge Coins</DialogTitle>
+    <DialogContent>
+      <DialogContentText>
+        You don't have enough merge coins to enroll in this webinar.
+      </DialogContentText>
+    </DialogContent>
+    <DialogActions>
+      <Button onClick={() => setNotEnoughCoins(false)}>Close</Button>
+      {/* add buy button to redirect to buy merge coins page */}
+      <Button onClick={() => navigate(`/token/${userId}`) }>Buy Merge Coins</Button>
+    </DialogActions>
+  </Dialog>
     <Dialog open={open} onClose={onClose}>
       <DialogTitle>Apply</DialogTitle>
       <DialogContent style={{ minWidth: "500px", minHeight: "400px" }}>
@@ -211,6 +228,7 @@ const MergeApplyWidget = ({ userMergeCoins, applicationPrice, open, onClose, use
         <Button onClick={onClose}>Close</Button>
       </DialogActions>
     </Dialog>
+    </div>
   );
 };
 
