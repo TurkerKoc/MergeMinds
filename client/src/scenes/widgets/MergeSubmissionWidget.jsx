@@ -31,6 +31,11 @@ import Badge from '@mui/material/Badge';
 import { Tooltip } from '@mui/material';
 import HelpIcon from '@mui/icons-material/Help';
 import { set } from "date-fns";
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 
 const MergeSubmissionWidget = ({id, savedDraftData}) => {
   const dispatch = useDispatch();
@@ -40,7 +45,7 @@ const MergeSubmissionWidget = ({id, savedDraftData}) => {
   const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
   const mediumMain = palette.neutral.mediumMain;
   const [formError, setFormError] = useState(null);
-
+  const [notEnoughCoins, setNotEnoughCoins] = useState(false)
   const [category, setCategory] = useState("");
   const [location, setLocation] = useState("");
   const [applicantNumber, setApplicantNumber] = useState(0);
@@ -149,7 +154,8 @@ const MergeSubmissionWidget = ({id, savedDraftData}) => {
     const userMergeCoins = mergeCoins;
     const updatedMergeCoins = userMergeCoins - submissionPrice;
     if (updatedMergeCoins < 0) {
-      setFormError("You do not have enough MergeCoins to apply to this post.");
+      setNotEnoughCoins(true);
+      //setFormError("You do not have enough MergeCoins to apply to this post.");
       return;
     }
 
@@ -205,7 +211,21 @@ const MergeSubmissionWidget = ({id, savedDraftData}) => {
   };
 
   return (
+    
     <WidgetWrapper>
+      <Dialog open={notEnoughCoins} onClose={() => setNotEnoughCoins(false)}>
+        <DialogTitle>Not Enough Merge Coins</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            You don't have enough merge coins to submit this idea.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setNotEnoughCoins(false)}>Close</Button>
+          {/* add buy button to redirect to buy merge coins page */}
+          <Button onClick={() => navigate(`/token/${_id}`) }>Buy Merge Coins</Button>
+        </DialogActions>
+      </Dialog>
       <Box>
         <Typography sx={{ marginBottom: '1rem' }}>Choose Category</Typography>
         {Array.isArray(category) && category.length > 0 ? (
