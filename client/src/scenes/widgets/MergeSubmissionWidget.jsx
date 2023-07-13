@@ -174,6 +174,19 @@ const MergeSubmissionWidget = ({id, savedDraftData}) => {
     getMergeUser();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
+  const clearForm = () => {
+    // Clear state
+    setSubmissionPrice(0);
+    setSelectedIsHidden("");
+    setApplicantNumber("");
+    setTitle("");
+    setSubmission("");
+    setSelectedCategory("");
+    setSelectedLocation("");
+    // Clear local storage
+    localStorage.removeItem('submissionFormData');
+  };
+
   const handlePost = async () => {
     const userMergeCoins = mergeCoins;
     const updatedMergeCoins = userMergeCoins - submissionPrice;
@@ -390,6 +403,7 @@ const MergeSubmissionWidget = ({id, savedDraftData}) => {
             {formError}
           </Typography>
         )}
+        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
         <Button
           disabled={!description || !title || !applicantNumber || !category || !location || !selectedIsHidden}
           onClick={handlePost}
@@ -405,6 +419,16 @@ const MergeSubmissionWidget = ({id, savedDraftData}) => {
             <Paid sx={{ fontSize: "25px" }} />
           </Badge>
         </Button>
+          <Button onClick={clearForm}
+          sx={{
+            borderRadius: "3rem",
+            mt: "1rem",
+            display: 'flex', gap: '5px'
+          }}
+        >
+          Clear
+        </Button>
+        </div>
       </Box>
     </WidgetWrapper>);
 };
