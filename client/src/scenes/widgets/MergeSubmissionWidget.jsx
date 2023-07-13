@@ -99,7 +99,31 @@ const MergeSubmissionWidget = ({id, savedDraftData}) => {
       setSelectedIsHidden(savedDraftData.selectedIsHidden || "");
       setApplicantNumber(savedDraftData.applicantNumber || "");
       setTitle(savedDraftData.title || "");
-      setSubmission(savedDraftData.description || "");      
+      setSubmission(savedDraftData.description || "");
+
+      const isHiddenValue = savedDraftData.selectedIsHidden || "";
+      if(isHiddenValue === "true") {
+        setSubmissionPrice(submissionPrice + 4);
+      }
+      else if(isHiddenValue === "false") {
+        setSubmissionPrice(submissionPrice - 4);
+      }
+      setSelectedIsHidden(isHiddenValue);
+
+      const applicantNumberValue = savedDraftData.applicantNumber || "";
+      if (applicantNumberValue === "") {
+        isHiddenValue === "true" ? setSubmissionPrice(8) : setSubmissionPrice(4); // Set the default submission price if the input is empty
+      } else {
+        const intValue = parseInt(applicantNumberValue, 10); // Convert the value to an integer
+        if (intValue > 0) {
+          const previousValue = applicantNumber;
+          const priceDifference = (intValue - previousValue) * 1; // Calculate the difference in price
+          setSubmissionPrice((prevPrice) => prevPrice + priceDifference); // Update the submission price
+        }
+        setApplicantNumber(intValue);
+      }
+      
+      
     }
   }, [id, savedDraftData]); 
 
