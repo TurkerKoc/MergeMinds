@@ -1,6 +1,7 @@
 // difference between js and jsx: jsx contains react components
 import { Box, useMediaQuery, Button, useTheme, Typography } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
+import { useParams, useLocation } from "react-router-dom";
 import React, { useState } from 'react';
 import Navbar from "scenes/navbar";
 import MergeBlogWidget from "scenes/widgets/MergeBlogWidget";
@@ -21,6 +22,7 @@ import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import ScrollTop from "components/ScrollTop";
 import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
+import Popup from "scenes/widgets/PaymentPopup";
 
 const NewsFeed = () => {
     const { palette } = useTheme();
@@ -43,6 +45,12 @@ const NewsFeed = () => {
     const [showLoadMore, setShowLoadMore] = useState(true);
 
     localStorage.setItem("lastVisited", "newsfeed");
+
+    let location = useLocation();
+    let query = new URLSearchParams(location.search);
+    const paymentStatus = query.get("payment");
+
+    const [showPopup, setShowPopup] = useState(false);
 
     const getMergeUser = async () => {
         const response = await fetch(`http://localhost:3001/mergeUsers/${_id}`, {
@@ -291,6 +299,12 @@ const NewsFeed = () => {
 
 
     useEffect(() => {
+        if (paymentStatus === 'success') {
+            setShowPopup(true);
+        }
+    }, [paymentStatus]);
+
+    useEffect(() => {
         getAllCategories();
         getAllLocations();
         getMergeUser();
@@ -307,6 +321,7 @@ const NewsFeed = () => {
     return (
         <Box>
             <Navbar /> {/* Navbar is a component we created in mern-social-media/client/src/scenes/navbar/index.jsx */}
+            <Popup open={showPopup} handleClose={() => setShowPopup(false)} />
             <Box
                 display="flex"
                 justifyContent="space-between"

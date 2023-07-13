@@ -1,7 +1,7 @@
 import { Box, useMediaQuery } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 import Navbar from "scenes/navbar";
 import FriendListWidget from "scenes/widgets/FriendListWidget";
 import MyPostWidget from "scenes/widgets/MyPostWidget";
@@ -11,6 +11,8 @@ import LinksWidget from "scenes/widgets/LinksWidget";
 import MergeSubmissionWidget from "scenes/widgets/MergeSubmissionWidget";
 import MergeBlogWidget from "scenes/widgets/MergeBlogWidget";
 import AdvertWidget from "scenes/widgets/AdvertWidget";
+import Popup from "scenes/widgets/PaymentPopup";
+
 const SubmissionPage = () => {
   const user = useSelector((state) => state.user);
   const isNonMobileScreens = useMediaQuery("(min-width:1000px)");
@@ -23,11 +25,24 @@ const SubmissionPage = () => {
   });
   localStorage.setItem("lastVisited", "submission");
 
+  let location = useLocation();
+  let query = new URLSearchParams(location.search);
+  const paymentStatus = query.get("payment");
+
+  const [showPopup, setShowPopup] = useState(false);
+
+  useEffect(() => {
+    if (paymentStatus === 'success') {
+        setShowPopup(true);
+    }
+}, [paymentStatus]);
+
   if (!user) return null;
 
   return (
     <Box>
       <Navbar />
+      <Popup open={showPopup} handleClose={() => setShowPopup(false)} />
       <Box
         width="100%"
         padding="2rem 6%"
