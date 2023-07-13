@@ -16,6 +16,7 @@ import WidgetWrapper from "components/WidgetWrapper";
 import { io } from "socket.io-client";
 import { Document, Page, pdfjs } from 'react-pdf';
 import { useNavigate } from "react-router-dom"; // useNavigate used for navigation between pages
+import { useDropzone } from "react-dropzone";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 pdfjs.GlobalWorkerOptions.disableAutoFetch = true;
@@ -37,9 +38,33 @@ const ChatWidget = () => {
     const [socket, setSocket] = useState(null);
     const chatBoxRef = useRef(null);
     const navigate = useNavigate();
+    const [selectedFile, setSelectedFile] = useState(null);
+    const [fileError, setFileError] = useState(null);
 
+    const handleFileSelect = (acceptedFiles) => {
+        const file = acceptedFiles[0];
+        const fileType = file.type;
+        const validFileType = fileType === "application/pdf";
 
+        if (validFileType) {
+            setSelectedFile(file);
+            setFileError(null);
+        } else {
+            // Show an error message to the user
+            setFileError("Please select a PDF file");
+        }
+    };
 
+    const handleDeleteUploadedFile = () => {
+        setSelectedFile(null);
+        setFileError(null);
+    };
+
+    const { getRootProps, getInputProps, isDragActive } = useDropzone({
+        accept: ".pdf",
+        multiple: false,
+        onDrop: handleFileSelect,
+    });
     const getChats = async () => {
         try {
             const response = await fetch(`http://localhost:3001/mergeChat/${userId}`, {
@@ -115,31 +140,35 @@ const ChatWidget = () => {
     };
 
     const handleSendMessage = async () => {
-        console.log("here");
         try {
-            console.log(chatHistory);
+            setFileError(null);
+            const formData = new FormData();
+            formData.append("senderId", userId);
+            formData.append("senderName", user.name);
+            formData.append("senderSurname", user.surname);
+            formData.append("chatId", currentChatId);
+            console.log(selectedFile);
+            if (selectedFile) {
+                formData.append("file", selectedFile);
+                formData.append("text", "http://localhost:3001/assets/" + selectedFile.name);
+            } else {
+                formData.append("text", message);
+            }
+
             const response = await fetch("http://localhost:3001/mergeMessages", {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    senderId: userId,
-                    text: message,
-                    senderName: user.name,
-                    senderSurname: user.surname,
-                    chatId: currentChatId,
-                }),
+                body: formData,
             });
-
 
             if (response.ok) {
                 const sentMessage = await response.json();
-                console.log("Sending message:", message);
                 socket.emit("msg", { message: sentMessage, currentChatId: currentChatId });
                 setChatHistory((prevChatHistory) => ({
                     ...prevChatHistory,
                     messages: [...prevChatHistory.messages, sentMessage],
                 }));
                 setMessage("");
+                setSelectedFile(null);
             } else {
                 console.error("Error sending message:", response.status);
             }
@@ -314,10 +343,10 @@ const ChatWidget = () => {
                             <FlexBetween gap="0.25rem" sx={{ marginBottom: '1rem' }}>
                                 {curContact && (
                                     <><Button
-                                    onClick={() => navigate(`/mergeProfilePage/${curContact._id}`)}
+                                        onClick={() => navigate(`/mergeProfilePage/${curContact._id}`)}
                                     ><Typography style={{ fontWeight: 'bold', fontSize: '20px' }}>
-                                        {curContact.name}{" "}{curContact.surname}
-                                    </Typography><Avatar
+                                            {curContact.name}{" "}{curContact.surname}
+                                        </Typography><Avatar
                                             src={`http://localhost:3001/assets/${curContact.picturePath}`}
                                             alt={`${curContact.name} ${curContact.surname}`}
                                             style={{ marginRight: "8px", marginLeft: "8px" }} /></Button></>
@@ -327,7 +356,7 @@ const ChatWidget = () => {
 
                         {chatHistory.contact && (
                             <React.Fragment>
-                                <Box maxHeight="550px" overflow="auto" my={2} ref={chatBoxRef}>
+                                <Box maxHeight="535px" overflow="auto" my={2} ref={chatBoxRef}>
                                     {chatHistory.messages.map((message) => (
                                         <Box
                                             key={message._id}
@@ -427,19 +456,40 @@ const ChatWidget = () => {
                                         </Box>
                                     ))}
                                 </Box>
+
                                 <TextField
-                                    value={message}
+                                    value={selectedFile ? selectedFile.name : message}
                                     onChange={(e) => setMessage(e.target.value)}
-                                    onKeyDown={handleKeyDown} // Add keydown event listener
+                                    onKeyDown={handleKeyDown}
                                     variant="outlined"
-                                    label="Message"
+                                    label= {isDragActive ? "Dropping File" : "Message"}
                                     fullWidth
                                     style={{ marginBottom: "8px" }}
                                 />
+                                {fileError && (
+                                    <Typography variant="caption" color="error">
+                                        {fileError}
+                                    </Typography>
+                                )}
                                 <Box display="flex" justifyContent="flex-end" sx={{ mb: '1rem' }}>
-                                    <Button onClick={handleSendMessage} variant="contained" color="primary">
-                                        Send
-                                    </Button>
+                                    <FlexBetween gap="0.5rem">
+                                        {!selectedFile && (
+                                            <div {...getRootProps()}>
+                                                <input {...getInputProps()} />
+                                                <Button component="span" variant="contained" color="primary">
+                                                    Upload File
+                                                </Button>
+                                            </div>
+                                        )}
+                                        {selectedFile && (
+                                            <Button component="span" variant="contained" color="primary" onClick={handleDeleteUploadedFile}>
+                                                Cancel
+                                            </Button>
+                                        )}
+                                        <Button onClick={handleSendMessage} variant="contained" color="primary">
+                                            Send
+                                        </Button>
+                                    </FlexBetween>
                                 </Box>
 
                             </React.Fragment>
