@@ -23,6 +23,7 @@ import CoinIcon from '@mui/icons-material/LocalAtm';
 import { Paid } from "@mui/icons-material";
 import { useEffect } from "react";
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import HandshakeOutlinedIcon from '@mui/icons-material/HandshakeOutlined';
 
 const MergePostWidget = ({
     postId,
@@ -119,7 +120,14 @@ const MergePostWidget = ({
     const isOwner = postUserId === loggedInUserId;
 
     return (
-        <WidgetWrapper mb="2rem">
+        <WidgetWrapper
+            mb="2rem"
+            sx={{
+                padding: "1.4rem",
+                maxWidth: "800px", // Set the maximum width of the widget
+                width: "100%", // Ensure the widget takes up the full width of the container
+            }}
+        >
             {name !== "admin admin" && (
                 <FlexBetween gap="1rem" alignItems="flex-start">
                     <MergeUser
@@ -156,11 +164,23 @@ const MergePostWidget = ({
                     )}
                 </FlexBetween>
             )}
+            {name == "admin admin" && (
+                <Chip icon={<HandshakeOutlinedIcon />} label="SPONSORED CONTENT" />)
+            }
             <Typography color={main} sx={{ mt: "1rem" }}>
                 <strong>{title}</strong>
             </Typography>
-            <Typography color={main} sx={{ mt: "1rem", mb: "1rem" }}>
-                {isHidden && !isOwner && !isApplied ? <span style={{ filter: "blur(5px)", pointerEvents: "none", userSelect: "none" }}>{description}</span> : description}
+            <Typography
+                color={main}
+                sx={{
+                mt: "1rem",
+                mb: "1rem",
+                maxWidth: "100%",
+                overflowWrap: "break-word",
+                wordWrap: "break-word",
+                }}
+            >
+            {isHidden && !isOwner && !isApplied ? <span style={{ filter: "blur(5px)", pointerEvents: "none", userSelect: "none" }}>{description}</span> : description}
             </Typography>
             {picturePath && (
                 <img
