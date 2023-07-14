@@ -22,8 +22,10 @@ import { Tooltip } from '@mui/material';
 import CoinIcon from '@mui/icons-material/LocalAtm';
 import { Paid } from "@mui/icons-material";
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import HandshakeOutlinedIcon from '@mui/icons-material/HandshakeOutlined';
+import ForumRoundedIcon from '@mui/icons-material/ForumRounded';
 
 const MergePostWidget = ({
     postId,
@@ -45,6 +47,7 @@ const MergePostWidget = ({
     createdAt,
 }) => {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const token = useSelector((state) => state.token);
     const loggedInUserId = useSelector((state) => state.user._id);
     const loggedInUserCoins = useSelector((state) => state.user.mergeCoins);
@@ -75,6 +78,11 @@ const MergePostWidget = ({
             window.open(`http://localhost:3001/assets/${picturePath}`)
         }
     }
+
+    const handleDM = () => {
+        navigate(`/mergeDirectMessages/${postUserId}`);
+    };
+
     const getApplicants = async () => {
         try {
             const res = await fetch(`http://localhost:3001/mergePosts/${postId}/applicants`);
@@ -160,7 +168,21 @@ const MergePostWidget = ({
                         </FlexBetween>
                     )}
                     {isApplied && (
-                        <CheckCircleIcon sx={{ fontSize: "30px", color: primary }} />
+                        <FlexBetween gap="0.25rem" sx={{ marginRight: '0.5rem' }}>
+                            <Chip
+                                label="DM"
+                                onClick={handleDM}
+                                icon={<ForumRoundedIcon />}
+                                color="primary"
+                                sx={{
+                                    fontSize: '13px',
+                                    height: '27px',
+                                    padding: '2.5px',
+                                    borderRadius: '20px',
+                                  }}
+                            />
+                            <CheckCircleIcon sx={{ fontSize: "30px", color: primary }} />
+                        </FlexBetween>
                     )}
                 </FlexBetween>
             )}
