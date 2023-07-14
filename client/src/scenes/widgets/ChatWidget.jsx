@@ -58,13 +58,25 @@ const ChatWidget = () => {
     const handleDeleteUploadedFile = () => {
         setSelectedFile(null);
         setFileError(null);
+        setMessage("");
     };
 
-    const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    // Configuration for TextField
+    const textFieldDropzone = useDropzone({
         accept: ".pdf",
         multiple: false,
         onDrop: handleFileSelect,
+        noClick: true,
     });
+
+    // Configuration for Button
+    const buttonDropzone = useDropzone({
+        accept: ".pdf",
+        multiple: false,
+        onDrop: handleFileSelect,
+        noClick: false,
+    });
+
     const getChats = async () => {
         try {
             const response = await fetch(`http://localhost:3001/mergeChat/${userId}`, {
@@ -456,26 +468,38 @@ const ChatWidget = () => {
                                         </Box>
                                     ))}
                                 </Box>
-
-                                <TextField
-                                    value={selectedFile ? selectedFile.name : message}
-                                    onChange={(e) => setMessage(e.target.value)}
-                                    onKeyDown={handleKeyDown}
-                                    variant="outlined"
-                                    label= {isDragActive ? "Dropping File" : "Message"}
-                                    fullWidth
-                                    style={{ marginBottom: "8px" }}
-                                />
+                                <div {...textFieldDropzone.getRootProps()}>
+                                    <input {...textFieldDropzone.getInputProps()} />
+                                    {textFieldDropzone.isDragActive ? (
+                                        <TextField
+                                            value={selectedFile ? selectedFile.name : ''}
+                                            variant="outlined"
+                                            label="Drop the file here..."
+                                            fullWidth
+                                            style={{ marginBottom: '8px' }}
+                                        />
+                                    ) : (
+                                        <TextField
+                                            value={selectedFile ? selectedFile.name : message}
+                                            onChange={(e) => setMessage(e.target.value)}
+                                            onKeyDown={handleKeyDown}
+                                            variant="outlined"
+                                            label="Message"
+                                            fullWidth
+                                            style={{ marginBottom: '8px' }}
+                                        />
+                                    )}
+                                </div>
                                 {fileError && (
-                                    <Typography variant="caption" color="error">
+                                    <Typography variant="caption" color="error" style={{ fontSize: '13px' }}>
                                         {fileError}
                                     </Typography>
                                 )}
                                 <Box display="flex" justifyContent="flex-end" sx={{ mb: '1rem' }}>
                                     <FlexBetween gap="0.5rem">
                                         {!selectedFile && (
-                                            <div {...getRootProps()}>
-                                                <input {...getInputProps()} />
+                                            <div {...buttonDropzone.getRootProps()}>
+                                                <input {...buttonDropzone.getInputProps()} />
                                                 <Button component="span" variant="contained" color="primary">
                                                     Upload File
                                                 </Button>
