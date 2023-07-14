@@ -26,7 +26,7 @@ const LandingPage = () => {
 
     const [typingText, setTypingText] = useState("");
     const targetText =
-        "MergeMinds is here to make your ideas come through. If you have an idea, let's make it real!"; // Replace with your desired text
+        "MergeMinds is here to make your ideas come true."; // Replace with your desired text
 
     useEffect(() => {
         let currentText = "";
@@ -50,7 +50,7 @@ const LandingPage = () => {
         <Box display="flex">
             <Box
                 className="left-side" // Add a CSS class to the left side container
-                width="50%" // Adjust the width as needed
+                width="70%" // Adjust the width as needed
                 height="100vh" // Adjust the height as needed
                 p="10rem 6%"
                 textAlign="center"
@@ -90,7 +90,7 @@ const LandingPage = () => {
             </Box>
 
             <Box
-                width="50%" // Adjust the width as needed
+                width="40%" // Adjust the width as needed
                 height="100vh" // Adjust the height as needed
                 display="flex"
                 alignItems="center"
