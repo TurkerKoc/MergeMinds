@@ -1,4 +1,5 @@
 import { BrowserRouter, Navigate, Routes, Route } from "react-router-dom"; // for routing
+import LandingPage from "./scenes/landingPage";
 import MergeLoginPage from "scenes/mergeLoginPage"; // for login page
 import SubmissionPage from "scenes/submissionPage"; // for submission page
 import NewsFeed from "scenes/newsFeed";
@@ -35,7 +36,8 @@ function App() {
         <ThemeProvider theme={theme}> {/* to set the theme for our app */}
           <CssBaseline /> {/* to reset the css and use the theme */}
           <Routes>
-            <Route path="/" element={<Navigate to="/mergeLogin" />} /> {/* Redirects to /mergeLogin */}
+            <Route path="/" element={<Navigate to="/landingPage" />} /> {/* Redirects to /mergeLogin */}
+            <Route path="/landingPage" element={<LandingPage />} /> {/* if the path is / then render the LoginPage component */}
             <Route path="/mergeLogin" element={<MergeLoginPage />} /> {/* if the path is / then render the LoginPage component */}
             <Route /* if the path is /submission then render the SubmissionPage component */
               path="/submission/:userId"
