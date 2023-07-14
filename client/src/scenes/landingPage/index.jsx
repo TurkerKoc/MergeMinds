@@ -74,7 +74,7 @@ const LandingPage = () => {
                             maxWidth="400px" // Limit the maximum width of the card
                             maxHeight="200px" // Limit the maximum height of the card
                             width="auto" // Allow the card to adjust its width based on content
-                            backgroundColor="AntiqueWhite" // Set the background color for each idea card
+                            backgroundColor="BlanchedAlmond" // Set the background color for each idea card
                             p="20px" // Adjust the padding as needed
                             borderRadius="4px" // Add border radius for a nicer appearance
                             boxShadow="0 2px 4px rgba(0, 0, 0, 0.1)" // Add a subtle shadow
