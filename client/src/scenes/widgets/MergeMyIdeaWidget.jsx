@@ -51,7 +51,14 @@ import {
     const dark = palette.primary.dark;
   
     return (
-      <WidgetWrapper mb="2rem">
+      <WidgetWrapper
+            mb="2rem"
+            sx={{
+                padding: "1.4rem",
+                maxWidth: "800px", // Set the maximum width of the widget
+                width: "100%", // Ensure the widget takes up the full width of the container
+            }}
+        >
         <FlexBetween gap="1rem" alignItems="flex-start">
           <MergeUser
             friendId={postUserId}
@@ -64,8 +71,17 @@ import {
         <Typography color={main} sx={{ mt: "1rem" }}>
           <strong>{title}</strong>
         </Typography>
-        <Typography color={main} sx={{ mt: "1rem", mb: "1rem"}}>
-          {description}
+        <Typography
+                color={main}
+                sx={{
+                mt: "1rem",
+                mb: "1rem",
+                maxWidth: "100%",
+                overflowWrap: "break-word",
+                wordWrap: "break-word",
+                }}
+            >
+            {description}
         </Typography>
         <MergeApplicantsWidget PostId={postId} />
         <FlexBetween gap="1rem" alignItems="flex-start" sx={{ mt: "1rem", mb: "0.5rem"}}>
