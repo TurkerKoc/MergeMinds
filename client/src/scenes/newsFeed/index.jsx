@@ -1,5 +1,5 @@
 // difference between js and jsx: jsx contains react components
-import { Box, useMediaQuery, Button, useTheme, Typography } from "@mui/material";
+import { Box, useMediaQuery, Button, useTheme, Select, MenuItem } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams, useLocation } from "react-router-dom";
 import React, { useState } from 'react';
@@ -23,6 +23,8 @@ import ScrollTop from "components/ScrollTop";
 import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
 import Popup from "scenes/widgets/PaymentPopup";
+import SearchIcon from '@mui/icons-material/Search';
+import Grid from '@mui/material/Grid';
 
 const NewsFeed = () => {
     const { palette } = useTheme();
@@ -43,6 +45,10 @@ const NewsFeed = () => {
     const [postsToShow, setPostsToShow] = useState(10);
     const posts = useSelector((state) => state.posts);
     const [showLoadMore, setShowLoadMore] = useState(true);
+    const [locationInputValue, setLocationInputValue] = useState("");
+    const [isLocationSelectOpen, setIsLocationSelectOpen] = useState(false);
+    const [categoryInputValue, setCategoryInputValue] = useState("");
+    const [isCategorySelectOpen, setIsCategorySelectOpen] = useState(false);
 
     localStorage.setItem("lastVisited", "newsfeed");
 
@@ -61,13 +67,26 @@ const NewsFeed = () => {
             dispatch(setUser({ user: mergeUser }));
         }
     };
+    const handleLocationInputChange = (event) => {
+        setLocationInputValue(event.target.value);
+        if (event.target.value.length > 1) {
+            getAllLocations(event.target.value);
+        }
+        if (event.key === "Enter") {
+            setIsLocationSelectOpen(true);
+        }
+    };
+    const handleCategoryInputChange = (event) => {
+        setCategoryInputValue(event.target.value);
+        if (event.target.value.length > 1) {
+            getAllCategories(event.target.value);
+        }
+        if (event.key === "Enter") {
+            setIsCategorySelectOpen(true);
+        }
+    };
 
     const handleTopClick = async () => {
-        // const response = await fetch(`http://localhost:3001/mergePosts/sortedByLikes`, {
-        //   method: "GET",
-        //   headers: { Authorization: `Bearer ${token}` }
-        // });
-        // const posts = await response.json();
         setSelectedButton('top');
         const sorted = [...posts].sort((a, b) => {
             const likesA = Object.keys(a.likes || {}).length;
@@ -76,7 +95,6 @@ const NewsFeed = () => {
         });
         console.log(sorted);
         console.log(posts);
-        // setSortedPosts(sorted);
 
         let result = randomizeSponsoredContent(sorted);
         dispatch(setPosts({ posts: result }));
@@ -141,8 +159,10 @@ const NewsFeed = () => {
     // console.log(randomIndex);
 
 
-    const handleCategoryAutocompleteChange = async (option) => {
+    const handleCategoryAutocompleteChange = async (e) => {
+        const option = categories.find((cat) => cat._id === e.target.value);
         setSelectedCategoryFilter(option);
+        setCategoryInputValue("");
         const response = await fetch("http://localhost:3001/mergePosts", {
             method: "GET",
             headers: { Authorization: `Bearer ${token}` },
@@ -165,8 +185,10 @@ const NewsFeed = () => {
         }
         setPostsToShow(10);
     };
-    const handleLocationAutocompleteChange = async (option) => {
+    const handleLocationAutocompleteChange = async (e) => {
+        const option = locations.find((loc) => loc._id === e.target.value);
         setSelectedLocationFilter(option);
+        setLocationInputValue("");
         const response = await fetch("http://localhost:3001/mergePosts", {
             method: "GET",
             headers: { Authorization: `Bearer ${token}` },
@@ -239,8 +261,8 @@ const NewsFeed = () => {
     };
 
 
-    const getAllCategories = async () => {
-        const response = await fetch(`http://localhost:3001/mergePosts/allCategories`, {
+    const getAllCategories = async (value) => {
+        const response = await fetch(`http://localhost:3001/mergePosts/categories?query=${value}`, {
             method: "GET",
             headers: { Authorization: `Bearer ${token}` }
         });
@@ -250,8 +272,8 @@ const NewsFeed = () => {
 
         setCategories(filteredCategories);
     }
-    const getAllLocations = async () => {
-        const response = await fetch(`http://localhost:3001/mergePosts/allLocations`, {
+    const getAllLocations = async (value) => {
+        const response = await fetch(`http://localhost:3001/mergePosts/locations?query=${value}`, {
             method: "GET",
             headers: { Authorization: `Bearer ${token}` }
         });
@@ -305,8 +327,8 @@ const NewsFeed = () => {
     }, [paymentStatus]);
 
     useEffect(() => {
-        getAllCategories();
-        getAllLocations();
+        getAllCategories("");
+        getAllLocations("ab");
         getMergeUser();
     }, []);
 
@@ -317,6 +339,16 @@ const NewsFeed = () => {
             setShowLoadMore(true);
         }
     }, [postsToShow, posts]);
+    useEffect(() => {
+        if (categoryInputValue === "") {
+            getAllCategories("");
+        }
+    }, [categoryInputValue]);
+    useEffect(() => {
+        if (locationInputValue === "") {
+            getAllLocations("ab");
+        }
+    }, [locationInputValue]);
 
     return (
         <Box>
@@ -328,45 +360,43 @@ const NewsFeed = () => {
                 marginTop="2rem"
                 gap="2rem"
             >
-                <Box flexBasis={isNonMobileScreens ? "26%" : undefined} paddingLeft="2rem"
+                <Box flexBasis={isNonMobileScreens ? "26.7%" : undefined} paddingLeft="2rem"
                     paddingRight="2rem"> {/* flexBasis is a css property to set width of an element and 26% means 26% of parent element (%26 of page) */}
                     <LinksWidget />
                 </Box>
                 <Box
-                    flexBasis={isNonMobileScreens ? "42%" : undefined}
-                    mt={isNonMobileScreens ? undefined : "1rem"}
+                    flexBasis={isNonMobileScreens ? "66%" : undefined}
                 >
                     <FlexBetween gap="0.5rem" sx={{ marginBottom: '1rem' }}>
-                        <TextField
-                            label="Search"
-                            value={searchKeyword}
-                            onChange={(e) => setSearchKeyword(e.target.value)}
-                            onKeyPress={(e) => {
-                                if (e.key === 'Enter') {
-                                    handleSearch();
-                                }
-                            }}
-                            sx={{ fontSize: '0.75rem', width: '90%' }} // Set width to 100%
-                        />
-
-                        <Button variant="contained" onClick={handleSearch} sx={{ height: '50px', fontSize: '0.75rem' }}>
-                            Search
-                        </Button>
+                        <Grid container alignItems="center" style={{ height: "100%" }}>
+                            <Grid item xs>
+                                <TextField
+                                    label="Search"
+                                    value={searchKeyword}
+                                    onChange={(e) => setSearchKeyword(e.target.value)}
+                                    onKeyPress={(e) => {
+                                        if (e.key === 'Enter') {
+                                            handleSearch();
+                                        }
+                                    }}
+                                    sx={{ height: '100%', fontSize: '0.75rem', width: '100%', marginRight: '1rem' }}// Set width to 100%
+                                />
+                            </Grid>
+                            <Grid item>
+                                <Button variant="contained" onClick={handleSearch} sx={{ height: '50px', fontSize: '0.75rem', ml: '1rem' }}>
+                                    <SearchIcon sx={{ fontSize: '2rem' }} />
+                                </Button>
+                            </Grid>
+                        </Grid>
 
                         {showClearButton && (
                             <Button
                                 variant="outlined"
                                 onClick={handleClearSearch}
                                 sx={{
-                                    display: "flex",
-                                    alignItems: "center",
-                                    justifyContent: "center",
-                                    borderRadius: "12px",
-                                    padding: "15px",
-                                    mr: "0.5rem",
-                                    mb: "0.1rem",
-                                    width: "1px", // Adjust the width to make it smaller
-                                    height: "50px", // Adjust the height to make it smaller
+                                    width: "100%", // Adjust the width to make it smaller
+                                    height: "100%", // Adjust the height to make it smaller
+                                    fontSize: '0.75rem',
                                 }}
                             >
                                 <CloseIcon sx={{ fontSize: "14px", marginRight: "2px" }} /> {/* Adjust the font size */}
@@ -411,7 +441,35 @@ const NewsFeed = () => {
                                             {({ TransitionProps }) => (
                                                 <Fade {...TransitionProps} timeout={350}>
                                                     <FlexBetween>
-                                                        <Autocomplete
+                                                        <TextField
+                                                            type="text"
+                                                            value={categoryInputValue}
+                                                            onChange={handleCategoryInputChange}
+                                                            placeholder="Type to filter categories"
+                                                            sx={{ width: "85%", mb: 2 }}
+                                                            onKeyDown={(event) => {
+                                                                handleCategoryInputChange(event);
+                                                            }}
+                                                        />
+                                                        <Select
+                                                            value=""
+                                                            open={isCategorySelectOpen} // Control the open state of the Select
+                                                            onClose={() => setIsCategorySelectOpen(false)}
+                                                            onOpen={() => setIsCategorySelectOpen(true)}
+                                                            onChange={(e) => {
+                                                                handleCategoryAutocompleteChange(e)
+                                                                popupState.close();
+                                                            }}
+                                                            sx={{ width: "15%", mb: 2 }}
+                                                            displayEmpty
+                                                        >
+                                                            {categories.map((cat) => (
+                                                                <MenuItem value={cat._id}>
+                                                                    {cat.domain}
+                                                                </MenuItem>
+                                                            ))}
+                                                        </Select>
+                                                        {/* <Autocomplete
                                                             id="grouped-demo"
                                                             options={categories}
                                                             groupBy={(option) => option.domain.firstLetter}
@@ -423,7 +481,7 @@ const NewsFeed = () => {
                                                             sx={{ width: 300 }}
                                                             renderInput={(params) => <TextField {...params}
                                                                 label="Category" />}
-                                                        />
+                                                        /> */}
                                                     </FlexBetween>
                                                 </Fade>
                                             )}
@@ -441,7 +499,35 @@ const NewsFeed = () => {
                                             {({ TransitionProps }) => (
                                                 <Fade {...TransitionProps} timeout={350}>
                                                     <FlexBetween>
-                                                        <Autocomplete
+                                                        <TextField
+                                                            type="text"
+                                                            value={locationInputValue}
+                                                            onChange={handleLocationInputChange}
+                                                            placeholder="Type to filter locations"
+                                                            sx={{ width: "85%", mb: 2 }}
+                                                            onKeyDown={(event) => {
+                                                                handleLocationInputChange(event);
+                                                            }}
+                                                        />
+                                                        <Select
+                                                            value=""
+                                                            open={isLocationSelectOpen} // Control the open state of the Select
+                                                            onClose={() => setIsLocationSelectOpen(false)}
+                                                            onOpen={() => setIsLocationSelectOpen(true)}
+                                                            onChange={(e) => {
+                                                                handleLocationAutocompleteChange(e);
+                                                                popupState.close();
+                                                            }}
+                                                            sx={{ width: "15%", mb: 2 }}
+                                                            displayEmpty
+                                                        >
+                                                            {locations.map((loc) => (
+                                                                <MenuItem value={loc._id}>
+                                                                    {loc.name}
+                                                                </MenuItem>
+                                                            ))}
+                                                        </Select>
+                                                        {/* <Autocomplete
                                                             id="grouped-demo"
                                                             options={locations}
                                                             groupBy={(option) => option.name.firstLetter}
@@ -453,7 +539,7 @@ const NewsFeed = () => {
                                                             sx={{ width: 300 }}
                                                             renderInput={(params) => <TextField {...params}
                                                                 label="Locations" />}
-                                                        />
+                                                        /> */}
                                                     </FlexBetween>
                                                 </Fade>
                                             )}
@@ -532,7 +618,7 @@ const NewsFeed = () => {
                         )}
                     </Box>
                     <MergePostsWidget userId={_id} postsToShow={postsToShow} />
-                    <Box display="flex" justifyContent="center" sx={{ mb: '1rem' }}>
+                    <Box display="flex" justifyContent="center">
                         {showLoadMore && (
                             <Button onClick={() => setPostsToShow(postsToShow + 10)}>
                                 Load More
@@ -551,7 +637,7 @@ const NewsFeed = () => {
                     </ScrollTop>
                 </Box>
                 {isNonMobileScreens && (
-                    <Box flexBasis="26%" paddingRight="2rem">
+                    <Box flexBasis="26%" mr="2rem">
                         <MergeBlogWidget />
                         <Box m="2rem 0" />
                     </Box>

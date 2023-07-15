@@ -17,31 +17,29 @@ import {
 } from "@mui/icons-material";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined"; // for particular icons you can import them like this
 import WidgetWrapper from "components/WidgetWrapper";
-import {useState} from "react";
-import {useDispatch, useSelector} from "react-redux";
-import {setPosts} from "state";
-import {setUser} from "state";
-import {useEffect} from "react";
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { setPosts } from "state";
+import { setUser } from "state";
+import { useEffect } from "react";
 import Dropzone from "react-dropzone"; // Dropzone is a library to handle file uploads (like a profile picture)
 import FlexBetween from "components/FlexBetween";
-import {is} from "date-fns/locale";
-import {useNavigate} from "react-router-dom";
-import {Paid} from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
+import { Paid } from "@mui/icons-material";
 import Badge from '@mui/material/Badge';
-import {Tooltip} from '@mui/material';
+import { Tooltip } from '@mui/material';
 import HelpIcon from '@mui/icons-material/Help';
-import {set} from "date-fns";
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
-const MergeSubmissionWidget = ({id, savedDraftData}) => {
+const MergeSubmissionWidget = ({ id, savedDraftData }) => {
     const dispatch = useDispatch();
-    const {mergeCoins, _id} = useSelector((state) => state.user);
+    const { mergeCoins, _id } = useSelector((state) => state.user);
     const token = useSelector((state) => state.token);
-    const {palette} = useTheme();
+    const { palette } = useTheme();
     const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
     const mediumMain = palette.neutral.mediumMain;
     const [formError, setFormError] = useState(null);
@@ -59,6 +57,22 @@ const MergeSubmissionWidget = ({id, savedDraftData}) => {
     const navigate = useNavigate();
     const [isDraftSaved, setIsDraftSaved] = useState(false); // State to track whether the draft is saved or not
     const [isFormDataPresent, setIsFormDataPresent] = useState(false);
+    const [locationInputValue, setLocationInputValue] = useState("");
+    const [isLocationSelectOpen, setIsLocationSelectOpen] = useState(false);
+    const [categoryInputValue, setCategoryInputValue] = useState("");
+    const [isCategorySelectOpen, setIsCategorySelectOpen] = useState(false);
+
+    const handleLocationSelect = (e) => {
+        setSelectedLocation(e.target.value);
+        const selectedOption = location.find((cat) => cat._id === e.target.value);
+        setLocationInputValue(selectedOption.name);
+    }
+
+    const handleCategorySelect = (e) => {
+        setSelectedCategory(e.target.value);
+        const selectedOption = category.find((cat) => cat._id === e.target.value);
+        setCategoryInputValue(selectedOption.domain);
+    }
 
     const getMergeUser = async () => {
         const response = await fetch(`http://localhost:3001/mergeUsers/${_id}`, {
@@ -66,7 +80,7 @@ const MergeSubmissionWidget = ({id, savedDraftData}) => {
         });
         const mergeUser = await response.json();
         if (response.ok) {
-            dispatch(setUser({user: mergeUser}));
+            dispatch(setUser({ user: mergeUser }));
         }
     };
 
@@ -93,10 +107,54 @@ const MergeSubmissionWidget = ({id, savedDraftData}) => {
         setSelectedIsHidden(value);
     };
 
+    const handleLocationInputChange = (event) => {
+        setLocationInputValue(event.target.value);
+        if (event.target.value.length > 1) {
+            getLocations(event.target.value);
+        }
+        if (event.key === "Enter") {
+            setIsLocationSelectOpen(true);
+        }
+    };
+    const handleCategoryInputChange = (event) => {
+        setCategoryInputValue(event.target.value);
+        if (event.target.value.length > 1) {
+            getCategories(event.target.value);
+        }
+        if (event.key === "Enter") {
+            setIsCategorySelectOpen(true);
+        }
+    };
+
+    const getLocation = async (value) => {
+        const response = await fetch(`http://localhost:3001/mergePosts/location/${value}`, {
+            method: "GET",
+        });
+        const curLocation = await response.json(); // we will get the logged in user from backend (backend will send the logged in user as json)
+        if (response.ok) {
+            setLocationInputValue(curLocation.name);
+        }
+    };
+    const getCategory = async (value) => {
+        const response = await fetch(`http://localhost:3001/mergePosts/category/${value}`, {
+            method: "GET",
+        });
+        const curCategory = await response.json(); // we will get the logged in user from backend (backend will send the logged in user as json)
+        if (response.ok) {
+            setCategoryInputValue(curCategory.domain);
+        }
+    };
+
     useEffect(() => {
         if (savedDraftData) {
             setSelectedCategory(savedDraftData.selectedCategory || "");
+            if (savedDraftData.selectedCategory) {
+                getCategory(savedDraftData.selectedCategory);
+            }
             setSelectedLocation(savedDraftData.selectedLocation || "");
+            if (savedDraftData.selectedLocation) {
+                getLocation(savedDraftData.selectedLocation);
+            }
             setSelectedIsHidden(savedDraftData.selectedIsHidden || "");
             setApplicantNumber(savedDraftData.applicantNumber || "");
             setTitle(savedDraftData.title || "");
@@ -145,41 +203,56 @@ const MergeSubmissionWidget = ({id, savedDraftData}) => {
         description,
     ]);
 
-    const getCategories = async () => {
-        const response = await fetch(`http://localhost:3001/mergePosts/allCategories`, {
+    const getCategories = async (value) => {
+        const response = await fetch(`http://localhost:3001/mergePosts/categories?query=${value}`, {
             method: "GET",
-            headers: {Authorization: `Bearer ${token}`},
+            headers: { Authorization: `Bearer ${token}` },
         });
         const categories = await response.json();
         const filteredCategories = categories.filter(category => category.domain !== 'Admin');
-
-        setCategory(filteredCategories);
+        if (filteredCategories.length > 0) {
+            setCategory(filteredCategories);
+        }
     };
-
-    const getLocations = async () => {
-        const response = await fetch(`http://localhost:3001/mergePosts/allLocations`, {
+    const getLocations = async (value) => {
+        const response = await fetch(`http://localhost:3001/mergePosts/locations?query=${value}`, {
             method: "GET",
-            headers: {Authorization: `Bearer ${token}`},
+            headers: { Authorization: `Bearer ${token}` },
         });
         const locations = await response.json();
         const filteredLocations = locations.filter(location => location.name !== 'Admin');
-        setLocation(filteredLocations);
+        if (filteredLocations.length > 0) {
+            setLocation(filteredLocations);
+        }
     };
 
     useEffect(() => {
-        getCategories();
-        getLocations();
+        if (categoryInputValue === "") {
+            getCategories("");
+        }
+    }, [categoryInputValue]);
+    useEffect(() => {
+        if (locationInputValue === "") {
+            getLocations("ab");
+        }
+    }, [locationInputValue]);
+
+    useEffect(() => {
+        getCategories("");
+        getLocations("ab");
         getMergeUser();
     }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
     const clearForm = () => {
         // Clear state
-        setSubmissionPrice(0);
+        setSubmissionPrice(4);
         setSelectedIsHidden("");
         setApplicantNumber("");
         setTitle("");
         setSubmission("");
         setSelectedCategory("");
+        setCategoryInputValue("");
+        setLocationInputValue("");
         setSelectedLocation("");
         // Clear local storage
         localStorage.removeItem('submissionFormData');
@@ -236,26 +309,26 @@ const MergeSubmissionWidget = ({id, savedDraftData}) => {
         try {
             const response = await fetch(`http://localhost:3001/mergePosts`, {
                 method: "POST",
-                headers: {Authorization: `Bearer ${token}`},
+                headers: { Authorization: `Bearer ${token}` },
                 body: formData,
             });
 
             const data = await response.json();
             if (response.ok) {
-                dispatch(setPosts({posts: data}));
+                dispatch(setPosts({ posts: data }));
             } else {
                 setFormError("An error occurred while submitting the form.");
             }
 
-            const curData = {mergeCoins: updatedMergeCoins};
+            const curData = { mergeCoins: updatedMergeCoins };
             const mergeUserResponse = await fetch(`http://localhost:3001/mergeUsers/mergeCoins/${id}`, {
                 method: "PATCH",
-                headers: {"Content-Type": "application/json"},
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(curData),
             });
             const mergeUser = await mergeUserResponse.json();
             if (mergeUserResponse.ok) {
-                dispatch(setUser({user: mergeUser.user}));
+                dispatch(setUser({ user: mergeUser.user }));
             } else {
                 setFormError("An error occurred while submitting the form.");
             }
@@ -282,7 +355,7 @@ const MergeSubmissionWidget = ({id, savedDraftData}) => {
         };
         const availableDraftId = localStorage.getItem("availableDraftId") || "";
         console.log("HEY " + availableDraftId.length);
-
+        console.log(draftData);
         if (availableDraftId.length === 0) {
             console.log("availableDraftId is not empty");
             try {
@@ -360,75 +433,111 @@ const MergeSubmissionWidget = ({id, savedDraftData}) => {
                 </DialogActions>
             </Dialog>
             <Box>
-                <Typography sx={{marginBottom: '1rem'}}>Choose Category</Typography>
+                <Typography sx={{ marginBottom: '1rem' }}>Choose Category</Typography>
                 {Array.isArray(category) && category.length > 0 ? (
-                    <Select
-                        value={selectedCategory}
-                        onChange={(e) => setSelectedCategory(e.target.value)}
-                        sx={{width: "100%", mb: 2}}
-                    >
-                        {category.map((cat) => (
-                            <MenuItem value={cat._id}>{cat.domain}</MenuItem>
-                        ))}
-                    </Select>
+                    <Box sx={{ display: 'flex', alignItems: 'center', marginBottom: '1rem' }}>
+                        <TextField
+                            type="text"
+                            value={categoryInputValue}
+                            onChange={handleCategoryInputChange}
+                            placeholder="Type to filter categories"
+                            sx={{ width: "95.5%", mb: 2 }}
+                            onKeyDown={(event) => {
+                                handleCategoryInputChange(event);
+                            }}
+                        />
+                        <Select
+                            value=""
+                            open={isCategorySelectOpen} // Control the open state of the Select
+                            onClose={() => setIsCategorySelectOpen(false)}
+                            onOpen={() => setIsCategorySelectOpen(true)}
+                            onChange={(e) => handleCategorySelect(e)}
+                            sx={{ width: "5.5%", mb: 2 }}
+                            displayEmpty
+                        >
+                            {category.map((cat) => (
+                                <MenuItem value={cat._id}>
+                                    {cat.domain}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </Box>
                 ) : (
                     <Typography>No categories found.</Typography>
                 )}
-                <Typography sx={{marginBottom: '1rem'}}>Choose Location</Typography>
+                <Typography sx={{ marginBottom: '1rem' }}>Choose Location</Typography>
                 {Array.isArray(location) && location.length > 0 ? (
-                    <Select
-                        value={selectedLocation}
-                        onChange={(e) => setSelectedLocation(e.target.value)}
-                        sx={{width: "100%", mb: 2}}
-                    >
-                        {location.map((loc) => (
-                            <MenuItem value={loc._id}>{loc.name}</MenuItem>
-                        ))}
-                    </Select>
+                    <Box sx={{ display: 'flex', alignItems: 'center', marginBottom: '1rem' }}>
+                        <TextField
+                            type="text"
+                            value={locationInputValue}
+                            onChange={handleLocationInputChange}
+                            placeholder="Type to filter locations"
+                            sx={{ width: "95.5%", mb: 2 }}
+                            onKeyDown={(event) => {
+                                handleLocationInputChange(event);
+                            }}
+                        />
+                        <Select
+                            value=""
+                            open={isLocationSelectOpen} // Control the open state of the Select
+                            onClose={() => setIsLocationSelectOpen(false)}
+                            onOpen={() => setIsLocationSelectOpen(true)}
+                            onChange={(e) => handleLocationSelect(e)}
+                            sx={{ width: "5.5%", mb: 2 }}
+                            displayEmpty
+                        >
+                            {location.map((loc) => (
+                                <MenuItem value={loc._id}>
+                                    {loc.name}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </Box>
                 ) : (
                     <Typography>No locations found.</Typography>
                 )}
-                <Typography sx={{display: 'flex', alignItems: 'center', marginBottom: '1rem'}}>
+                <Typography sx={{ display: 'flex', alignItems: 'center', marginBottom: '1rem' }}>
                     Do you want your post as Hidden?
-                    <Tooltip title={<Typography style={{fontSize: '0.8rem'}}>Enabling the hidden post selection feature
+                    <Tooltip title={<Typography style={{ fontSize: '0.8rem' }}>Enabling the hidden post selection feature
                         ensures that only individuals who have applied for your idea can access and view its
                         description, keeping it hidden from others.</Typography>}>
-                        <HelpIcon style={{fontSize: '1.1rem', marginLeft: '0.5rem'}}/>
+                        <HelpIcon style={{ fontSize: '1.1rem', marginLeft: '0.5rem' }} />
                     </Tooltip>
                 </Typography>
                 <Select
                     value={selectedIsHidden}
                     onChange={(e) => handleIsHiddenChange(e.target.value)}
-                    sx={{width: "100%", mb: 2}}
+                    sx={{ width: "100%", mb: 2 }}
                 >
                     <MenuItem value="true">
                         Yes
-                        <Badge badgeContent={4} color="warning" style={{transform: 'scale(0.8)'}}>
-                            <Paid sx={{fontSize: "25px"}}/>
+                        <Badge badgeContent={4} color="warning" style={{ transform: 'scale(0.8)' }}>
+                            <Paid sx={{ fontSize: "25px" }} />
                         </Badge>
                     </MenuItem>
                     <MenuItem value="false">No</MenuItem>
                 </Select>
-                <Typography sx={{display: 'flex', alignItems: 'center', marginBottom: '1rem'}}>
+                <Typography sx={{ display: 'flex', alignItems: 'center', marginBottom: '1rem' }}>
                     Prepaid Applicant Number
                     <Tooltip
-                        title={<Typography style={{fontSize: '0.8rem'}}>This represents the maximum number of applicants
+                        title={<Typography style={{ fontSize: '0.8rem' }}>This represents the maximum number of applicants
                             who can apply for your idea without spending mergecoins. The idea owner covers application
                             fees for these applicants.</Typography>}>
-                        <HelpIcon style={{fontSize: '1.1rem', marginLeft: '0.5rem'}}/>
+                        <HelpIcon style={{ fontSize: '1.1rem', marginLeft: '0.5rem' }} />
                     </Tooltip>
                 </Typography>
                 <FlexBetween gap="0.5rem" alignItems="center">
                     <TextField
                         value={applicantNumber}
                         onChange={(e) => handleApplicantNumberChange(e.target.value)}
-                        sx={{width: "100%", mb: 2}}
+                        sx={{ width: "100%", mb: 2 }}
                     />
                     <Badge badgeContent={1} color="warning">
-                        <Paid sx={{fontSize: "25px", mb: 2}}/>
+                        <Paid sx={{ fontSize: "25px", mb: 2 }} />
                     </Badge>
                 </FlexBetween>
-                <Typography sx={{marginBottom: '1rem'}}>Title</Typography>
+                <Typography sx={{ marginBottom: '1rem' }}>Title</Typography>
                 <TextField
                     placeholder="Type catching attention title here..."
                     value={title}
@@ -438,7 +547,7 @@ const MergeSubmissionWidget = ({id, savedDraftData}) => {
                     }}
                     sx={{ width: "100%", mb: 2 }}
                 />
-                <Typography sx={{marginBottom: '1rem'}}>Description</Typography>
+                <Typography sx={{ marginBottom: '1rem' }}>Description</Typography>
                 <TextField
                     placeholder="Describe your idea here..."
                     value={description}
@@ -448,7 +557,7 @@ const MergeSubmissionWidget = ({id, savedDraftData}) => {
                     }}
                     multiline
                     rows={10}
-                    sx={{width: "100%", mb: 2}}
+                    sx={{ width: "100%", mb: 2 }}
                 />
                 <Box gridColumn="span 4" border={`1px solid ${palette.neutral.medium}`} borderRadius="5px" p="1rem">
                     <Dropzone
@@ -456,36 +565,36 @@ const MergeSubmissionWidget = ({id, savedDraftData}) => {
                         multiple={false}
                         onDrop={(acceptedFiles) => setImage(acceptedFiles[0])}
                     >
-                        {({getRootProps, getInputProps}) => (
+                        {({ getRootProps, getInputProps }) => (
                             <FlexBetween>
                                 <Box
                                     {...getRootProps()}
                                     border={`2px dashed ${palette.primary.main}`}
                                     p="1rem"
                                     width="100%"
-                                    sx={{"&:hover": {cursor: "pointer"}}}
+                                    sx={{ "&:hover": { cursor: "pointer" } }}
                                 >
                                     <input {...getInputProps()} />
                                     {!image ? <p>Add Image Here</p> : (
                                         <FlexBetween>
                                             <Typography>{image.name}</Typography>
-                                            <EditOutlined/>
+                                            <EditOutlined />
                                         </FlexBetween>
                                     )}
                                 </Box>
-                                <IconButton onClick={() => setImage(null)} sx={{width: "15%"}}>
-                                    <DeleteOutlined/>
+                                <IconButton onClick={() => setImage(null)} sx={{ width: "15%" }}>
+                                    <DeleteOutlined />
                                 </IconButton>
                             </FlexBetween>
                         )}
                     </Dropzone>
                 </Box>
                 {formError && (
-                    <Typography color="error" sx={{m: "1rem 0"}}>
+                    <Typography color="error" sx={{ m: "1rem 0" }}>
                         {formError}
                     </Typography>
                 )}
-                <div style={{display: 'flex', justifyContent: 'space-between'}}>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                     <Button
                         disabled={!description || !title || !applicantNumber || !category || !location || !selectedIsHidden}
                         onClick={handlePost}
@@ -499,7 +608,7 @@ const MergeSubmissionWidget = ({id, savedDraftData}) => {
                     >
                         post
                         <Badge badgeContent={submissionPrice} color="warning">
-                            <Paid sx={{fontSize: "25px"}}/>
+                            <Paid sx={{ fontSize: "25px" }} />
                         </Badge>
                     </Button>
                     {isFormDataPresent && (
@@ -530,7 +639,7 @@ const MergeSubmissionWidget = ({id, savedDraftData}) => {
                     </Button>
                 </div>
                 {isDraftSaved && (
-                    <Typography color="success" sx={{mt: "1rem"}}>
+                    <Typography color="success" sx={{ mt: "1rem" }}>
                         Draft saved successfully.
                     </Typography>
                 )}

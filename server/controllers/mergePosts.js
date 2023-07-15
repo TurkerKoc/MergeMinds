@@ -628,3 +628,46 @@ export const getAllLocations = async (req, res) => {
     res.status(404).json({ message: err.message });
   }
 }
+
+export const getLocation = async (req, res) => {
+  const { locationId } = req.params;
+
+  try {
+    const locaiton = await Location.findById(locationId);
+    res.status(200).json(locaiton);
+  } catch (err) {
+    res.status(404).json({ message: err.message });
+  }
+}
+
+export const getLocations = async (req, res) => {
+  const { query } = req.query;
+
+  try {
+    const locations = await Location.find({ name: { $regex: `^${query}`, $options: 'i' } });
+    res.status(200).json(locations);
+  } catch (err) {
+    res.status(404).json({ message: err.message });
+  }
+};
+export const getCategory = async (req, res) => {
+  const { categoryId } = req.params;
+
+  try {
+    const category = await Category.findById(categoryId);
+    res.status(200).json(category);
+  } catch (err) {
+    res.status(404).json({ message: err.message });
+  }
+}
+
+export const getCategories = async (req, res) => {
+  const { query } = req.query;
+
+  try {
+    const categories = await Category.find({ domain: { $regex: `^${query}`, $options: 'i' } });
+    res.status(200).json(categories);
+  } catch (err) {
+    res.status(404).json({ message: err.message });
+  }
+};

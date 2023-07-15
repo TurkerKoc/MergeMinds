@@ -42,7 +42,8 @@ import Price from "./models/Price.js";
 import Webinar from "./models/Webinar.js";
 import Category from "./models/Category.js";
 import {mergeUsers, users, posts, locations, prices, categories} from "./data/index.js"; // for one time user and post creation
-
+import { readCSV } from "./data/index.js";
+import { categories50Array  } from "./data/index.js";
 
 /* ADD DUMMY WEBINAR DATA */
 const webinars = [
@@ -167,6 +168,16 @@ mongoose
         // Location.insertMany(locations);
         // Price.insertMany(prices);
         // Webinar.insertMany(webinars); // added this line
+        // readCSV(); // added this line
+        // try {
+        //     const csvLocations = await readCSV();            
+        //     Location.insertMany(csvLocations);
+        //     console.log('CSV locations saved successfully');
+        //   } catch (error) {
+        //     console.error('Error saving CSV locations:', error);
+        //   }
+        // const categoriesArray = await categories50Array();
+        // Category.insertMany(categoriesArray);
     })
     .catch((error) => console.log(`${error} did not connect`));
 
