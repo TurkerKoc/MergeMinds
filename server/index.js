@@ -42,7 +42,7 @@ import Price from "./models/Price.js";
 import Webinar from "./models/Webinar.js";
 import Category from "./models/Category.js";
 import {mergeUsers, users, posts, locations, prices, categories} from "./data/index.js"; // for one time user and post creation
-import { readCSV } from "./data/index.js";
+//import { readCSV } from "./data/index.js";
 import { categories50Array  } from "./data/index.js";
 
 /* ADD DUMMY WEBINAR DATA */

@@ -132,7 +132,7 @@ const MergePostWidget = ({
             mb="2rem"
             sx={{
                 padding: "1.4rem",
-                maxWidth: "800px", // Set the maximum width of the widget
+                maxWidth: "100%", // Set the maximum width of the widget
                 width: "100%", // Ensure the widget takes up the full width of the container
             }}
         >

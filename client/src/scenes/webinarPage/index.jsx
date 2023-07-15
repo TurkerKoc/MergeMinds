@@ -45,11 +45,11 @@ const MergeWebinarPage = () => {
             <Box m="2rem 0" />
             <MergeMyWebinarWidget/>
           </Box >
-          <Box flexBasis={isNonMobileScreens ? "76%" : undefined}>
+          <Box flexBasis={isNonMobileScreens ? "66%" : undefined} paddingRight="2rem">
             <MergeWebinarWidget userId={_id} />
         </Box>
           {isNonMobileScreens && (
-            <Box flexBasis="26%">
+            <Box flexBasis={isNonMobileScreens ? "26%" : undefined} mr="2rem">
               <MergeBlogWidget />
               <Box m="2rem 0" />
               <AdvertWidget />

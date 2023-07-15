@@ -35,19 +35,17 @@ const MergeDirectMessages = () => {
                 gap="2rem"
             >
                 <Box flexBasis={isNonMobileScreens ? "26%" : undefined}
-                    paddingLeft="2rem" paddingRight="2rem">
+                     paddingLeft="2rem"
+                     paddingRight="2rem"> 
                     <LinksWidget/>
                     <Box m="2rem 0" />
                     {myProfile && <PersonalNavigator/>} {/* Conditionally render PersonalNavigator */}
                 </Box>
-                <Box
-                    flexBasis={isNonMobileScreens ? "42%" : undefined}
-                >
+                <Box flexBasis={isNonMobileScreens ? "66%" : undefined} 
+                    paddingRight="2rem">
                     <ChatWidget postUserId={postUserId}/>
                 </Box>
-                <Box flexBasis={isNonMobileScreens ? "26%" : undefined}
-                    paddingRight="2rem" mb={5}
-                >
+                <Box flexBasis={isNonMobileScreens ? "26%" : undefined} mr="2rem" >
                     <UserCard userId={userId}/>
                 </Box>
             </Box>

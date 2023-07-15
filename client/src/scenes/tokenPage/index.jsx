@@ -35,20 +35,23 @@ const MergeTokenPage = () => {
     <Box>
       <Navbar />
       <Box
-                display="flex"
-                justifyContent="space-between"
-                marginTop="2rem"
-                gap="2rem"
-            >
-        <Box flexBasis={isNonMobileScreens ? "26%" : undefined} paddingLeft="2rem"
-                    paddingRight="2rem"> 
+          display="flex"
+          justifyContent="space-between"
+          marginTop="2rem"
+          gap="2rem"
+        >
+        <Box flexBasis={isNonMobileScreens ? "26%" : undefined} 
+          paddingLeft="2rem"
+          paddingRight="2rem"> 
           <LinksWidget />
         </Box >
-        <Box flexBasis={isNonMobileScreens ? "76%" : undefined}>
-          <MergeTokenWidget userId={_id} />
+
+        <Box flexBasis={isNonMobileScreens ? "66%" : undefined} 
+          paddingRight="2rem" >
+            <MergeTokenWidget userId={_id} />
         </Box>
         {isNonMobileScreens && (
-          <Box flexBasis="26%">
+         <Box flexBasis={isNonMobileScreens ? "26%" : undefined} mr="2rem">
             <MergeBlogWidget />
             <Box m="2rem 0" />
             <AdvertWidget />

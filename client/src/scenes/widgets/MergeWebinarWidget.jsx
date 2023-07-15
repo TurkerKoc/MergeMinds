@@ -165,8 +165,8 @@ const MergeWebinarWidget = () => {
         eventClick={handleEventClick}
       />
 
-      {/* Warning Dialog */}
-      <Dialog open={notEnoughCoins} onClose={() => setNotEnoughCoins(false)}>
+      {/* Warning Dialog  make it warning color*/}
+      <Dialog open={notEnoughCoins} onClose={() => setNotEnoughCoins(false)} color='warning'>
         <DialogTitle>Not Enough Merge Coins</DialogTitle>
         <DialogContent>
           <DialogContentText>
@@ -208,7 +208,7 @@ const MergeWebinarWidget = () => {
                 <span style={{ textTransform: 'uppercase' }}>
                   <span style={{ textTransform: 'capitalize' }}>E</span>nroll
                 </span>
-              <Badge badgeContent={dialogWebinar.extendedProps.price} color="warning">
+              <Badge badgeContent={dialogWebinar.extendedProps.price} color="warning" max={999}>
                 <Paid sx={{ fontSize: "25px", marginLeft: "5px" }} />
               </Badge>
             </Button>

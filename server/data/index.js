@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
-import csv from 'csv-parser';
-import fs from 'fs';
+// import csv from 'csv-parser';
+// import fs from 'fs';
 const userIds = [
   new mongoose.Types.ObjectId(),
   new mongoose.Types.ObjectId(),
@@ -405,31 +405,31 @@ export const posts = [
   },
 ];
 
-const csvFilePath = '/Users/turkerkoc/Downloads/simplemaps_worldcities_basicv1/worldcities.csv';
+// const csvFilePath = '/Users/turkerkoc/Downloads/simplemaps_worldcities_basicv1/worldcities.csv';
 
-export const readCSV = () => {
-  return new Promise((resolve, reject) => {
-    const locations = [];
+// export const readCSV = () => {
+//   return new Promise((resolve, reject) => {
+//     const locations = [];
 
-    fs.createReadStream(csvFilePath)
-      .pipe(csv())
-      .on('data', (row) => {
-        const location = {
-          _id: new mongoose.Types.ObjectId(),
-          name: row.city + ', ' + row.iso2,
-        };
-        locations.push(location);
-      })
-      .on('end', () => {
-        console.log('CSV file successfully processed');
-        resolve(locations);
-      })
-      .on('error', (error) => {
-        console.error('Error processing CSV file:', error);
-        reject(error);
-      });
-  });
-};
+//     fs.createReadStream(csvFilePath)
+//       .pipe(csv())
+//       .on('data', (row) => {
+//         const location = {
+//           _id: new mongoose.Types.ObjectId(),
+//           name: row.city + ', ' + row.iso2,
+//         };
+//         locations.push(location);
+//       })
+//       .on('end', () => {
+//         console.log('CSV file successfully processed');
+//         resolve(locations);
+//       })
+//       .on('error', (error) => {
+//         console.error('Error processing CSV file:', error);
+//         reject(error);
+//       });
+//   });
+// };
 export const categories50Array = () => {
 const categories50 = [
   "Other"
