@@ -42,7 +42,7 @@ const MergeProfilePage = () => {
                      paddingRight="2rem"> 
                     <LinksWidget/>
                     <Box m="2rem 0" />
-                    {myProfile && <PersonalNavigator/>} {/* Conditionally render PersonalNavigator */}
+                    {myProfile && <PersonalNavigator onMyDraftsClick={handleMyDraftsClick}/>} {/* Conditionally render PersonalNavigator */}
                 </Box>
                 <Box flexBasis={isNonMobileScreens ? "66%" : undefined} 
                     paddingRight="2rem">

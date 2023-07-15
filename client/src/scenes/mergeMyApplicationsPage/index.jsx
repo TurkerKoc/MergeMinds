@@ -18,7 +18,7 @@ import MergeMyApplicationsWidget from "scenes/widgets/MergeMyApplicationsWidget"
 
 const MergeMyApplicationsPage = () => {
   const isNonMobileScreens = useMediaQuery("(min-width:1000px)");
-  const { _id } = useSelector((state) => state.user);  
+  const { _id } = useSelector((state) => state.user);
 
   return (
     <Box>
@@ -32,17 +32,17 @@ const MergeMyApplicationsPage = () => {
         <Box flexBasis={isNonMobileScreens ? "26%" : undefined} paddingLeft="2rem" paddingRight="2rem"> {/* flexBasis is a css property to set width of an element and 26% means 26% of parent element (%26 of page) */}
           <LinksWidget />
           <Box m="2rem 0" />
-					<PersonalNavigatorWidget />
+          <PersonalNavigatorWidget />
         </Box >
         <Box
-          flexBasis={isNonMobileScreens ? "42%" : undefined}
-          mt={isNonMobileScreens ? undefined : "1rem"}
+          flexBasis={isNonMobileScreens ? "66%" : undefined}
+          paddingRight="2rem"
         >
           <MergeMyApplicationsWidget userId={_id} />
         </Box>
         {isNonMobileScreens && (
-          <Box flexBasis="26%" paddingRight="2rem" paddingLeft="2rem">
-            <UserCard userId={_id}/>
+          <Box flexBasis={isNonMobileScreens ? "26%" : undefined} mr="2rem" >
+            <UserCard userId={_id} />
             <Box m="2rem 0" />
             <AdvertWidget />
             <Box m="2rem 0" />

@@ -34,14 +34,14 @@ const MergeMyIdeasPage = () => {
           <PersonalNavigatorWidget />
         </Box >
         <Box
-          flexBasis={isNonMobileScreens ? "42%" : undefined}
-          mt={isNonMobileScreens ? undefined : "1rem"}
+          flexBasis={isNonMobileScreens ? "66%" : undefined}
+          paddingRight="2rem"
         >
           <MergeMyIdeasWidget />
         </Box>
         {isNonMobileScreens && (
-          <Box flexBasis="26%" paddingRight="2rem" paddingLeft="2rem">
-            <UserCard userId={_id}/>
+                <Box flexBasis={isNonMobileScreens ? "26%" : undefined} mr="2rem" >
+                <UserCard userId={_id}/>
             <Box m="2rem 0" />
             <AdvertWidget />
             <Box m="2rem 0" />

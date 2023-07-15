@@ -112,7 +112,7 @@ const MergeSubmissionWidget = ({ id, savedDraftData }) => {
         if (event.target.value.length > 1) {
             getLocations(event.target.value);
         }
-        if (event.key === "Enter") {
+        if (event.key === "Enter" || event.key === "Tab") {
             setIsLocationSelectOpen(true);
         }
     };
@@ -121,7 +121,7 @@ const MergeSubmissionWidget = ({ id, savedDraftData }) => {
         if (event.target.value.length > 1) {
             getCategories(event.target.value);
         }
-        if (event.key === "Enter") {
+        if (event.key === "Enter" || event.key === "Tab") {
             setIsCategorySelectOpen(true);
         }
     };
@@ -441,7 +441,7 @@ const MergeSubmissionWidget = ({ id, savedDraftData }) => {
                             value={categoryInputValue}
                             onChange={handleCategoryInputChange}
                             placeholder="Type to filter categories"
-                            sx={{ width: "95.5%", mb: 2 }}
+                            sx={{ width: "96%", mb: 2 }}
                             onKeyDown={(event) => {
                                 handleCategoryInputChange(event);
                             }}
@@ -452,7 +452,7 @@ const MergeSubmissionWidget = ({ id, savedDraftData }) => {
                             onClose={() => setIsCategorySelectOpen(false)}
                             onOpen={() => setIsCategorySelectOpen(true)}
                             onChange={(e) => handleCategorySelect(e)}
-                            sx={{ width: "5.5%", mb: 2 }}
+                            sx={{ width: "4%", mb: 2 }}
                             displayEmpty
                         >
                             {category.map((cat) => (
@@ -473,7 +473,7 @@ const MergeSubmissionWidget = ({ id, savedDraftData }) => {
                             value={locationInputValue}
                             onChange={handleLocationInputChange}
                             placeholder="Type to filter locations"
-                            sx={{ width: "95.5%", mb: 2 }}
+                            sx={{ width: "96%", mb: 2 }}
                             onKeyDown={(event) => {
                                 handleLocationInputChange(event);
                             }}
@@ -484,7 +484,7 @@ const MergeSubmissionWidget = ({ id, savedDraftData }) => {
                             onClose={() => setIsLocationSelectOpen(false)}
                             onOpen={() => setIsLocationSelectOpen(true)}
                             onChange={(e) => handleLocationSelect(e)}
-                            sx={{ width: "5.5%", mb: 2 }}
+                            sx={{ width: "4%", mb: 2 }}
                             displayEmpty
                         >
                             {location.map((loc) => (
@@ -607,7 +607,7 @@ const MergeSubmissionWidget = ({ id, savedDraftData }) => {
                         }}
                     >
                         post
-                        <Badge badgeContent={submissionPrice} color="warning">
+                        <Badge badgeContent={submissionPrice} color="warning" max={9999}>
                             <Paid sx={{ fontSize: "25px" }} />
                         </Badge>
                     </Button>
