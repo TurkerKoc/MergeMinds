@@ -12,7 +12,8 @@ import {useContext} from "react";
 
 const MergeDirectMessages = () => {
     console.log("MergeDirectMessages")
-    const {userId} = useParams();
+    const userId = useSelector((state) => state.user._id);
+    const {postUserId} = useParams();
     const loggedInUser = useSelector((state) => state.user);
     const isNonMobileScreens = true;
     let myProfile = false;
@@ -42,7 +43,7 @@ const MergeDirectMessages = () => {
                 <Box
                     flexBasis={isNonMobileScreens ? "42%" : undefined}
                 >
-                    <ChatWidget/>
+                    <ChatWidget postUserId={postUserId}/>
                 </Box>
                 <Box flexBasis={isNonMobileScreens ? "26%" : undefined}
                     paddingRight="2rem" mb={5}

@@ -60,7 +60,11 @@ function App() {
               element={isAuth ? <MergeProfilePage /> : <Navigate to="/mergeLogin" />}
             />
             <Route /* if the path is /submission then render the SubmissionPage component */
-                path="/mergeDirectMessages/:userId"
+                path="/mergeDirectMessages"
+                element={isAuth ? <MergeDirectMessages /> : <Navigate to="/mergeLogin" />}
+            />
+            <Route /* if the path is /submission then render the SubmissionPage component */
+                path="/mergeDirectMessages/:postUserId"
                 element={isAuth ? <MergeDirectMessages /> : <Navigate to="/mergeLogin" />}
             />
             <Route /* if the path is /mergeMyIdeasPage then render the ProfilePage component */

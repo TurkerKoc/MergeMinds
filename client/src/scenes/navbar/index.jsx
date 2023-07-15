@@ -87,7 +87,7 @@ const Navbar = () => {
             </Badge>
           </IconButton>
           <IconButton>             
-            <Message onClick={() => navigate(`/mergeDirectMessages/${user._id}`)} sx={{ fontSize: "23px" }} /> 
+            <Message onClick={() => navigate(`/mergeDirectMessages`)} sx={{ fontSize: "23px" }} /> 
           </IconButton>
           {/* <Notifications sx={{ fontSize: "25px" }} />
           <Help sx={{ fontSize: "25px" }} /> */}

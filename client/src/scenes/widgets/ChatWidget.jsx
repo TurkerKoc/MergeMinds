@@ -24,7 +24,8 @@ pdfjs.GlobalWorkerOptions.disableStream = true;
 
 const ChatWidget = () => {
     const { palette } = useTheme();
-    const { userId } = useParams();
+    const userId = useSelector((state) => state.user._id);
+    const { postUserId } = useParams();
     const token = useSelector((state) => state.token);
     const [user, setUser] = useState(null);
     const [contacts, setContacts] = useState([]);
@@ -83,7 +84,7 @@ const ChatWidget = () => {
                 method: "GET",
             });
 
-            if (response.ok) {
+            if (response.ok && !postUserId) {
                 const data = await response.json();
                 const memberIds = data.reduce((ids, chat) => {
                     const memberId = chat.members.find((memberId) => memberId !== userId);
@@ -93,7 +94,11 @@ const ChatWidget = () => {
                     return ids;
                 }, []);
                 setContacts(memberIds);
-            } else {
+            } 
+            else if (response.ok) {
+                setContacts([postUserId]);
+            }
+            else {
                 console.error("Error fetching user data:", response.status);
             }
         } catch (error) {
@@ -140,12 +145,19 @@ const ChatWidget = () => {
         setCurContact(contact);
         setCurrentChatId("");
         setChatHistory({ contact, messages: [] });
+        if (socket) {
+          socket.disconnect(); // Disconnect the existing socket connection
+        }
+        const newSocket = io("http://localhost:3001"); // Create a new socket connection
+        setSocket(newSocket);
         await fetchChatHistory(contact);
         setShowContacts(false);
-        setSocket(io("http://localhost:3001")); // Replace with your server URL
     };
 
     const handleBackClick = () => {
+        if(postUserId) {
+            navigate(`/newsfeed`);
+        }
         setCurContact(null);
         setShowContacts(true);
         socket.emit("shutdown");
@@ -299,6 +311,12 @@ const ChatWidget = () => {
         if (!isContactsFetched) {
             fetchContacts();
         }
+
+        if (postUserId) {
+            contacts.map((contact, index) => {
+                handleContactClick(contact);
+            })
+        }
     }, [contacts, isContactsFetched]);
 
     useEffect(() => {
@@ -310,7 +328,7 @@ const ChatWidget = () => {
     return (
         <WidgetWrapper>
             <Box p={2} color={palette.text.primary} maxHeight="750px">
-                {showContacts ? (
+                {(showContacts && !postUserId) ? (
                     <React.Fragment>
                         <Box display="flex" alignItems="center" gap="1rem">
                             <Typography style={{ fontSize: "24px" }} variant="h6">
