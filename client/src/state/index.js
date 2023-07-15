@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit"; // https://redux-toolkit.js.org/api/createSlice
 
 const initialState = {  // this is the initial state of the redux store
-  mode: "light",
+  mode: "dark",
   user: null,
   token: null,
   posts: [],
