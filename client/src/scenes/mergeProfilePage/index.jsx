@@ -1,18 +1,19 @@
 import {Box} from "@mui/material";
 import {useSelector} from "react-redux";
-import {useParams} from "react-router-dom";
+import {useParams, useNavigate, Link} from "react-router-dom";
 import Navbar from "scenes/navbar";
 import PersonalNavigator from "scenes/widgets/PersonalNavigatorWidget";
 import LinksWidget from "scenes/widgets/LinksWidget";
 import UserCard from "scenes/widgets/UserCardWidget";
 import SummaryWidget from "scenes/widgets/SummaryWidget";
 import MyDraftsWidget from "scenes/widgets/MyDraftsWidget";
-import {useState} from "react";
+import {useState, useEffect} from "react";
 
 const MergeProfilePage = () => {
     const {userId} = useParams();
     const loggedInUser = useSelector((state) => state.user);
     const [showMyDrafts, setShowMyDrafts] = useState(false);
+    const navigate = useNavigate();
 
     const isNonMobileScreens = true;
     let myProfile = false;
@@ -21,9 +22,14 @@ const MergeProfilePage = () => {
     }
 
     const handleMyDraftsClick = () => {
-        //TODO: navigate to mergeProfilePage
+        navigate(`/mergeProfilePage/${userId}?showMyDrafts=true`);
         setShowMyDrafts(true);
     };
+
+    useEffect(() => {
+        const urlParams = new URLSearchParams(window.location.search);
+        setShowMyDrafts(urlParams.get("showMyDrafts") === "true");
+    }, []);
 
     if (!userId) return null;
 
@@ -36,19 +42,25 @@ const MergeProfilePage = () => {
                 marginTop="2rem"
                 gap="2rem"
             >
-            
-            <Box flexBasis={isNonMobileScreens ? "26%" : undefined}
-                     paddingLeft="2rem"
-                     paddingRight="2rem"> 
+                <Box
+                    flexBasis={isNonMobileScreens ? "26%" : undefined}
+                    paddingLeft="2rem"
+                    paddingRight="2rem"
+                >
                     <LinksWidget/>
-                    <Box m="2rem 0" />
-                    {myProfile && <PersonalNavigator onMyDraftsClick={handleMyDraftsClick}/>} {/* Conditionally render PersonalNavigator */}
+                    <Box m="2rem 0"/>
+                    {myProfile && (
+                        <PersonalNavigator onMyDraftsClick={handleMyDraftsClick}/>
+                    )}{" "}
+                    {/* Conditionally render PersonalNavigator */}
                 </Box>
-                <Box flexBasis={isNonMobileScreens ? "66%" : undefined} 
-                    paddingRight="2rem">
+                <Box
+                    flexBasis={isNonMobileScreens ? "66%" : undefined}
+                    paddingRight="2rem"
+                >
                     {showMyDrafts ? <MyDraftsWidget/> : <SummaryWidget/>}
                 </Box>
-                <Box flexBasis={isNonMobileScreens ? "26%" : undefined} mr="2rem" >
+                <Box flexBasis={isNonMobileScreens ? "26%" : undefined} mr="2rem">
                     <UserCard userId={userId}/>
                 </Box>
             </Box>
