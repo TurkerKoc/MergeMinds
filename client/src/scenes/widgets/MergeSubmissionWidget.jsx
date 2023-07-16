@@ -338,6 +338,16 @@ const MergeSubmissionWidget = ({id, savedDraftData}) => {
             } else {
                 setFormError("An error occurred while submitting the form.");
             }
+            const availableDraftId = localStorage.getItem("availableDraftId");
+            if (availableDraftId) {
+                try {
+                    await fetch(`http://localhost:3001/mergeDraftData/${availableDraftId}`, {
+                        method: "DELETE",
+                    });
+                } catch (error) {
+                    console.log(error);
+                }
+            }
             localStorage.removeItem('submissionFormData');
             navigate("/newsfeed");
         } catch (error) {
