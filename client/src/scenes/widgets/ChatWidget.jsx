@@ -17,6 +17,7 @@ import { io } from "socket.io-client";
 import { Document, Page, pdfjs } from 'react-pdf';
 import { useNavigate } from "react-router-dom"; // useNavigate used for navigation between pages
 import { useDropzone } from "react-dropzone";
+import DialogContent from "@mui/material/DialogContent";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 pdfjs.GlobalWorkerOptions.disableAutoFetch = true;
@@ -337,32 +338,48 @@ const ChatWidget = () => {
                             </Typography>
                         </Box>
                         <Box my={2}>
+                        <DialogContent dividers style={{ minWidth: '600px', minHeight: '400px' }}>
+                        <div style={{ maxHeight: '400px', overflow: 'auto' , paddingRight: '20px' }}>
                             {contacts.map((contact, index) => {
                                 if (contact) {
-                                    return (
-                                        <Box
-                                            key={contact._id}
-                                            display="flex"
-                                            alignItems="center"
-                                            gap="1rem"
-                                            py={1}
-                                            component={Link}
-                                            to={`/profile/${contact._id}`}
-                                            onClick={() => handleContactClick(contact)}
-                                            style={{ cursor: "pointer" }}
-                                        >
-                                            <Avatar
-                                                src={`http://localhost:3001/assets/${contact.picturePath}`}
-                                                alt={contact.name}
-                                            />
-                                            <Typography style={{ fontSize: "24px" }} variant="h6">
-                                                {`${contact.name} ${contact.surname}`}
-                                            </Typography>
-                                        </Box>
-                                    );
+                                return (
+                                    <Typography key={contact._id} variant="h6" style={{ marginBottom: '1rem' }}>
+                                    <Button
+                                        display="flex"
+                                        alignItems="center"
+                                        gap="1rem"
+                                        py={1}
+                                        component={Link}
+                                        to={`/profile/${contact._id}`}
+                                        onClick={() => handleContactClick(contact)}                                    
+                                        style={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        marginBottom: '0.6rem',
+                                        cursor: 'pointer',
+                                        padding: '1.2rem',
+                                        border: '1px solid #e0e0e0',
+                                        borderRadius: '20px',
+                                        width: '100%',
+                                        textAlign: 'left',
+                                        justifyContent: 'flex-start',
+                                        }}
+                                    >
+                                        <Avatar
+                                        src={`http://localhost:3001/assets/${contact.picturePath}`}
+                                        alt={contact.name}
+                                        />
+                                        <Typography style={{ fontSize: "24px" }} variant="h6">
+                                        {`${contact.name} ${contact.surname}`}
+                                        </Typography>
+                                    </Button>
+                                    </Typography>
+                                );
                                 }
                                 return null;
                             })}
+                        </div>
+                        </DialogContent>
                         </Box>
                     </React.Fragment>
                 ) : (
