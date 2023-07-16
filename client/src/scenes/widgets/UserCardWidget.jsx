@@ -33,10 +33,16 @@ const UserCardWidget = ({userId}) => {
   const [rating, setRating] = useState(0);
   const [isRated, setIsRated] = useState(loggedInUser.ratedUsers.indexOf(userId) !== -1);
 
+  let myProfile = false;
+  if (loggedInUser._id === userId) {
+      myProfile = true;
+  }
+
   const userData = {
     name: user ? `${user.name} ${user.surname}` : '',
     profilePicture: user ? `http://localhost:3001/assets/${user.picturePath}` : '',
     trustPoints: user && user.trustPoints ? user.trustPoints : '?',
+    trustPointViewCount: user && user.trustPointViewCount ? user.trustPointViewCount : '?',
     websiteLink: user && user.webSiteLink ? user.webSiteLink : '',
   };
 
@@ -132,14 +138,15 @@ const UserCardWidget = ({userId}) => {
             <div style={styles.container}>
               <MilitaryTechIcon fontSize="large" color="primary" style={styles.icon} />
               <Rating
-                      name="widget-rating"
-                      value={userData.trustPoints}
-                      readOnly
-                      size="medium"
-                    />    
-               <span style={{marginLeft: "0.5rem"}}>{userData.trustPoints}/5</span>
+                name="widget-rating"
+                value={userData.trustPoints}
+                readOnly
+                size="medium"
+              />
+              <span style={{marginLeft: "0.2rem"}}>{userData.trustPoints}/5</span>    
             </div>
-            { !isRated && (
+            <div><span style={{marginLeft: "0.5rem", marginTop: "1rem"}}> out of {userData.trustPointViewCount} rate(s)</span></div>
+            {!myProfile && !isRated && (
             <Box style={{ marginTop: '20px' }}>
                 <Chip
                   icon={<ThumbsUpDownIcon />}
