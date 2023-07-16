@@ -360,10 +360,12 @@ const NewsFeed = () => {
                 marginTop="2rem"
                 gap="2rem"
             >
-                <Box flexBasis={isNonMobileScreens ? "26.7%" : undefined} paddingLeft="2rem"
-                    paddingRight="2rem"> {/* flexBasis is a css property to set width of an element and 26% means 26% of parent element (%26 of page) */}
-                    <LinksWidget />
-                </Box>
+                {isNonMobileScreens && (
+                    <Box flexBasis={isNonMobileScreens ? "26.7%" : undefined} paddingLeft="2rem"
+                        paddingRight="2rem"> {/* flexBasis is a css property to set width of an element and 26% means 26% of parent element (%26 of page) */}
+                        <LinksWidget />
+                    </Box>
+                )}
                 <Box
                     flexBasis={isNonMobileScreens ? "66%" : undefined}
                 >
@@ -388,11 +390,11 @@ const NewsFeed = () => {
                                 </Button>
                             </Grid>
                             <Grid item>
-                            {showClearButton && (
-                                <Button variant="outlined" onClick={handleClearSearch} sx={{ height: '50px', fontSize: '0.75rem', ml: '1rem' }}>
-                                    <CloseIcon sx={{ fontSize: "14px", marginRight: "2px" }} /> {/* Adjust the font size */}
-                                </Button>
-                            )}
+                                {showClearButton && (
+                                    <Button variant="outlined" onClick={handleClearSearch} sx={{ height: '50px', fontSize: '0.75rem', ml: '1rem' }}>
+                                        <CloseIcon sx={{ fontSize: "14px", marginRight: "2px" }} /> {/* Adjust the font size */}
+                                    </Button>
+                                )}
                             </Grid>
                         </Grid>
 
@@ -610,7 +612,7 @@ const NewsFeed = () => {
                                 </span>
                             </Button>
                         )}
-                    </Box>
+                    </Box>                    
                     <MergePostsWidget userId={_id} postsToShow={postsToShow} />
                     <Box display="flex" justifyContent="center">
                         {showLoadMore && (

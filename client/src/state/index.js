@@ -26,6 +26,7 @@ export const authSlice = createSlice({ // this is the slice of the redux store -
     setLogout: (state) => { // set user and token to null in redux store -> this is called when user logs out
       state.user = null;
       state.token = null;
+      localStorage.clear(); // clear local storage
     },
     setUser: (state, action) => {
       state.user = action.payload.user;

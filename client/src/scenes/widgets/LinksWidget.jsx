@@ -9,7 +9,7 @@ import { Message, Paid }from "@mui/icons-material";
 import { useNavigate } from "react-router-dom"; // useNavigate used for navigation between pages
 import { useSelector } from "react-redux";
 
-const MergeBlogWidget = () => {
+const LinksWidget = () => {
   const { palette } = useTheme();
   const navigate = useNavigate(); 
   const dark = palette.neutral.dark;
@@ -161,4 +161,4 @@ const MergeBlogWidget = () => {
   );
 };
 
-export default MergeBlogWidget;
+export default LinksWidget;

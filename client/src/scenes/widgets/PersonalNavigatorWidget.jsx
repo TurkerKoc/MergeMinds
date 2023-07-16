@@ -84,7 +84,7 @@ const PersonalNavigatorWidget = ({onMyDraftsClick}) => {
                         <AlignHorizontalCenterIcon/>
                         <Typography
                             color={main}
-                            variant="h"
+                            variant="h5"
                             fontWeight="500"
                             sx={{
                                 "&:hover": {
