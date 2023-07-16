@@ -54,6 +54,7 @@ const MergePostWidget = ({
     const isLiked = Boolean(likes[loggedInUserId]);
     const likeCount = Object.keys(likes).length;
     const DislikesCount = Object.keys(dislikes).length;
+    const bluredDescription = "This is a blured description to show all the time.";
 
     const { palette } = useTheme();
     const main = palette.neutral.main;
@@ -179,7 +180,7 @@ const MergePostWidget = ({
                                     height: '27px',
                                     padding: '2.5px',
                                     borderRadius: '20px',
-                                  }}
+                                }}
                             />
                             <CheckCircleIcon sx={{ fontSize: "30px", color: primary }} />
                         </FlexBetween>
@@ -195,14 +196,14 @@ const MergePostWidget = ({
             <Typography
                 color={main}
                 sx={{
-                mt: "1rem",
-                mb: "1rem",
-                maxWidth: "100%",
-                overflowWrap: "break-word",
-                wordWrap: "break-word",
+                    mt: "1rem",
+                    mb: "1rem",
+                    maxWidth: "100%",
+                    overflowWrap: "break-word",
+                    wordWrap: "break-word",
                 }}
             >
-            {isHidden && !isOwner && !isApplied ? <span style={{ filter: "blur(5px)", pointerEvents: "none", userSelect: "none" }}>{description}</span> : description}
+                {isHidden && !isOwner && !isApplied ? <span style={{ filter: "blur(5px)", pointerEvents: "none", userSelect: "none" }}>{bluredDescription}</span> : description}
             </Typography>
             {picturePath && (
                 <img
