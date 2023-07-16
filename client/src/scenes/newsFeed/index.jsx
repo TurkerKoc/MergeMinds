@@ -72,7 +72,7 @@ const NewsFeed = () => {
         if (event.target.value.length > 1) {
             getAllLocations(event.target.value);
         }
-        if (event.key === "Enter") {
+        if (event.key === "Enter" || event.key === "Tab") {
             setIsLocationSelectOpen(true);
         }
     };
@@ -81,7 +81,7 @@ const NewsFeed = () => {
         if (event.target.value.length > 1) {
             getAllCategories(event.target.value);
         }
-        if (event.key === "Enter") {
+        if (event.key === "Enter" || event.key === "Tab") {
             setIsCategorySelectOpen(true);
         }
     };
@@ -387,21 +387,15 @@ const NewsFeed = () => {
                                     <SearchIcon sx={{ fontSize: '2rem' }} />
                                 </Button>
                             </Grid>
+                            <Grid item>
+                            {showClearButton && (
+                                <Button variant="outlined" onClick={handleClearSearch} sx={{ height: '50px', fontSize: '0.75rem', ml: '1rem' }}>
+                                    <CloseIcon sx={{ fontSize: "14px", marginRight: "2px" }} /> {/* Adjust the font size */}
+                                </Button>
+                            )}
+                            </Grid>
                         </Grid>
 
-                        {showClearButton && (
-                            <Button
-                                variant="outlined"
-                                onClick={handleClearSearch}
-                                sx={{
-                                    width: "100%", // Adjust the width to make it smaller
-                                    height: "100%", // Adjust the height to make it smaller
-                                    fontSize: '0.75rem',
-                                }}
-                            >
-                                <CloseIcon sx={{ fontSize: "14px", marginRight: "2px" }} /> {/* Adjust the font size */}
-                            </Button>
-                        )}
                     </FlexBetween>
                     <FlexBetween gap="1rem" alignItems="flex-start">
                         <FlexBetween gap="0.5rem" alignItems="left">
