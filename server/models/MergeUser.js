@@ -46,6 +46,10 @@ const MergeUserSchema = new mongoose.Schema(
 			default: "",
 			max: 500,			
 		},
+    ratedUsers: {
+      type: [String],
+      default: [],
+    },
 		webSiteLink: String,
 		mergeCoins: Number,
   },

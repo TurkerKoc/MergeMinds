@@ -29,8 +29,9 @@ export const mergeRegister = async (req, res) => { // async function to register
       picturePath,
       friends: [],
       trustPoints: 5,
-      trustPointViewCount: 0,
+      trustPointViewCount: 1,
       profileSummary,
+      ratedUsers: [],
       webSiteLink,
       mergeCoins: 2,
     }); // create new user with hashed password

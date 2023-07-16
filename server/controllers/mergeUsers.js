@@ -96,3 +96,39 @@ export const addRemoveMergeFriend = async (req, res) => {
     res.status(404).json({ message: err.message });
   }
 };
+
+export const rateUser = async (req, res) => {
+  const { userId } = req.params; // YENI ID
+  const { rating } = req.body;
+  const { loggedInUserId } = req.body; // TUKO ID
+  
+  try {
+    // Get the user being rated
+    const ratedUser = await MergeUser.findById(userId); // YENI
+    if (!ratedUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Check if the current user has already rated the user
+    const currentUser = await MergeUser.findById(loggedInUserId); // TUKO
+    if (currentUser.ratedUsers.indexOf(userId) !== -1) {
+      return res.status(400).json({ message: "User has already been rated" });
+    }
+    
+    // Update the rating and trustPointViewCount
+    ratedUser.trustPointViewCount++;
+    ratedUser.trustPoints = (ratedUser.trustPoints * (ratedUser.trustPointViewCount - 1) + rating) / ratedUser.trustPointViewCount;
+    ratedUser.trustPoints = Number(ratedUser.trustPoints.toFixed(1));
+
+    // Save the changes
+    await ratedUser.save();
+
+    // Update the current user's ratedUsers array
+    currentUser.ratedUsers.push(String(userId));
+    await currentUser.save();
+
+    res.status(200).json(currentUser); // return the updated rated user YENI
+  } catch (err) {
+    res.status(500).json({ message: err.message }); // return error message
+  }
+};
