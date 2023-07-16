@@ -1,4 +1,4 @@
-import {Box} from "@mui/material";
+import { Box, useMediaQuery, Button, useTheme, Select, MenuItem } from "@mui/material";
 import {useSelector} from "react-redux";
 import {useParams} from "react-router-dom";
 import Navbar from "scenes/navbar";
@@ -15,7 +15,7 @@ const MergeDirectMessages = () => {
     const userId = useSelector((state) => state.user._id);
     const {postUserId} = useParams();
     const loggedInUser = useSelector((state) => state.user);
-    const isNonMobileScreens = true;
+    const isNonMobileScreens = useMediaQuery("(min-width:1000px)");
     let myProfile = false;
     if (loggedInUser._id === userId) {
         myProfile = true;
@@ -34,20 +34,40 @@ const MergeDirectMessages = () => {
                 marginTop="2rem"
                 gap="2rem"
             >
-                <Box flexBasis={isNonMobileScreens ? "26%" : undefined}
-                     paddingLeft="2rem"
-                     paddingRight="2rem"> 
-                    <LinksWidget/>
+                {isNonMobileScreens && (
+                <Box
+                    flexBasis={isNonMobileScreens ? "26%" : undefined}
+                    paddingLeft="2rem"
+                >
+                <LinksWidget/>
                     <Box m="2rem 0" />
                     {myProfile && <PersonalNavigator/>} {/* Conditionally render PersonalNavigator */}
                 </Box>
+                )}
+                
+                {!isNonMobileScreens && (
+                <Box flexBasis="100%" ml='2rem' mr="2rem">
+                    <ChatWidget postUserId={postUserId}/>
+                    <Box m="2rem 0" />
+                    {myProfile && <PersonalNavigator/>} {/* Conditionally render PersonalNavigator */}
+                    <Box m="2rem 0" />
+                </Box>
+                )}
+
+
+                {isNonMobileScreens && (
                 <Box flexBasis={isNonMobileScreens ? "66%" : undefined} 
-                    paddingRight="2rem">
+                    paddingRight="2rem"
+                    paddingLeft="2rem"
+                >
                     <ChatWidget postUserId={postUserId}/>
                 </Box>
+                )}
+                {isNonMobileScreens && (
                 <Box flexBasis={isNonMobileScreens ? "26%" : undefined} mr="2rem" >
                     <UserCard userId={userId}/>
                 </Box>
+                )}
             </Box>
         </Box>
     );

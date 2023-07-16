@@ -28,7 +28,7 @@ const MergeTokenPage = () => {
 
   // if (!user) return null;
 
-  const isNonMobileScreens = useMediaQuery("(min-width:300px)");
+  const isNonMobileScreens = useMediaQuery("(min-width:1000px)");
   const {_id, picturePath} = useSelector((state) => state.user);
 
   return (
@@ -40,22 +40,35 @@ const MergeTokenPage = () => {
           marginTop="2rem"
           gap="2rem"
         >
-        <Box flexBasis={isNonMobileScreens ? "26%" : undefined} 
+        {isNonMobileScreens && (
+        <Box
+            flexBasis={isNonMobileScreens ? "26%" : undefined}
+            paddingLeft="2rem"
+        >
+        <LinksWidget/>
+        </Box>
+        )}
+        
+        {!isNonMobileScreens && (
+        <Box flexBasis={isNonMobileScreens ? "100%" : undefined} 
+          paddingRight="2rem"
           paddingLeft="2rem"
-          paddingRight="2rem"> 
-          <LinksWidget />
-        </Box >
-
-        <Box flexBasis={isNonMobileScreens ? "66%" : undefined} 
-          paddingRight="2rem" >
+           >
             <MergeTokenWidget userId={_id} />
         </Box>
+        )}
+
+        {isNonMobileScreens && (
+        <Box flexBasis={isNonMobileScreens ? "66%" : undefined} 
+        paddingRight="2rem"
+        paddingLeft="2rem">
+            <MergeTokenWidget userId={_id} />
+            
+        </Box>
+        )}
         {isNonMobileScreens && (
          <Box flexBasis={isNonMobileScreens ? "26%" : undefined} mr="2rem">
             <MergeBlogWidget />
-            <Box m="2rem 0" />
-            <AdvertWidget />
-            <Box m="2rem 0" />
             {/* <FriendListWidget userId={_id} /> */}
           </Box>
         )}  

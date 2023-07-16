@@ -30,18 +30,39 @@ const MergeMyApplicationsPage = () => {
                 marginTop="2rem"
                 gap="2rem"
             >
+            {isNonMobileScreens && (
                 <Box
                     flexBasis={isNonMobileScreens ? "26%" : undefined}
                     paddingLeft="2rem"
-                    paddingRight="2rem"
                 >
-                    <LinksWidget/>
-                    <Box m="2rem 0"/>
-                    <PersonalNavigatorWidget onMyDraftsClick={handleMyDraftsClick}/>
+                <LinksWidget/>
+                    <Box m="2rem 0" />
+                    <PersonalNavigatorWidget onMyDraftsClick={handleMyDraftsClick} />
                 </Box>
+                )}
+                
+                {!isNonMobileScreens && (
+                <Box
+                    flexBasis={isNonMobileScreens ? "66%" : '100%'}
+                    paddingRight="2rem"
+                    paddingLeft="2rem"
+                >
+                    {showMyDrafts ? (
+                        <MyDraftsWidget userId={_id}/>
+                    ) : (
+                        <MergeMyApplicationsWidget userId={_id}/>
+                    )}
+                    <Box m="2rem 0" />
+                    <PersonalNavigatorWidget onMyDraftsClick={handleMyDraftsClick} />
+                    <Box m="2rem 0" />
+                </Box>
+                )}
+                
+                {isNonMobileScreens && (
                 <Box
                     flexBasis={isNonMobileScreens ? "66%" : undefined}
                     paddingRight="2rem"
+                    paddingLeft="2rem"
                 >
                     {showMyDrafts ? (
                         <MyDraftsWidget userId={_id}/>
@@ -49,6 +70,9 @@ const MergeMyApplicationsPage = () => {
                         <MergeMyApplicationsWidget userId={_id}/>
                     )}
                 </Box>
+                )}
+
+
                 {isNonMobileScreens && (
                     <Box flexBasis={isNonMobileScreens ? "26%" : undefined} mr="2rem">
                         <UserCard userId={_id}/>

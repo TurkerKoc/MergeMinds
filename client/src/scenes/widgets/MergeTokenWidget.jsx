@@ -132,30 +132,31 @@ const MergeTokenWidget = ({ userId }) => {
       <Typography variant="body1" sx={{ fontFamily: 'Arial, sans-serif' ,  fontWeight: 'bold', fontSize:17}}>
                Summary
               </Typography>
-      <Card sx={{ display: 'flex', flexDirection: 'column', padding: 1.5, boxShadow: '0 3px 5px 2px rgba(0,0,0,0.1)'}}>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', mt:1 }}>
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <img src="http://localhost:3001/assets/cart3.png" alt="Minus" />
-              <Typography variant="body1" sx={{ mx:2, fontFamily: 'Arial, sans-serif' ,  fontWeight: 'bold', fontSize:17}}>
-                Total Coins
-              </Typography>
-            </Box>
-            <Typography variant="body1" sx={{ fontFamily: 'Arial, sans-serif' ,  fontWeight: 'bold', fontSize:17}}>
-              {totalCoins}
-            </Typography>
-          </Box>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', mt: 1 }}>
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <img src="http://localhost:3001/assets/euro1.png" alt="Minus" />
-              <Typography variant="body1" sx={{ mt: 0, mx:2, fontFamily: 'Arial, sans-serif' ,  fontWeight: 'bold', fontSize:17}}>
-                Total Price
-              </Typography>
-            </Box>
-            <Typography variant="body1" sx={{ fontFamily: 'Arial, sans-serif' ,  fontWeight: 'bold', fontSize:17}}>
-              {totalPrice} €
-            </Typography>
-          </Box>
-          </Card>
+              <Card sx={{ display: 'flex', flexDirection: 'column', padding: 1.5, boxShadow: '0 3px 5px 2px rgba(0,0,0,0.1)'}}>
+  <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, justifyContent: 'space-between', alignItems: 'center', width: '100%', mt:1 }}>
+    <Box sx={{ display: 'flex', alignItems: 'center', mb: { xs: 1, md: 0 } }}>
+      <img src="http://localhost:3001/assets/cart3.png" alt="Minus" />
+      <Typography variant="body1" sx={{ mx:2, fontFamily: 'Arial, sans-serif' ,  fontWeight: 'bold', fontSize:17}}>
+        Total Coins
+      </Typography>
+    </Box>
+    <Typography variant="body1" sx={{ fontFamily: 'Arial, sans-serif' ,  fontWeight: 'bold', fontSize:17}}>
+      {totalCoins}
+    </Typography>
+  </Box>
+  <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, justifyContent: 'space-between', alignItems: 'center', width: '100%', mt: 1 }}>
+    <Box sx={{ display: 'flex', alignItems: 'center', mb: { xs: 1, md: 0 } }}>
+      <img src="http://localhost:3001/assets/euro1.png" alt="Minus" />
+      <Typography variant="body1" sx={{ mt: 0, mx:2, fontFamily: 'Arial, sans-serif' ,  fontWeight: 'bold', fontSize:17}}>
+        Total Price
+      </Typography>
+    </Box>
+    <Typography variant="body1" sx={{ fontFamily: 'Arial, sans-serif' ,  fontWeight: 'bold', fontSize:17}}>
+      {totalPrice} €
+    </Typography>
+  </Box>
+</Card>
+
           <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', mt: 1 }}>
           <Button onClick={handleCheckout} variant="contained" sx={{ fontWeight: 'bold', fontFamily: 'Arial, sans-serif', width: '70%', mb: '1rem'}}>
             Proceed to Checkout

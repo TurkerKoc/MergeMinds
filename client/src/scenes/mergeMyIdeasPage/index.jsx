@@ -26,27 +26,43 @@ const MergeMyIdeasPage = () => {
                 marginTop="2rem"
                 gap="2rem"
             >
+
+            {isNonMobileScreens && (
                 <Box
                     flexBasis={isNonMobileScreens ? "26%" : undefined}
                     paddingLeft="2rem"
-                    paddingRight="2rem"
                 >
-                    <LinksWidget />
+                <LinksWidget/>
                     <Box m="2rem 0" />
                     <PersonalNavigatorWidget onMyDraftsClick={handleMyDraftsClick} />
                 </Box>
+                )}
+
+                
+                {!isNonMobileScreens && (
+                    <Box
+                        flexBasis={isNonMobileScreens ? "66%" : '100%'}
+                        ml='2rem' mr="2rem"
+                    >
+                        <MergeMyIdeasWidget />
+                        <Box m="2rem 0" />
+                    <PersonalNavigatorWidget onMyDraftsClick={handleMyDraftsClick} />
+                    <Box m="2rem 0" />
+                    </Box>
+                )}
+
+                {isNonMobileScreens && (
                 <Box
                     flexBasis={isNonMobileScreens ? "66%" : undefined}
                     paddingRight="2rem"
+                    paddingLeft="2rem"
                 >
                     <MergeMyIdeasWidget />
                 </Box>
+                )}
                 {isNonMobileScreens && (
                     <Box flexBasis={isNonMobileScreens ? "26%" : undefined} mr="2rem">
                         <UserCard userId={_id} />
-                        <Box m="2rem 0" />
-                        <AdvertWidget />
-                        <Box m="2rem 0" />
                         {/* <FriendListWidget userId={_id} /> */}
                     </Box>
                 )}

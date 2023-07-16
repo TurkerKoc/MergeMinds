@@ -39,21 +39,36 @@ const MergeWebinarPage = () => {
                 marginTop="2rem"
                 gap="2rem"
             >
-          <Box flexBasis={isNonMobileScreens ? "26%" : undefined} paddingLeft="2rem"
-                    paddingRight="2rem"> {/* flexBasis is a css property to set width of an element and 26% means 26% of parent element (%26 of page) */}
-            <LinksWidget />
-            <Box m="2rem 0" />
+            {isNonMobileScreens && (
+              <Box
+                  flexBasis={isNonMobileScreens ? "26%" : undefined}
+                  paddingLeft="2rem"
+              >
+              <LinksWidget/>
+              <Box m="2rem 0" />
+              <MergeMyWebinarWidget/>
+            </Box >
+          )}
+
+        {!isNonMobileScreens && (
+        <Box flexBasis='100%' ml='2rem' mr="2rem">
             <MergeMyWebinarWidget/>
-          </Box >
-          <Box flexBasis={isNonMobileScreens ? "66%" : undefined} paddingRight="2rem">
+            <Box m="2rem 0" />
             <MergeWebinarWidget userId={_id} />
         </Box>
+        )}
+
+        {isNonMobileScreens && (
+          <Box flexBasis={isNonMobileScreens ? "66%" : undefined}
+          paddingRight="2rem"
+          paddingLeft="2rem"
+          >
+            <MergeWebinarWidget userId={_id} />
+        </Box>
+                        )}
           {isNonMobileScreens && (
             <Box flexBasis={isNonMobileScreens ? "26%" : undefined} mr="2rem">
               <MergeBlogWidget />
-              <Box m="2rem 0" />
-              <AdvertWidget />
-              <Box m="2rem 0" />
               {/* <FriendListWidget userId={_id} /> */}
             </Box>
           )}  

@@ -28,6 +28,9 @@ import { setMode, setLogout } from "state"; // setMode and setLogout are actions
 import { useNavigate } from "react-router-dom"; // useNavigate used for navigation between pages
 import FlexBetween from "components/FlexBetween"; // FlexBetween is a component we created in mern-social-media/client/src/components/FlexBetween.jsx 
 import Badge from '@mui/material/Badge';
+import Person2Icon from '@mui/icons-material/Person2';
+import EventIcon from '@mui/icons-material/Event';
+import HomeIcon from '@mui/icons-material/Home';
 
 const Navbar = () => {
   const [isMobileMenuToggled, setIsMobileMenuToggled] = useState(false); // isMobileMenuToggled is a state and setIsMobileMenuToggled is a function to change the state
@@ -163,9 +166,74 @@ const Navbar = () => {
                 <LightMode sx={{ color: dark, fontSize: "25px" }} />
               )}
             </IconButton>
-            <Message sx={{ fontSize: "25px" }} />
-            <Notifications sx={{ fontSize: "25px" }} />
-            <Help sx={{ fontSize: "25px" }} />
+
+            <IconButton>
+              <HomeIcon sx={{ fontSize: "25px", color: dark }}
+                          onClick={() => {
+                            navigate(`/newsFeed`);
+                            navigate(0);
+                          }}
+                          display="flex"  // Added display="flex"
+                          alignItems="center" // Added alignItems="center"	
+              
+              />
+            </IconButton>
+
+
+
+            <IconButton>
+              <Message sx={{ fontSize: "25px", color: dark }}
+                          onClick={() => {
+                            navigate(`/mergeDirectMessages`);
+                            navigate(0);
+                          }}
+                          display="flex"  // Added display="flex"
+                          alignItems="center" // Added alignItems="center"	
+              
+              />
+            </IconButton>
+
+
+
+            <IconButton>
+              <Person2Icon sx={{ fontSize: "25px", color: dark }}
+                          onClick={() => {
+                            navigate(`/mergeProfilePage/${user._id}`);
+                            navigate(0);
+                          }}
+                          display="flex"  // Added display="flex"
+                          alignItems="center" // Added alignItems="center"	
+              
+              />
+            </IconButton>
+
+
+            <IconButton>
+              <Paid sx={{ fontSize: "25px", color: dark }}
+                          onClick={() => {
+                            navigate(`/token/${user._id}`)
+                            navigate(0);
+                          }}
+                          display="flex"  // Added display="flex"
+                          alignItems="center" // Added alignItems="center"	
+              
+              />
+            </IconButton>
+            
+
+
+            <IconButton>
+              <EventIcon sx={{ fontSize: "25px", color: dark }}
+                          onClick={() => navigate(`/webinar/${user._id}`)} 
+                          display="flex"  // Added display="flex"
+                          alignItems="center" // Added alignItems="center"	
+              
+              />
+            </IconButton>
+
+
+
+
             <FormControl variant="standard" value={fullName}>
               <Select
                 value={fullName}

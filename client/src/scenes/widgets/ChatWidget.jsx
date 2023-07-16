@@ -41,6 +41,7 @@ const ChatWidget = () => {
     const navigate = useNavigate();
     const [selectedFile, setSelectedFile] = useState(null);
     const [fileError, setFileError] = useState(null);
+    
 
     const handleFileSelect = (acceptedFiles) => {
         const file = acceptedFiles[0];
