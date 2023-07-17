@@ -40,6 +40,7 @@ import {
     const dispatch = useDispatch();
     const token = useSelector((state) => state.token);
     const loggedInUserId = useSelector((state) => state.user._id);
+    const loggedInUser = useSelector((state) => state.user);
     const isLiked = Boolean(likes[loggedInUserId]);
     const likeCount = Object.keys(likes).length;
     const DislikesCount = Object.keys(dislikes).length;
@@ -66,6 +67,7 @@ import {
             subtitle={formatDistanceToNow(new Date(createdAt), { addSuffix: true })}
             userPicturePath={userPicturePath}
             trustPoints={trustPoints}
+            trustPointViewCount={loggedInUser.trustPointViewCount}
           />
         </FlexBetween>
         <Typography color={main} sx={{ mt: "1rem" }}>

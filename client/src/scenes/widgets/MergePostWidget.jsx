@@ -62,6 +62,7 @@ const MergePostWidget = ({
     const dark = palette.primary.dark;
     const [openPopup, setOpenPopup] = useState(false);
     const [isApplied, setIsApplied] = useState(false);
+    const [trustPointViewCount, setTrustPointViewCount] = useState(0);
 
     const handleApply = () => {
         setIsApplied(true);
@@ -122,8 +123,29 @@ const MergePostWidget = ({
         dispatch(setPost({ post: updatedPost }));
     };
 
+    const getUser = async () => {
+        try {
+          const response = await fetch(`http://localhost:3001/mergeUsers/${postUserId}`, {
+            method: 'GET',
+            headers: { Authorization: `Bearer ${token}` },
+          });
+    
+          if (response.ok) {
+            const data = await response.json();
+            console.log("TPCOUNT: ", data.trustPointViewCount);
+            setTrustPointViewCount(data.trustPointViewCount);
+            console.log("TPCOUNT2: ", trustPointViewCount);
+          } else {
+            console.error('Error fetching user data:', response.status);
+          }
+        } catch (error) {
+          console.error('Error fetching user data:', error);
+        }
+    };
+
     useEffect(() => {
         getApplicants(); // Fetch the applicants when the component mounts
+        getUser();
     }, []);
     // Check if the logged-in user is the owner of the idea post
     const isOwner = postUserId === loggedInUserId;
@@ -145,6 +167,7 @@ const MergePostWidget = ({
                         subtitle={formatDistanceToNow(new Date(createdAt), { addSuffix: true })}
                         userPicturePath={userPicturePath}
                         trustPoints={trustPoints}
+                        trustPointViewCount={trustPointViewCount}
                         isApplied={isApplied}
                         isOwner={isOwner}
                     />

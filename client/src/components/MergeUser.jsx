@@ -4,7 +4,7 @@ import FlexBetween from "./FlexBetween";
 import UserImage from "./UserImage";
 import Rating from '@mui/material/Rating';
 
-const MergeUser = ({ friendId, name, subtitle, userPicturePath, trustPoints, isApplied, isOwner }) => {
+const MergeUser = ({ friendId, name, subtitle, userPicturePath, trustPoints, trustPointViewCount, isApplied, isOwner }) => {
   const navigate = useNavigate();
 
   const { palette } = useTheme();
@@ -16,6 +16,14 @@ const MergeUser = ({ friendId, name, subtitle, userPicturePath, trustPoints, isA
       navigate(`/mergeProfilePage/${friendId}`);
       navigate(0);
     }
+  };
+
+  const styles = {
+    container: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
   };
     
   return (
@@ -39,7 +47,10 @@ const MergeUser = ({ friendId, name, subtitle, userPicturePath, trustPoints, isA
           >
             {name}
           </Typography>
+          <div style={styles.container}>
 						<Rating name="read-only" value={trustPoints} readOnly />
+            <span style={{marginLeft: "0.2rem", fontSize: "13px", fontFamily: "Roboto, sans-serif", color: "#AAAAAA"}}>({trustPointViewCount})</span> 
+          </div>
 					</FlexBetween>
           <Typography color={medium} fontSize="0.75rem">
             {subtitle}
