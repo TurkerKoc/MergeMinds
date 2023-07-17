@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Box, Typography, useTheme, Divider, Button } from '@mui/material';
-import LinkedInIcon from '@mui/icons-material/LinkedIn';
+import OpenInNewRoundedIcon from '@mui/icons-material/OpenInNewRounded';
 import MilitaryTechIcon from '@mui/icons-material/MilitaryTech';
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
@@ -153,60 +153,64 @@ const UserCardWidget = ({userId}) => {
               )}
             </Box>
             {!myProfile && !isRated && (
-            <Box style={{ marginTop: '10px' }}>
-                <Chip
-                  icon={<ThumbsUpDownIcon />}
-                  label="RATE"
-                  color="primary"
-                  onClick={handleClickOpen}
-                  style={styles.chip}
-                  clickable
-                />
-                <Dialog
-                  open={openRate}
-                  TransitionComponent={Transition}
-                  keepMounted
-                  onClose={handleClose}
-                  aria-describedby="alert-dialog-slide-description"
-                >
-                  <DialogContent dividers style={{ minWidth: '400px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                    <Box style={{marginBottom: '10px'}}>
-                    <DialogContentText id="alert-dialog-slide-description" style={{ textAlign: 'center', fontSize: '17px' }}>
-                      Please rate this user
-                    </DialogContentText>
-                    </Box>
-                    <Rating
-                      name="widget-rating"
-                      value={rating}
-                      onChange={handleRatingChange}
-                      size="large"
-                      style={{ fontSize: 40 }}
-                    />
-                  </DialogContent>
-                  <DialogActions>
-                    <Button onClick={handleClose}>Save</Button>
-                  </DialogActions>
-                </Dialog>
-              </Box>
+              <Box style={{ marginTop: '10px' }}>
+                  <Chip
+                    icon={<ThumbsUpDownIcon />}
+                    label="RATE"
+                    color="primary"
+                    onClick={handleClickOpen}
+                    style={styles.chip}
+                    clickable
+                  />
+                  <Dialog
+                    open={openRate}
+                    TransitionComponent={Transition}
+                    keepMounted
+                    onClose={handleClose}
+                    aria-describedby="alert-dialog-slide-description"
+                  >
+                    <DialogContent dividers style={{ minWidth: '400px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                      <Box style={{marginBottom: '10px'}}>
+                      <DialogContentText id="alert-dialog-slide-description" style={{ textAlign: 'center', fontSize: '17px' }}>
+                        Please rate this user
+                      </DialogContentText>
+                      </Box>
+                      <Rating
+                        name="widget-rating"
+                        value={rating}
+                        onChange={handleRatingChange}
+                        size="large"
+                        style={{ fontSize: 40 }}
+                      />
+                    </DialogContent>
+                    <DialogActions>
+                      <Button onClick={handleClose}>Save</Button>
+                    </DialogActions>
+                  </Dialog>
+                </Box>
             )}
           </Typography>         
         </Box>
       </Box>
-      {/* LinkedIn Icon */}
-      <Box display="flex" justifyContent="center">
-        <a
-          href={
-            userData.websiteLink.startsWith('http')
-              ? userData.websiteLink
-              : `https://${userData.websiteLink}`
-          }
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{ textDecoration: 'none', color: palette.primary.main}}
-        >
-          <LinkedInIcon fontSize="large" color="primary" />
-        </a>
-      </Box> 
+      { userData.websiteLink && (
+        <Box display="flex" justifyContent="center">
+          <Button >
+            <OpenInNewRoundedIcon fontSize="small" style={{marginRight: '2px'}}/>
+            <a
+              href={
+                userData.websiteLink.startsWith('http')
+                  ? userData.websiteLink
+                  : `http://${userData.websiteLink}`
+              }
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ textDecoration: 'none', color: palette.primary.main, textTransform: 'lowercase'}}
+            >
+              {userData.websiteLink}
+            </a>
+          </Button>
+        </Box> 
+      )}
     </WidgetWrapper>
   );
 };
