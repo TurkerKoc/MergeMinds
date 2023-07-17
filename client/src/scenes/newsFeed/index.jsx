@@ -361,13 +361,13 @@ const NewsFeed = () => {
                 gap="2rem"
             >
                 {isNonMobileScreens && (
-                    <Box flexBasis={isNonMobileScreens ? "26.7%" : undefined} paddingLeft="2rem"
-                        paddingRight="2rem"> {/* flexBasis is a css property to set width of an element and 26% means 26% of parent element (%26 of page) */}
+                    <Box flexBasis={isNonMobileScreens ? "26.7%" : undefined} paddingLeft="2rem"> {/* flexBasis is a css property to set width of an element and 26% means 26% of parent element (%26 of page) */}
                         <LinksWidget />
                     </Box>
                 )}
                 <Box
-                    flexBasis={isNonMobileScreens ? "66%" : undefined}
+                    flexBasis={isNonMobileScreens ? "66%" : "100%"}
+                    paddingLeft="2rem"
                 >
                     <FlexBetween gap="0.5rem" sx={{ marginBottom: '1rem' }}>
                         <Grid container alignItems="center" style={{ height: "100%" }}>
