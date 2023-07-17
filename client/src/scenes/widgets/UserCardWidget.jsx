@@ -145,12 +145,18 @@ const UserCardWidget = ({userId}) => {
               />
               <span style={{marginLeft: "0.2rem"}}>{userData.trustPoints}/5</span>    
             </div>
-            <div><span style={{marginLeft: "0.5rem", marginTop: "1rem"}}> out of {userData.trustPointViewCount} rate(s)</span></div>
+            <Box style={{ marginTop: '5px' }}>
+              {user && user.trustPointViewCount ? (
+              <div><span style={{marginLeft: "0.5rem", marginTop: "1rem"}}> out of {userData.trustPointViewCount} rate(s)</span></div>
+              ): (
+              <div><span style={{marginLeft: "0.5rem", marginTop: "1rem"}}> No one has rated yet</span></div>
+              )}
+            </Box>
             {!myProfile && !isRated && (
-            <Box style={{ marginTop: '20px' }}>
+            <Box style={{ marginTop: '10px' }}>
                 <Chip
                   icon={<ThumbsUpDownIcon />}
-                  label="RATE THIS USER"
+                  label="RATE"
                   color="primary"
                   onClick={handleClickOpen}
                   style={styles.chip}
@@ -187,7 +193,7 @@ const UserCardWidget = ({userId}) => {
         </Box>
       </Box>
       {/* LinkedIn Icon */}
-      <Box display="flex" justifyContent="center" >
+      <Box display="flex" justifyContent="center">
         <a
           href={
             userData.websiteLink.startsWith('http')
