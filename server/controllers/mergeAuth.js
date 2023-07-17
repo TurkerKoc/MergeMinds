@@ -29,7 +29,7 @@ export const mergeRegister = async (req, res) => { // async function to register
       picturePath,
       friends: [],
       trustPoints: 5,
-      trustPointViewCount: 1,
+      trustPointViewCount: 0,
       profileSummary,
       ratedUsers: [],
       webSiteLink,
