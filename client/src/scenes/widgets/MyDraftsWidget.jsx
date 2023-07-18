@@ -14,6 +14,8 @@ import {useParams} from "react-router-dom";
 import {useNavigate} from "react-router-dom";
 import WidgetWrapper from "../../components/WidgetWrapper";
 import {useEffect, useState} from "react";
+import formatDistanceToNow from 'date-fns/formatDistanceToNow';
+import FlexBetween from "components/FlexBetween";
 
 const MyDraftsWidget = () => {
     const {userId} = useParams();
@@ -32,6 +34,7 @@ const MyDraftsWidget = () => {
                     method: "GET",
                 });
                 const draftData = await response.json();
+                console.log("draftData");
                 console.log(draftData);
                 setDrafts(draftData);
             } catch (error) {
@@ -46,11 +49,12 @@ const MyDraftsWidget = () => {
         // Save the selected draft data to local storage
         const selectedDraft = drafts.find((draft) => draft._id === draftId);
         if (selectedDraft) {
+            console.log("selected Draft in MyDraftsWidget", selectedDraft);
             localStorage.setItem("submissionFormData", JSON.stringify(selectedDraft));
             localStorage.setItem("availableDraftId", draftId);
         }
 
-        navigate(`/submission/${draftId}`);
+        navigate(`/submission/${userId}`);
     };
 
     const handleDeleteDraft = async () => {
@@ -116,7 +120,9 @@ const MyDraftsWidget = () => {
                                             }}
                                             onClick={() => handleDraftClick(draft._id)}
                                         >
-                                            <Typography variant="subtitle1">{draft.title}</Typography>
+                                            <Typography variant="subtitle1">{draft.title}</Typography>                                    
+                                        <FlexBetween gap="1rem" alignItems="center">
+                                            <Typography variant="subtitle1">{formatDistanceToNow(new Date(draft.createdAt), { addSuffix: true })}</Typography>
                                             <Button
                                                 variant="text"
                                                 color="error"
@@ -127,6 +133,7 @@ const MyDraftsWidget = () => {
                                             >
                                                 X
                                             </Button>
+                                        </FlexBetween>
                                         </Box>
                                     ))
                                 ) : (

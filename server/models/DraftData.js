@@ -8,7 +8,7 @@ const draftDataSchema = new mongoose.Schema(
         applicantNumber: Number,
         selectedCategory: String,
         selectedLocation: String,
-        selectedIsHidden: Boolean,
+        selectedIsHidden: String,
     },
     { timestamps: true }
 );

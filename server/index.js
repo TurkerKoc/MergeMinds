@@ -7,7 +7,7 @@ import multer from "multer"; // for file storage
 import helmet from "helmet"; // for security
 import morgan from "morgan"; // for logging
 import path from "path"; // for file paths
-import {fileURLToPath} from "url"; // allow us to properly set paths
+import { fileURLToPath } from "url"; // allow us to properly set paths
 import authRoutes from "./routes/auth.js";
 import userRoutes from "./routes/users.js";
 import postRoutes from "./routes/posts.js";
@@ -23,14 +23,14 @@ import mergeMessageRoutes from "./routes/messageRoutes.js";
 import mergeSponsoredContentRoutes from "./routes/sponsoredContentRoutes.js";
 import mergeDraftDataRoutes from "./routes/draftDataRoutes.js";
 
-import {register} from "./controllers/auth.js"; // for registering user
-import {createPost} from "./controllers/posts.js";
-import {verifyToken} from "./middleware/auth.js";
+import { register } from "./controllers/auth.js"; // for registering user
+import { createPost } from "./controllers/posts.js";
+import { verifyToken } from "./middleware/auth.js";
 
-import {mergeRegister} from "./controllers/mergeAuth.js"; // for registering user
-import {createMergePost} from "./controllers/mergePosts.js";
-import {applyMergePost} from "./controllers/mergePosts.js";
-import {createMessage} from "./controllers/messageController.js";
+import { mergeRegister } from "./controllers/mergeAuth.js"; // for registering user
+import { createMergePost } from "./controllers/mergePosts.js";
+import { applyMergePost } from "./controllers/mergePosts.js";
+import { createMessage } from "./controllers/messageController.js";
 
 import User from "./models/User.js"; // for one time user creation
 import { createServer } from "http";
@@ -41,9 +41,9 @@ import Location from "./models/Location.js";
 import Price from "./models/Price.js";
 import Webinar from "./models/Webinar.js";
 import Category from "./models/Category.js";
-import {mergeUsers, users, posts, locations, prices, categories} from "./data/index.js"; // for one time user and post creation
+import { mergeUsers, users, posts, locations, prices, categories } from "./data/index.js"; // for one time user and post creation
 //import { readCSV } from "./data/index.js";
-import { categories50Array  } from "./data/index.js";
+import { categories50Array } from "./data/index.js";
 
 /* ADD DUMMY WEBINAR DATA */
 const webinars = [
@@ -69,18 +69,18 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const server = createServer(app);
 const io = new Server(server, {
-  cors: {
-    origin: "http://localhost:3000",
-    methods: ["GET", "POST"],
-    allowedHeaders: ["my-custom-header"],
-    credentials: true,
-  },
+    cors: {
+        origin: "http://localhost:3000",
+        methods: ["GET", "POST"],
+        allowedHeaders: ["my-custom-header"],
+        credentials: true,
+    },
 });
 
 
 
 app.use(helmet()); // allow us to set security headers
-app.use(helmet.crossOriginResourcePolicy({policy: "cross-origin"}));
+app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
 app.use(morgan("common")); // allow us to log requests
 // app.use(bodyParser.json({ limit: "30mb", extended: true })); // allow us to parse request body
 // app.use(bodyParser.urlencoded({ limit: "30mb", extended: true })); // allow us to parse request body with 30mb limit
@@ -97,7 +97,7 @@ const storage = multer.diskStorage({
         cb(null, file.originalname); // set filename to original filename
     },
 });
-const upload = multer({storage}); // initialize multer with storage -> we will use this variable to upload files
+const upload = multer({ storage }); // initialize multer with storage -> we will use this variable to upload files
 
 /* ROUTES WITH FILES */
 //upload.single("picture") -> if you set picture it will be set in http request body as picture and multer will upload it to public/assets
@@ -110,8 +110,8 @@ app.post("/mergeMessages", upload.single("file"), createMessage); // also this o
 /* STRIPE ROUTE */
 app.use("/stripe", stripeRoutes);
 
-app.use(bodyParser.json({limit: "30mb", extended: true}));
-app.use(bodyParser.urlencoded({limit: "30mb", extended: true}));
+app.use(bodyParser.json({ limit: "30mb", extended: true }));
+app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 
 /* ROUTES */
 app.use("/auth", authRoutes);
@@ -137,7 +137,7 @@ io.on("connection", (socket) => {
         // console.log("mesage received")
         // console.log("message: ", message)
         // console.log("currentChatId: ", currentChatId)
-      // Broadcast the message to other connected clients
+        // Broadcast the message to other connected clients
         socket.broadcast.emit("msg", { message: message, receivedChatId: currentChatId });
     });
 
@@ -159,7 +159,6 @@ mongoose
     })
     .then(() => {
         server.listen(PORT, () => console.log(`Server Port: ${PORT}`));
-
         /* ADD DUMMY DATA ONE TIME */
         // User.insertMany(users);
         // Post.insertMany(posts);
@@ -178,6 +177,38 @@ mongoose
         //   }
         // const categoriesArray = await categories50Array();
         // Category.insertMany(categoriesArray);
+
+        // Find categories with duplicate domain names
+        // const duplicateCategories = await Category.aggregate([
+        //     {
+        //         $group: {
+        //             _id: "$domain",
+        //             count: { $sum: 1 },
+        //             ids: { $push: "$_id" },
+        //         },
+        //     },
+        //     {
+        //         $match: {
+        //             count: { $gt: 1 },
+        //         },
+        //     },
+        // ]);
+
+        // if (duplicateCategories.length === 0) {
+        //     console.log("No duplicate categories found.");
+        //     return;
+        // }
+
+        // // Delete duplicate categories (excluding the first occurrence)
+        // const deletePromises = duplicateCategories.map(async (duplicate) => {
+        //     const [firstCategory, ...restCategories] = duplicate.ids;
+        //     await Category.deleteMany({ _id: { $in: restCategories } });
+        //     console.log(`Deleted ${restCategories.length} duplicate categories with domain: ${duplicate._id}`);
+        // });
+
+        // await Promise.all(deletePromises);
+
+        // console.log("Duplicates deletion completed.");
     })
     .catch((error) => console.log(`${error} did not connect`));
 

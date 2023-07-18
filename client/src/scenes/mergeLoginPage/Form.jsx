@@ -15,6 +15,7 @@ import { useDispatch } from "react-redux"; // useDispatch used for dispatching a
 import { setLogin } from "state"; // setLogin is an action from state.js
 import Dropzone from "react-dropzone"; // Dropzone is a library to handle file uploads (like profile picture)
 import FlexBetween from "components/FlexBetween"; // FlexBetween is a component we created in mern-social-media/client/src/components/FlexBetween.jsx
+import {useEffect} from "react";
 
 // yup validation schema for register form
 const registerSchema = yup.object().shape({ //required is a yup function to show error message if user doesn't enter anything in that field
@@ -122,11 +123,19 @@ const Form = () => {
     if (isRegister) await register(values, onSubmitProps); // if the pageType is register then call register function        
   };
 
+  useEffect(() => { // this function will be called when the pageType changes
+    console.log("Checking page type");
+    console.log(isLogin);
+    console.log(isRegister);
+    console.log(pageType);
+  }, [isLogin, isRegister, pageType]);
+
   return (
     <Formik // Formik is a library to handle forms in react from https://formik.org/docs/overview
       onSubmit={handleFormSubmit} // onSubmit is a function that will be called when user submits the form
       initialValues={isLogin ? initialValuesLogin : initialValuesRegister} // initialValues is an object that contains initial values for the form
       validationSchema={isLogin ? loginSchema : registerSchema} // validationSchema is a yup schema to validate the form
+      enableReinitialize={true} // Enable reinitialization when the initial values change
     >
       {({
         values, // values is an object that contains values for each field

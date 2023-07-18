@@ -403,22 +403,24 @@ const NewsFeed = () => {
                         <FlexBetween gap="0.5rem" alignItems="left">
                             <Button
                                 // disabled={!post}
+                                variant="contained"
                                 onClick={handleNewClick}
                                 sx={{
-                                    color: palette.background.alt,
                                     backgroundColor: selectedButton === 'new' ? palette.primary.main : palette.primary.light,
                                     borderRadius: "3rem",
+                                    opacity: selectedButton !== 'new' ? 0.5 : 1, // Add opacity based on selectedButton value
                                     mb: "1rem",
                                 }}
                             >
                                 New
                             </Button>
                             <Button
+                                variant="contained"
                                 // disabled={!post}
                                 onClick={handleTopClick}
                                 sx={{
-                                    color: palette.background.alt,
                                     backgroundColor: selectedButton === 'top' ? palette.primary.main : palette.primary.light,
+                                    opacity: selectedButton !== 'top' ? 0.5 : 1, // Add opacity based on selectedButton value
                                     borderRadius: "3rem",
                                     mb: "1rem",
                                 }}

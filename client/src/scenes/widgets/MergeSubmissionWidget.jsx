@@ -51,7 +51,7 @@ const MergeSubmissionWidget = ({id, savedDraftData}) => {
     const [description, setSubmission] = useState("");
     const [selectedCategory, setSelectedCategory] = useState("");
     const [selectedLocation, setSelectedLocation] = useState("");
-    let [selectedIsHidden, setSelectedIsHidden] = useState(false);
+    const [selectedIsHidden, setSelectedIsHidden] = useState("");
     const [image, setImage] = useState("");
     const [submissionPrice, setSubmissionPrice] = useState(4);
     const navigate = useNavigate();
@@ -145,64 +145,6 @@ const MergeSubmissionWidget = ({id, savedDraftData}) => {
         }
     };
 
-    useEffect(() => {
-        if (savedDraftData) {
-            setSelectedCategory(savedDraftData.selectedCategory || "");
-            if (savedDraftData.selectedCategory) {
-                getCategory(savedDraftData.selectedCategory);
-            }
-            setSelectedLocation(savedDraftData.selectedLocation || "");
-            if (savedDraftData.selectedLocation) {
-                getLocation(savedDraftData.selectedLocation);
-            }
-            setSelectedIsHidden(savedDraftData.selectedIsHidden || "");
-            setApplicantNumber(savedDraftData.applicantNumber || "");
-            setTitle(savedDraftData.title || "");
-            setSubmission(savedDraftData.description || "");
-
-            const isHiddenValue = savedDraftData.selectedIsHidden || "";
-            if (isHiddenValue === "true") {
-                setSubmissionPrice(submissionPrice + 4);
-            } else if (isHiddenValue === "false") {
-                setSubmissionPrice(submissionPrice - 4);
-            }
-            setSelectedIsHidden(isHiddenValue);
-
-            const applicantNumberValue = savedDraftData.applicantNumber || "";
-            if (applicantNumberValue === "") {
-                isHiddenValue === "true" ? setSubmissionPrice(8) : setSubmissionPrice(4); // Set the default submission price if the input is empty
-            } else {
-                const intValue = parseInt(applicantNumberValue, 10); // Convert the value to an integer
-                if (intValue > 0) {
-                    const previousValue = applicantNumber;
-                    const priceDifference = (intValue - previousValue) * 1; // Calculate the difference in price
-                    setSubmissionPrice((prevPrice) => prevPrice + priceDifference); // Update the submission price
-                }
-                setApplicantNumber(intValue);
-            }
-        }
-    }, [id, savedDraftData]);
-
-    useEffect(() => {
-        const formData = {
-            selectedCategory,
-            selectedLocation,
-            selectedIsHidden,
-            applicantNumber,
-            title,
-            description,
-        };
-
-        localStorage.setItem("submissionFormData", JSON.stringify(formData));
-    }, [
-        selectedCategory,
-        selectedLocation,
-        selectedIsHidden,
-        applicantNumber,
-        title,
-        description,
-    ]);
-
     const getCategories = async (value) => {
         const response = await fetch(`http://localhost:3001/mergePosts/categories?query=${value}`, {
             method: "GET",
@@ -224,30 +166,13 @@ const MergeSubmissionWidget = ({id, savedDraftData}) => {
         if (filteredLocations.length > 0) {
             setLocation(filteredLocations);
         }
-    };
-
-    useEffect(() => {
-        if (categoryInputValue === "") {
-            getCategories("");
-        }
-    }, [categoryInputValue]);
-    useEffect(() => {
-        if (locationInputValue === "") {
-            getLocations("ab");
-        }
-    }, [locationInputValue]);
-
-    useEffect(() => {
-        getCategories("");
-        getLocations("ab");
-        getMergeUser();
-    }, []); // eslint-disable-line react-hooks/exhaustive-deps
+    };    
 
     const clearForm = () => {
         // Clear state
         setSubmissionPrice(4);
         setSelectedIsHidden("");
-        setApplicantNumber("");
+        setApplicantNumber(0);
         setTitle("");
         setSubmission("");
         setSelectedCategory("");
@@ -257,16 +182,6 @@ const MergeSubmissionWidget = ({id, savedDraftData}) => {
         // Clear local storage
         localStorage.removeItem('submissionFormData');
     };
-
-    useEffect(() => {
-        const formData = localStorage.getItem("submissionFormData");
-        if (formData) {
-            // If formData exists in localStorage, show the "Clear Form" button
-            setIsFormDataPresent(true);
-        } else {
-            setIsFormDataPresent(false);
-        }
-    }, []);
 
     const handleClearForm = () => {
         localStorage.removeItem("submissionFormData");
@@ -304,6 +219,8 @@ const MergeSubmissionWidget = ({id, savedDraftData}) => {
         formData.append("title", title);
         formData.append("description", description);
         formData.append("isHidden", selectedIsHidden);
+        // console.log("on post");
+        // console.log(typeof selectedIsHidden);
         formData.append("prepaidApplicants", applicantNumber);
         formData.append("categoryId", selectedCategory);
         formData.append("priceId", "64a1eb2e03e50005ceafe231");
@@ -357,9 +274,6 @@ const MergeSubmissionWidget = ({id, savedDraftData}) => {
     };
 
     const handleSaveDraft = async () => {
-        if (selectedIsHidden === "") {
-            selectedIsHidden = "false";
-        }
         const draftData = {
             userId: id,
             title,
@@ -369,9 +283,11 @@ const MergeSubmissionWidget = ({id, savedDraftData}) => {
             selectedLocation,
             selectedIsHidden,
         };
-        const availableDraftId = localStorage.getItem("availableDraftId") || "";
-        console.log("HEY " + availableDraftId.length);
+        console.log("Saving draft...");
         console.log(draftData);
+        const availableDraftId = localStorage.getItem("availableDraftId") || "";
+        // console.log("HEY " + availableDraftId.length);
+        // console.log(draftData);
         if (availableDraftId.length === 0) {
             console.log("availableDraftId is not empty");
             try {
@@ -394,7 +310,7 @@ const MergeSubmissionWidget = ({id, savedDraftData}) => {
 
                 if (response.ok) {
                     const draftDataExist = await response.json();
-                    console.log("HEYYY" + draftDataExist);
+                    // console.log("HEYYY" + draftDataExist);
                     if (draftDataExist.length !== 0) {
                         try {
                             await fetch(`http://localhost:3001/mergeDraftData/${availableDraftId}`, {
@@ -471,6 +387,106 @@ const MergeSubmissionWidget = ({id, savedDraftData}) => {
         return isValid;
     };
 
+    //to get all categories when text field is empty
+    useEffect(() => {
+        if (categoryInputValue === "") {
+            getCategories("");
+        }
+    }, [categoryInputValue]);
+
+    //get locations when text field is empty (starting with ab)
+    useEffect(() => {
+        if (locationInputValue === "") {
+            getLocations("ab");
+        }
+    }, [locationInputValue]);
+
+    //get locations categories and current user when page first rendered
+    useEffect(() => {
+        getCategories("");
+        getLocations("ab");
+        getMergeUser();
+    }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+    //check whether are there any unsaved data in local storage
+    useEffect(() => {
+        const formData = localStorage.getItem("submissionFormData");
+        // console.log("getting form data");
+        // console.log(formData);
+        if (formData) {
+            // console.log("form data exists");
+            // If formData exists in localStorage, show the "Clear Form" button
+            setIsFormDataPresent(true);
+        } else {
+            // console.log("form data does not exist");
+            setIsFormDataPresent(false);
+        }
+    }, []);
+
+    //when any of the values changed, save them to local storage
+    useEffect(() => {
+        const formData = {
+            selectedCategory,
+            selectedLocation,
+            selectedIsHidden,
+            applicantNumber,
+            title,
+            description,
+        };
+
+        localStorage.setItem("submissionFormData", JSON.stringify(formData));
+    }, [
+        selectedCategory,
+        selectedLocation,
+        selectedIsHidden,
+        applicantNumber,
+        title,
+        description,
+    ]);
+
+    //get the saved draft data from local storage
+    useEffect(() => {        
+        console.log(savedDraftData);
+        if (savedDraftData) {
+            setSelectedCategory(savedDraftData.selectedCategory || "");
+            if (savedDraftData.selectedCategory) {
+                getCategory(savedDraftData.selectedCategory);
+            }
+            setSelectedLocation(savedDraftData.selectedLocation || "");
+            if (savedDraftData.selectedLocation) {
+                getLocation(savedDraftData.selectedLocation);
+            }
+            // setSelectedIsHidden(savedDraftData.selectedIsHidden || "");
+            // console.log('selected is hidden: ', savedDraftData.selectedIsHidden);
+            // console.log(typeof savedDraftData.selectedIsHidden);
+
+            setApplicantNumber(savedDraftData.applicantNumber || 0);
+            setTitle(savedDraftData.title || "");
+            setSubmission(savedDraftData.description || "");
+
+            setSelectedIsHidden(savedDraftData.selectedIsHidden || "");
+
+            var newSubmissionPrice = 4;
+            const isHiddenValue = savedDraftData.selectedIsHidden || "";
+            // console.log(isHiddenValue);
+            // console.log(typeof isHiddenValue);
+            if (isHiddenValue && isHiddenValue === "true") {
+                newSubmissionPrice += 4;
+            }
+
+            const applicantNumberValue = savedDraftData.applicantNumber || 0;
+            if(applicantNumberValue > 0) {
+                const intValue = applicantNumberValue // Convert the value to an integer
+                if (intValue > 0) {
+                    const previousValue = applicantNumber;
+                    const priceDifference = (intValue - previousValue) * 1; // Calculate the difference in price
+                    newSubmissionPrice += priceDifference;
+                }
+                setApplicantNumber(intValue);
+            }
+            setSubmissionPrice(newSubmissionPrice);
+        }
+    }, [id, savedDraftData]);
 
     return (
         <WidgetWrapper>
@@ -650,7 +666,7 @@ const MergeSubmissionWidget = ({id, savedDraftData}) => {
                 )}
                 <div style={{display: 'flex', justifyContent: 'space-between'}}>
                     <Button
-                        disabled={!description || !title || !applicantNumber || !category || !location || !selectedIsHidden}
+                        disabled={!description || !title || !category || !location || !selectedIsHidden}
                         onClick={handlePost}
                         variant="contained"
                         sx={{
