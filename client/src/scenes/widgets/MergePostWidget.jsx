@@ -2,61 +2,64 @@ import {
     FavoriteBorderOutlined,
     FavoriteOutlined,
 } from "@mui/icons-material";
-import { Typography, useTheme, Chip } from "@mui/material";
+import {Typography, useTheme, Chip} from "@mui/material";
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 import FlexBetween from "components/FlexBetween";
 import MergeUser from "components/MergeUser";
 import WidgetWrapper from "components/WidgetWrapper";
-import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { setPost } from "state";
+import {useState} from "react";
+import {useDispatch, useSelector} from "react-redux";
+import {setPost} from "state";
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 import MergeApplyWidget from "scenes/widgets/MergeApplyWidget";
 import Badge from '@mui/material/Badge';
 import {
     Button, // Button is a component from material ui library
 } from "@mui/material";
-import { Tooltip } from '@mui/material';
+import {Tooltip} from '@mui/material';
 import CoinIcon from '@mui/icons-material/LocalAtm';
-import { Paid } from "@mui/icons-material";
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import {Paid} from "@mui/icons-material";
+import {useEffect} from "react";
+import {useNavigate} from "react-router-dom";
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import HandshakeOutlinedIcon from '@mui/icons-material/HandshakeOutlined';
 import ForumRoundedIcon from '@mui/icons-material/ForumRounded';
+import emailjs from '@emailjs/browser';
 
 const MergePostWidget = ({
-    postId,
-    postUserId,
-    name,
-    userPicturePath,
-    trustPoints,
-    picturePath,
-    location,
-    title,
-    description,
-    isHidden,
-    prepaidApplicants,
-    categoryId,
-    priceId,
-    likes,
-    dislikes,
-    Applications,
-    createdAt,
-}) => {
+                             postId,
+                             postUserId,
+                             name,
+                             email,
+                             userPicturePath,
+                             trustPoints,
+                             picturePath,
+                             location,
+                             title,
+                             description,
+                             isHidden,
+                             prepaidApplicants,
+                             categoryId,
+                             priceId,
+                             likes,
+                             dislikes,
+                             Applications,
+                             createdAt,
+                         }) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const token = useSelector((state) => state.token);
     const loggedInUserId = useSelector((state) => state.user._id);
     const loggedInUserCoins = useSelector((state) => state.user.mergeCoins);
+    const loggedInUserName = useSelector((state) => state.user.name + " " + state.user.surname);
     const isLiked = Boolean(likes[loggedInUserId]);
     const likeCount = Object.keys(likes).length;
     const DislikesCount = Object.keys(dislikes).length;
     const bluredDescription = "This is a blured description to show all the time.";
 
-    const { palette } = useTheme();
+    const {palette} = useTheme();
     const main = palette.neutral.main;
     const primary = palette.primary.main;
     const dark = palette.primary.dark;
@@ -64,7 +67,21 @@ const MergePostWidget = ({
     const [isApplied, setIsApplied] = useState(false);
     const [trustPointViewCount, setTrustPointViewCount] = useState(0);
 
+    const sendEmail = () => {
+        // emailjs.send('service_vaxd84v', 'template_ca3i5qs', {
+        //     to_name: name,
+        //     from_name: loggedInUserName,
+        //     reply_to: email
+        // }, 'i0ct3E73-yR2Mvgxy')
+        //     .then((result) => {
+        //         console.log(result.text);
+        //     }, (error) => {
+        //         console.log(error.text);
+        //     });
+    };
+
     const handleApply = () => {
+        sendEmail();
         setIsApplied(true);
     };
     const handleOpenPopup = () => {
@@ -105,10 +122,10 @@ const MergePostWidget = ({
                 Authorization: `Bearer ${token}`,
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({ userId: loggedInUserId }),
+            body: JSON.stringify({userId: loggedInUserId}),
         });
         const updatedPost = await response.json();
-        dispatch(setPost({ post: updatedPost }));
+        dispatch(setPost({post: updatedPost}));
     };
     const patchDislike = async () => {
         const response = await fetch(`http://localhost:3001/mergePosts/${postId}/dislike`, {
@@ -117,29 +134,29 @@ const MergePostWidget = ({
                 Authorization: `Bearer ${token}`,
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({ userId: loggedInUserId }),
+            body: JSON.stringify({userId: loggedInUserId}),
         });
         const updatedPost = await response.json();
-        dispatch(setPost({ post: updatedPost }));
+        dispatch(setPost({post: updatedPost}));
     };
 
     const getUser = async () => {
         try {
-          const response = await fetch(`http://localhost:3001/mergeUsers/${postUserId}`, {
-            method: 'GET',
-            headers: { Authorization: `Bearer ${token}` },
-          });
-    
-          if (response.ok) {
-            const data = await response.json();
-            console.log("TPCOUNT: ", data.trustPointViewCount);
-            setTrustPointViewCount(data.trustPointViewCount);
-            console.log("TPCOUNT2: ", trustPointViewCount);
-          } else {
-            console.error('Error fetching user data:', response.status);
-          }
+            const response = await fetch(`http://localhost:3001/mergeUsers/${postUserId}`, {
+                method: 'GET',
+                headers: {Authorization: `Bearer ${token}`},
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                console.log("TPCOUNT: ", data.trustPointViewCount);
+                setTrustPointViewCount(data.trustPointViewCount);
+                console.log("TPCOUNT2: ", trustPointViewCount);
+            } else {
+                console.error('Error fetching user data:', response.status);
+            }
         } catch (error) {
-          console.error('Error fetching user data:', error);
+            console.error('Error fetching user data:', error);
         }
     };
 
@@ -164,7 +181,7 @@ const MergePostWidget = ({
                     <MergeUser
                         friendId={postUserId}
                         name={name.split(' ')[0] + ' ' + name.split(' ')[1][0] + '.'}
-                        subtitle={formatDistanceToNow(new Date(createdAt), { addSuffix: true })}
+                        subtitle={formatDistanceToNow(new Date(createdAt), {addSuffix: true})}
                         userPicturePath={userPicturePath}
                         trustPoints={trustPoints}
                         trustPointViewCount={trustPointViewCount}
@@ -172,31 +189,32 @@ const MergePostWidget = ({
                         isOwner={isOwner}
                     />
                     {!isOwner && !isApplied && (
-                        <FlexBetween gap="0.25rem" sx={{ marginRight: '0.5rem' }}>
+                        <FlexBetween gap="0.25rem" sx={{marginRight: '0.5rem'}}>
                             <Button
                                 onClick={handleOpenPopup}// navigate to submission page when user clicks on submit button
-                                sx={{ fontSize: "15px", display: 'flex', gap: '5px' }}
+                                sx={{fontSize: "15px", display: 'flex', gap: '5px'}}
                             >
-                                <span style={{ textTransform: 'lowercase' }}>
-                                    <span style={{ textTransform: 'capitalize' }}>a</span>pply
+                                <span style={{textTransform: 'lowercase'}}>
+                                    <span style={{textTransform: 'capitalize'}}>a</span>pply
                                 </span>
                                 {prepaidApplicants == 0 && (
                                     <Badge badgeContent={priceId} color="warning">
-                                        <Paid sx={{ fontSize: "25px" }} />
+                                        <Paid sx={{fontSize: "25px"}}/>
                                     </Badge>
                                 )}
                             </Button>
-                            <MergeApplyWidget userMergeCoins={loggedInUserCoins} applicationPrice={prepaidApplicants <= 0 ? priceId : 0}
-                                userId={loggedInUserId} ideaPostId={postId} ideaPostUserId={postUserId}
-                                open={openPopup} onClose={handleClosePopup} onResult={handleApply} />
+                            <MergeApplyWidget userMergeCoins={loggedInUserCoins}
+                                              applicationPrice={prepaidApplicants <= 0 ? priceId : 0}
+                                              userId={loggedInUserId} ideaPostId={postId} ideaPostUserId={postUserId}
+                                              open={openPopup} onClose={handleClosePopup} onResult={handleApply}/>
                         </FlexBetween>
                     )}
                     {isApplied && (
-                        <FlexBetween gap="0.25rem" sx={{ marginRight: '0.5rem' }}>
+                        <FlexBetween gap="0.25rem" sx={{marginRight: '0.5rem'}}>
                             <Chip
                                 label="DM"
                                 onClick={handleDM}
-                                icon={<ForumRoundedIcon />}
+                                icon={<ForumRoundedIcon/>}
                                 color="primary"
                                 sx={{
                                     fontSize: '13px',
@@ -205,15 +223,15 @@ const MergePostWidget = ({
                                     borderRadius: '20px',
                                 }}
                             />
-                            <CheckCircleIcon sx={{ fontSize: "30px", color: primary }} />
+                            <CheckCircleIcon sx={{fontSize: "30px", color: primary}}/>
                         </FlexBetween>
                     )}
                 </FlexBetween>
             )}
             {name == "admin admin" && (
-                <Chip icon={<HandshakeOutlinedIcon />} label="SPONSORED CONTENT" />)
+                <Chip icon={<HandshakeOutlinedIcon/>} label="SPONSORED CONTENT"/>)
             }
-            <Typography color={main} sx={{ mt: "1rem" }}>
+            <Typography color={main} sx={{mt: "1rem"}}>
                 <strong>{title}</strong>
             </Typography>
             <Typography
@@ -226,7 +244,11 @@ const MergePostWidget = ({
                     wordWrap: "break-word",
                 }}
             >
-                {isHidden && !isOwner && !isApplied ? <span style={{ filter: "blur(5px)", pointerEvents: "none", userSelect: "none" }}>{bluredDescription}</span> : description}
+                {isHidden && !isOwner && !isApplied ? <span style={{
+                    filter: "blur(5px)",
+                    pointerEvents: "none",
+                    userSelect: "none"
+                }}>{bluredDescription}</span> : description}
             </Typography>
             {picturePath && (
                 <img
@@ -243,19 +265,19 @@ const MergePostWidget = ({
                 />
             )}
             {name !== "admin admin" && (
-                <FlexBetween gap="1rem" alignItems="flex-start" sx={{ mt: "1rem", mb: "0.5rem" }}>
+                <FlexBetween gap="1rem" alignItems="flex-start" sx={{mt: "1rem", mb: "0.5rem"}}>
                     <FlexBetween gap="0.5rem">
-                        <Chip label={location} />
-                        <Chip label={categoryId} />
+                        <Chip label={location}/>
+                        <Chip label={categoryId}/>
                     </FlexBetween>
-                    <FlexBetween mt="0.50rem" sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                    <FlexBetween mt="0.50rem" sx={{display: 'flex', justifyContent: 'flex-end'}}>
                         <FlexBetween gap="1rem">
                             <FlexBetween gap="0.3rem">
                                 <ArrowUpwardIcon onClick={patchLike}>
                                     {isLiked ? (
-                                        <FavoriteOutlined sx={{ color: primary }} />
+                                        <FavoriteOutlined sx={{color: primary}}/>
                                     ) : (
-                                        <FavoriteBorderOutlined />
+                                        <FavoriteBorderOutlined/>
                                     )}
                                 </ArrowUpwardIcon>
                                 <Typography>{likeCount}</Typography>
@@ -263,9 +285,9 @@ const MergePostWidget = ({
                             <FlexBetween gap="0.3rem">
                                 <ArrowDownwardIcon onClick={patchDislike}>
                                     {isLiked ? (
-                                        <FavoriteOutlined sx={{ color: primary }} />
+                                        <FavoriteOutlined sx={{color: primary}}/>
                                     ) : (
-                                        <FavoriteBorderOutlined />
+                                        <FavoriteBorderOutlined/>
                                     )}
                                 </ArrowDownwardIcon>
                                 <Typography>{DislikesCount}</Typography>

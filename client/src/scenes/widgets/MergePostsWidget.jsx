@@ -103,6 +103,7 @@ const MergePostsWidget = ({ userId, isProfile = false, postsToShow }) => {
             postId={_id}
             postUserId={userId._id}            
             name={`${userId.name} ${userId.surname}`}
+            email={userId.email}
             userPicturePath={userId.picturePath}
             trustPoints={userId.trustPoints}
             picturePath={picturePath}
