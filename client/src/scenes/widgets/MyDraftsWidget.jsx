@@ -86,47 +86,57 @@ const MyDraftsWidget = () => {
     if (!userId) return null;
 
     return (
-        <WidgetWrapper sx={{minHeight: "300px"}}>
-            <Box p={2} color={palette.text.primary}>
-                <Box mt={3}>
-                    <Typography variant="h1" fontWeight="500" sx={{mb: "3rem"}}>
-                        My Drafts
-                    </Typography>
-                    {drafts.length > 0 ? (
-                        drafts.sort((a, b) => b.createdAt.localeCompare(a.createdAt)).map((draft) => (
-                            <Box
-                                key={draft._id}
-                                mb={1}
-                                sx={{
-                                    border: `1px solid ${palette.divider}`,
-                                    borderRadius: "10px",
-                                    p: "0.5rem",
-                                    "&:hover": {
-                                        cursor: "pointer",
-                                        borderColor: palette.primary.main,
-                                    },
-                                    display: "flex",
-                                    justifyContent: "space-between",
-                                    alignItems: "center",
-                                }}
-                                onClick={() => handleDraftClick(draft._id)}
-                            >
-                                <Typography variant="subtitle1">{draft.title}</Typography>
-                                <Button
-                                    variant="text"
-                                    color="error"
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        handleConfirmationDialogOpen(draft._id);
-                                    }}
-                                >
-                                    X
-                                </Button>
-                            </Box>
-                        ))
-                    ) : (
-                        <Typography variant="subtitle1">You have no drafts to show.</Typography>
-                    )}
+        <WidgetWrapper>
+            <Box p={2} color={palette.text.primary} maxHeight="750px">
+                <Box>
+                    <Box display="flex" alignItems="center" gap="1rem">
+                        <Typography style={{ fontSize: "24px" }} variant="h6">
+                            My Drafts
+                        </Typography>
+                    </Box>
+                    <Box my={2}>
+                        <DialogContent dividers style={{ minWidth: '600px', minHeight: drafts.length > 0 ? '1px' : '50px' }}>
+                            <div style={{ maxHeight: '400px', overflow: 'auto' , paddingRight: '20px' }}>
+                                {drafts.length > 0 ? (
+                                    drafts.sort((a, b) => b.createdAt.localeCompare(a.createdAt)).map((draft) => (
+                                        <Box
+                                            key={draft._id}
+                                            mb={1}
+                                            sx={{
+                                                border: `1px solid ${palette.divider}`,
+                                                borderRadius: "10px",
+                                                p: "0.5rem",
+                                                "&:hover": {
+                                                    cursor: "pointer",
+                                                    borderColor: palette.primary.main,
+                                                },
+                                                display: "flex",
+                                                justifyContent: "space-between",
+                                                alignItems: "center",
+                                            }}
+                                            onClick={() => handleDraftClick(draft._id)}
+                                        >
+                                            <Typography variant="subtitle1">{draft.title}</Typography>
+                                            <Button
+                                                variant="text"
+                                                color="error"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    handleConfirmationDialogOpen(draft._id);
+                                                }}
+                                            >
+                                                X
+                                            </Button>
+                                        </Box>
+                                    ))
+                                ) : (
+                                    <Typography variant="h6" style={{ marginBottom: '0.1rem', textAlign: 'center'}}>
+                                        You have no drafts
+                                    </Typography>
+                                )}
+                            </div>
+                        </DialogContent>
+                    </Box>
                 </Box>
             </Box>
             <Dialog open={confirmationDialogOpen} onClose={handleConfirmationDialogClose}>

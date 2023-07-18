@@ -338,7 +338,7 @@ const ChatWidget = () => {
                             </Typography>
                         </Box>
                         <Box my={2}>
-                        <DialogContent dividers style={{ minWidth: '600px', minHeight: contacts.length > 0 ? '400px' : '50px' }}>
+                        <DialogContent dividers style={{ minWidth: '600px', minHeight: contacts.length > 0 ? '1px' : '50px' }}>
                         <div style={{ maxHeight: '400px', overflow: 'auto' , paddingRight: '20px' }}>
                             {contacts.map((contact, index) => {
                                 if (contact) {

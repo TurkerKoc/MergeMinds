@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { setPosts } from "state";
 import MergePostWidget from "./MergePostWidget";
 import { Merge } from "@mui/icons-material";
+import { Typography } from "@mui/material";
+import { Alert } from "@mui/material";
 
 const MergeMyApplicationsWidget = ({ userId }) => {
   const dispatch = useDispatch();
@@ -27,6 +29,13 @@ const MergeMyApplicationsWidget = ({ userId }) => {
 
   return (
     <>
+    {!posts.length && (
+      <Alert variant="outlined" severity="info" style={{ marginTop: '5px' }}>
+        <Typography variant="h6" style={{ marginBottom: '0.1rem', textAlign: 'center'}}>
+          You have no applications
+        </Typography>
+      </Alert>
+    )}
       {posts.map(
         ({
           _id,
