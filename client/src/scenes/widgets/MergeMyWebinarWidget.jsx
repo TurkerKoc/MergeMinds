@@ -93,30 +93,31 @@ const MergeMyWebinarWidget = () => {
         </List>
       </Box>
       {selectedWebinar ? (
-      <Dialog open={!!selectedWebinar} onClose={handleClose}>
-        <DialogTitle>{selectedWebinar.title}</DialogTitle>
-        <DialogContent>
-          <DialogContentText>{selectedWebinar.description}</DialogContentText>
-        </DialogContent>
-        <DialogContentText sx={{ fontWeight: 'bold', mt:'0.5rem', ml: '2rem'}}>
-          Date: {new Date(selectedWebinar.start).toLocaleDateString("en-US", {
-            year: "numeric",
-            month: "2-digit",
-            day: "2-digit"
-          })}
-        </DialogContentText>
-        <DialogActions>
-          <Button onClick={handleClose} sx={{ fontSize: "14px", display: 'flex', gap: '3px' }} color="primary">
-            Close
-          </Button>
-          <Button onClick={() => window.open(selectedWebinar.zoomLink, "_blank")} sx={{ fontSize: "14px", display: 'flex', gap: '3px' }} color="primary">
-            Open
-          </Button>
-        </DialogActions>
-      </Dialog>
-    ) : (
-      <Typography variant="body1">You don't have any enrolled webinar</Typography>
-    )}
+        <Dialog open={!!selectedWebinar} onClose={handleClose}>
+          <DialogTitle>{selectedWebinar.title}</DialogTitle>
+          <DialogContent>
+            <DialogContentText>{selectedWebinar.description}</DialogContentText>
+          </DialogContent>
+          <DialogContentText sx={{ fontWeight: 'bold', mt: '0.5rem', ml: '2rem' }}>
+            Date: {new Date(selectedWebinar.start).toLocaleDateString("en-US", {
+              year: "numeric",
+              month: "2-digit",
+              day: "2-digit"
+            })}
+          </DialogContentText>
+          <DialogActions>
+            <Button onClick={handleClose} sx={{ fontSize: "14px", display: 'flex', gap: '3px' }} color="primary">
+              Close
+            </Button>
+            <Button onClick={() => window.open(selectedWebinar.zoomLink, "_blank")} sx={{ fontSize: "14px", display: 'flex', gap: '3px' }} color="primary">
+              Open
+            </Button>
+          </DialogActions>
+        </Dialog>
+      ) : (
+        <Typography variant="h6" style={{ marginBottom: '1rem', textAlign: 'center' }}>
+          You don't have any webinars yet.
+        </Typography>)}
 
     </WidgetWrapper>
   );

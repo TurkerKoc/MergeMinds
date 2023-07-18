@@ -36,7 +36,7 @@ import HomeIcon from '@mui/icons-material/Home';
 const Navbar = () => {
   const [isMobileMenuToggled, setIsMobileMenuToggled] = useState(false); // isMobileMenuToggled is a state and setIsMobileMenuToggled is a function to change the state
   const dispatch = useDispatch(); // dispatch is a function to dispatch actions to redux store
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
   const user = useSelector((state) => state.user); // grabbing user data from redux store
   const isNonMobileScreens = useMediaQuery("(min-width: 1000px)"); // useMediaQuery is a hook to check if the screen is mobile or not
   const { palette } = useTheme();
@@ -65,15 +65,15 @@ const Navbar = () => {
           }}
         >
           MergeMinds
-        </Typography>        
+        </Typography>
       </FlexBetween>
 
       {/* DESKTOP NAV */}
       {isNonMobileScreens ? ( // if screen is not mobile then show these icons
-        <FlexBetween gap="2rem"> {/* gap from search bar -> 2rem is equal to 32px */}        
-          <Button 
-            variant="contained" 
-            color="primary" 
+        <FlexBetween gap="2rem"> {/* gap from search bar -> 2rem is equal to 32px */}
+          <Button
+            variant="contained"
+            color="primary"
             onClick={() => navigate(`/submission/${user._id}`)} // navigate to submission page when user clicks on submit button
             startIcon={<AddIcon />} // Add the plus icon using the startIcon prop
           >
@@ -85,14 +85,14 @@ const Navbar = () => {
             ) : (
               <LightMode sx={{ color: dark, fontSize: "25px" }} /> // dark mode icon will be dark color when theme.palette.mode is light
             )}
-          </IconButton>   
+          </IconButton>
           <IconButton>
             <Badge badgeContent={user.mergeCoins} color="warning" max={999}>
-              <Paid onClick={() => navigate(`/token/${user._id}`)}  sx={{ fontSize: "25px" }} />
+              <Paid onClick={() => navigate(`/token/${user._id}`)} sx={{ fontSize: "25px" }} />
             </Badge>
           </IconButton>
-          <IconButton>             
-            <Message onClick={() => navigate(`/mergeDirectMessages`)} sx={{ fontSize: "23px" }} /> 
+          <IconButton>
+            <Message onClick={() => navigate(`/mergeDirectMessages`)} sx={{ fontSize: "23px" }} />
           </IconButton>
           {/* <Notifications sx={{ fontSize: "25px" }} />
           <Help sx={{ fontSize: "25px" }} /> */}
@@ -150,7 +150,7 @@ const Navbar = () => {
             </IconButton>
           </Box>
 
-          {/* MENU ITEMS (Same with NAVBAR items with little bit css changes */} 
+          {/* MENU ITEMS (Same with NAVBAR items with little bit css changes */}
           <FlexBetween
             display="flex"
             flexDirection="column" // to show menu items in one column
@@ -169,83 +169,83 @@ const Navbar = () => {
               )}
             </IconButton>
 
-            <IconButton>
+            <IconButton
+              onClick={() => {
+                navigate(`/newsFeed`);
+                navigate(0);
+              }}>
               <HomeIcon sx={{ fontSize: "25px", color: dark }}
-                          onClick={() => {
-                            navigate(`/newsFeed`);
-                            navigate(0);
-                          }}
-                          display="flex"  // Added display="flex"
-                          alignItems="center" // Added alignItems="center"	
-              
+                display="flex"  // Added display="flex"
+                alignItems="center" // Added alignItems="center"	
+
               />
               <Typography
-							color={main}
-							variant="h5"
-							fontWeight="500"
-							sx={{
-								"&:hover": {
-									color: palette.primary.light,
-									cursor: "pointer",
-								},
-								marginLeft: "0.5rem"
-							}}
-						>
-							Explore
-						</Typography>
+                color={main}
+                variant="h5"
+                fontWeight="500"
+                sx={{
+                  "&:hover": {
+                    color: palette.primary.light,
+                    cursor: "pointer",
+                  },
+                  marginLeft: "0.5rem"
+                }}
+              >
+                Explore
+              </Typography>
             </IconButton>
 
-            <IconButton>
+            <IconButton
+              onClick={() => {
+                navigate(`/mergeProfilePage/${user._id}`);
+                navigate(0);
+              }}>
               <Person2Icon sx={{ fontSize: "25px", color: dark }}
-                          onClick={() => {
-                            navigate(`/mergeProfilePage/${user._id}`);
-                            navigate(0);
-                          }}
-                          display="flex"  // Added display="flex"
-                          alignItems="center" // Added alignItems="center"	
-                        
+                display="flex"  // Added display="flex"
+                alignItems="center" // Added alignItems="center"	
+
               />
               <Typography
-							color={main}
-							variant="h5"
-							fontWeight="500"
-							sx={{
-								"&:hover": {
-									color: palette.primary.light,
-									cursor: "pointer",
-								},
-								marginLeft: "0.5rem"
-							}}
-						>
-							Profile
-						</Typography>
-              
+                color={main}
+                variant="h5"
+                fontWeight="500"
+                sx={{
+                  "&:hover": {
+                    color: palette.primary.light,
+                    cursor: "pointer",
+                  },
+                  marginLeft: "0.5rem"
+                }}
+              >
+                Profile
+              </Typography>
+
             </IconButton>
 
-            <IconButton>
+            <IconButton onClick={() => {
+              navigate(`/mergeDirectMessages`);
+              navigate(0);
+            }}>
               <Message sx={{ fontSize: "25px", color: dark }}
-                          onClick={() => {
-                            navigate(`/mergeDirectMessages`);
-                            navigate(0);
-                          }}
-                          display="flex"  // Added display="flex"
-                          alignItems="center" // Added alignItems="center"	
-              
+
+                display="flex"  // Added display="flex"
+                alignItems="center" // Added alignItems="center"	
+
               />
               <Typography
-							color={main}
-							variant="h5"
-							fontWeight="500"
-							sx={{
-								"&:hover": {
-									color: palette.primary.light,
-									cursor: "pointer",
-								},
-								marginLeft: "0.5rem"
-							}}
-						>
-							Direct Messages
-						</Typography>
+                color={main}
+                variant="h5"
+                fontWeight="500"
+                sx={{
+                  "&:hover": {
+                    color: palette.primary.light,
+                    cursor: "pointer",
+                  },
+                  marginLeft: "0.5rem"
+                }}
+              >
+                Direct Messages
+              </Typography>
             </IconButton>
 
 
@@ -253,58 +253,59 @@ const Navbar = () => {
 
 
 
-            <IconButton>
-            <Badge badgeContent={user.mergeCoins} color="warning" max={999}>
-              <Paid sx={{ fontSize: "25px", color: dark }}
-                          onClick={() => {
-                            navigate(`/token/${user._id}`)
-                            navigate(0);
-                          }}
-                          display="flex"  // Added display="flex"
-                          alignItems="center" // Added alignItems="center"	
-              
-              />
+            <IconButton
+              onClick={() => {
+                navigate(`/token/${user._id}`)
+                navigate(0);
+              }}>
+              <Badge badgeContent={user.mergeCoins} color="warning" max={999}>
+                <Paid sx={{ fontSize: "25px", color: dark }}
+                  display="flex"  // Added display="flex"
+                  alignItems="center" // Added alignItems="center"	
 
-            </Badge>
-            <Typography
-							color={main}
-							variant="h5"
-							fontWeight="500"
-							sx={{
-								"&:hover": {
-									color: palette.primary.light,
-									cursor: "pointer",
-								},
-								marginLeft: "1rem"
-							}}
-						>
-							MergeCoins
-						</Typography>
+                />
+
+              </Badge>
+              <Typography
+                color={main}
+                variant="h5"
+                fontWeight="500"
+                sx={{
+                  "&:hover": {
+                    color: palette.primary.light,
+                    cursor: "pointer",
+                  },
+                  marginLeft: "1rem"
+                }}
+              >
+                MergeCoins
+              </Typography>
             </IconButton>
-            
 
 
-            <IconButton>
+
+            <IconButton
+              onClick={() => navigate(`/webinar/${user._id}`)}
+            >
               <EventIcon sx={{ fontSize: "25px", color: dark }}
-                          onClick={() => navigate(`/webinar/${user._id}`)} 
-                          display="flex"  // Added display="flex"
-                          alignItems="center" // Added alignItems="center"	
-              
+                display="flex"  // Added display="flex"
+                alignItems="center" // Added alignItems="center"	
+
               />
-                            <Typography
-							color={main}
-							variant="h5"
-							fontWeight="500"
-							sx={{
-								"&:hover": {
-									color: palette.primary.light,
-									cursor: "pointer",
-								},
-								marginLeft: "0.5rem"
-							}}
-						>
-							Webinars
-						</Typography>
+              <Typography
+                color={main}
+                variant="h5"
+                fontWeight="500"
+                sx={{
+                  "&:hover": {
+                    color: palette.primary.light,
+                    cursor: "pointer",
+                  },
+                  marginLeft: "0.5rem"
+                }}
+              >
+                Webinars
+              </Typography>
             </IconButton>
 
 
