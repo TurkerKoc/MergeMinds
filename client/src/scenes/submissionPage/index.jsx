@@ -52,36 +52,49 @@ const SubmissionPage = () => {
 
     return (
         <Box>
-            <Navbar/>
-            <Popup open={showPopup} handleClose={() => setShowPopup(false)}/>
-            <Box
+        <Navbar />
+        {/* Conditionally render the popup */}
+            <Popup open={showPopup} handleClose={() => setShowPopup(false)} />
+        <Box
                 display="flex"
                 justifyContent="space-between"
                 marginTop="2rem"
                 gap="2rem"
             >
-                <Box flexBasis={isNonMobileScreens ? "26%" : undefined}
-                     paddingLeft="2rem"
-                     paddingRight="2rem">
+                {isNonMobileScreens && (
+                <Box
+                        flexBasis={isNonMobileScreens ? "26%" : '100%'}
+                        paddingLeft="2rem"
+                    >
                     <LinksWidget/>
                     <Box m="2rem 0"/>
-
                     <PersonalNavigator onMyDraftsClick={handleMyDraftsClick}/>
 
                 </Box>
+                )}
+
+                {!isNonMobileScreens && (
+                  <Box flexBasis={isNonMobileScreens ? "26%" : '100%'} ml='2rem' mr="2rem">  
+                    <MergeSubmissionWidget id={user._id} savedDraftData={savedDraftData || {}}/>
+                    <Box m="2rem 0" />
+                    <PersonalNavigator onMyDraftsClick={handleMyDraftsClick}/>
+                    <Box m="2rem 0"/>
+                    </Box>
+                )}
+
+                {isNonMobileScreens && (
                 <Box
                     flexBasis={isNonMobileScreens ? "66%" : undefined}
                     paddingRight="2rem"
                 >
                     <MergeSubmissionWidget id={user._id} savedDraftData={savedDraftData || {}}/>
                 </Box>
+                )}
+
+                
                 {isNonMobileScreens && (
                     <Box flexBasis={isNonMobileScreens ? "26%" : undefined} mr="2rem">
                         <MergeBlogWidget/>
-                        <Box m="2rem 0"/>
-                        <AdvertWidget/>
-                        <Box m="2rem 0"/>
-                        {/* <FriendListWidget userId={_id} /> */}
                     </Box>
                 )}
             </Box>
