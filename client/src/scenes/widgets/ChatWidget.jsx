@@ -338,12 +338,12 @@ const ChatWidget = () => {
                             </Typography>
                         </Box>
                         <Box my={2}>
-                        <DialogContent dividers style={{ minWidth: '600px', minHeight: '400px' }}>
+                        <DialogContent dividers style={{ minWidth: '600px', minHeight: contacts.length > 0 ? '1px' : '50px' }}>
                         <div style={{ maxHeight: '400px', overflow: 'auto' , paddingRight: '20px' }}>
                             {contacts.map((contact, index) => {
                                 if (contact) {
                                 return (
-                                    <Typography key={contact._id} variant="h6" style={{ marginBottom: '1rem' }}>
+                                    <Typography key={contact._id} variant="h6" style={{ marginBottom: '0.1rem' }}>
                                     <Button
                                         display="flex"
                                         alignItems="center"
@@ -357,7 +357,7 @@ const ChatWidget = () => {
                                         alignItems: 'center',
                                         marginBottom: '0.6rem',
                                         cursor: 'pointer',
-                                        padding: '1.2rem',
+                                        padding: '1rem',
                                         border: '1px solid #e0e0e0',
                                         borderRadius: '20px',
                                         width: '100%',
@@ -369,7 +369,7 @@ const ChatWidget = () => {
                                         src={`http://localhost:3001/assets/${contact.picturePath}`}
                                         alt={contact.name}
                                         />
-                                        <Typography style={{ fontSize: "24px" }} variant="h6">
+                                        <Typography style={{ fontSize: "16px" }} variant="h6">
                                         {`${contact.name} ${contact.surname}`}
                                         </Typography>
                                     </Button>
@@ -378,6 +378,11 @@ const ChatWidget = () => {
                                 }
                                 return null;
                             })}
+                            {!contacts.length && (
+                                <Typography variant="h6" style={{ marginBottom: '0.1rem', textAlign: 'center'}}>
+                                    You have no direct messages
+                                </Typography>
+                            )}
                         </div>
                         </DialogContent>
                         </Box>
@@ -434,6 +439,7 @@ const ChatWidget = () => {
                                                         style={{
                                                             color: message.senderId === userId ? "black" : "black",
                                                             textAlign: message.senderId === userId ? "right" : "left",
+                                                            maxWidth: "400px",
                                                         }}
                                                     >
                                                         Click this message to open resume of the user.
@@ -456,6 +462,7 @@ const ChatWidget = () => {
                                                         style={{
                                                             color: message.senderId === userId ? "black" : "black",
                                                             textAlign: message.senderId === userId ? "right" : "left",
+                                                            maxWidth: "400px",
                                                         }}
                                                     >
                                                         {new Date(message.createdAt).toLocaleString()}
@@ -472,7 +479,8 @@ const ChatWidget = () => {
                                                     <Typography
                                                         style={{
                                                             color: message.senderId === userId ? "black" : "black",
-                                                            textAlign: message.senderId === userId ? "right" : "left",
+                                                            textAlign: message.senderId === userId ? "left" : "left",
+                                                            maxWidth: "400px",
                                                         }}
                                                     >
                                                         {message.text.split('\n').map((line, index) => (
@@ -487,6 +495,7 @@ const ChatWidget = () => {
                                                         style={{
                                                             color: message.senderId === userId ? "black" : "black",
                                                             textAlign: message.senderId === userId ? "right" : "left",
+                                                            maxWidth: "400px",
                                                         }}
                                                     >
                                                         {new Date(message.createdAt).toLocaleString()}

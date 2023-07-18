@@ -4,6 +4,8 @@ import { setPosts } from "state";
 import MergePostWidget from "./MergePostWidget";
 import MergeMyIdeaWidget from "./MergeMyIdeaWidget";
 import { Merge } from "@mui/icons-material";
+import { Typography } from "@mui/material";
+import { Alert } from "@mui/material";
 
 const MergeMyIdeasWidget = () => {    
     const dispatch = useDispatch();
@@ -30,6 +32,13 @@ const MergeMyIdeasWidget = () => {
 
     return (
         <>
+        {!posts.length && (
+            <Alert variant="outlined" severity="info" style={{ marginTop: '5px' }}>
+                <Typography variant="h6" style={{ marginBottom: '0.1rem', textAlign: 'center'}}>
+                    You have no idea posts
+                </Typography>
+            </Alert>
+        )}
         {posts && (posts.map(
             ({
             _id,

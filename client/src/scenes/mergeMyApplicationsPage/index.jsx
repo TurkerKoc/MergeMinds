@@ -76,9 +76,6 @@ const MergeMyApplicationsPage = () => {
                 {isNonMobileScreens && (
                     <Box flexBasis={isNonMobileScreens ? "26%" : undefined} mr="2rem">
                         <UserCard userId={_id}/>
-                        <Box m="2rem 0"/>
-                        <AdvertWidget/>
-                        <Box m="2rem 0"/>
                         {/* <FriendListWidget userId={_id} /> */}
                     </Box>
                 )}
