@@ -67,7 +67,8 @@ const MergeMyWebinarWidget = () => {
         My Webinars
       </Typography>
       <Box>
-        <List>
+        {userWebinars && userWebinars.length > 0 ? (
+        <List>          
           {userWebinars.map((webinar) => (
             <ListItem
               key={webinar._id}
@@ -89,10 +90,13 @@ const MergeMyWebinarWidget = () => {
                 {webinar.title}
               </Typography>
             </ListItem>
-          ))}
-        </List>
+          ))}    
+        </List> ) : (
+          <Typography variant="h6" style={{ marginBottom: '1rem', textAlign: 'center' }}>
+          You don't have any webinars yet.
+        </Typography> )}
       </Box>
-      {selectedWebinar ? (
+      { selectedWebinar ? (
         <Dialog open={!!selectedWebinar} onClose={handleClose}>
           <DialogTitle>{selectedWebinar.title}</DialogTitle>
           <DialogContent>
@@ -113,11 +117,7 @@ const MergeMyWebinarWidget = () => {
               Open
             </Button>
           </DialogActions>
-        </Dialog>
-      ) : (
-        <Typography variant="h6" style={{ marginBottom: '1rem', textAlign: 'center' }}>
-          You don't have any webinars yet.
-        </Typography>)}
+        </Dialog> ) : null}
 
     </WidgetWrapper>
   );

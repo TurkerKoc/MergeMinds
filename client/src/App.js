@@ -53,27 +53,27 @@ function App() {
             />
             <Route /* if the path is /submission then render the SubmissionPage component */
               path="/newsfeed"
-              element={isAuth ? <NewsFeed /> : <Navigate to="/mergeLogin" />}
+              element={isAuth ? <NewsFeed /> : <Navigate to="/" />}
             />
             <Route /* if the path is /submission then render the SubmissionPage component */
               path="/mergeProfilePage/:userId"
-              element={isAuth ? <MergeProfilePage /> : <Navigate to="/mergeLogin" />}
+              element={isAuth ? <MergeProfilePage /> : <Navigate to="/" />}
             />
             <Route /* if the path is /submission then render the SubmissionPage component */
                 path="/mergeDirectMessages"
-                element={isAuth ? <MergeDirectMessages /> : <Navigate to="/mergeLogin" />}
+                element={isAuth ? <MergeDirectMessages /> : <Navigate to="/" />}
             />
             <Route /* if the path is /submission then render the SubmissionPage component */
                 path="/mergeDirectMessages/:postUserId"
-                element={isAuth ? <MergeDirectMessages /> : <Navigate to="/mergeLogin" />}
+                element={isAuth ? <MergeDirectMessages /> : <Navigate to="/" />}
             />
             <Route /* if the path is /mergeMyIdeasPage then render the ProfilePage component */
               path="/mergeMyIdeas"
-              element={isAuth ? <MergeMyIdeasPage /> : <Navigate to="/mergeLogin" />}
+              element={isAuth ? <MergeMyIdeasPage /> : <Navigate to="/" />}
             />
             <Route /* if the path is /mergeMyIdeasPage then render the ProfilePage component */
               path="/mergeMyApplications"
-              element={isAuth ? <MergeMyApplicationsPage /> : <Navigate to="/mergeLogin" />}
+              element={isAuth ? <MergeMyApplicationsPage /> : <Navigate to="/" />}
             />
           </Routes>
         </ThemeProvider>
