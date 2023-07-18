@@ -254,6 +254,7 @@ const Navbar = () => {
 
 
             <IconButton>
+            <Badge badgeContent={user.mergeCoins} color="warning" max={999}>
               <Paid sx={{ fontSize: "25px", color: dark }}
                           onClick={() => {
                             navigate(`/token/${user._id}`)
@@ -263,7 +264,9 @@ const Navbar = () => {
                           alignItems="center" // Added alignItems="center"	
               
               />
-              <Typography
+
+            </Badge>
+            <Typography
 							color={main}
 							variant="h5"
 							fontWeight="500"
@@ -272,7 +275,7 @@ const Navbar = () => {
 									color: palette.primary.light,
 									cursor: "pointer",
 								},
-								marginLeft: "0.5rem"
+								marginLeft: "1rem"
 							}}
 						>
 							MergeCoins
