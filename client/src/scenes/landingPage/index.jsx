@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
-import { Box, Typography, Button, useTheme } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import React, {useState, useEffect} from "react";
+import {Box, Typography, Button, useTheme} from "@mui/material";
+import {useNavigate} from "react-router-dom";
 import "./styles.css"; // Import the CSS file
 
 const LandingPage = () => {
@@ -22,9 +22,31 @@ const LandingPage = () => {
         "Seeking collaborators for a music project!",
         "Planning a road trip and need travel buddies!",
         "Starting a fitness challenge group!",
-    ]; // Increased to 10 idea cards
+        "Let's organize a beach cleanup event!",
+        "Creating an online marketplace for local artisans!",
+        "Inventing a sustainable packaging solution!",
+        "Building an AI-powered personal assistant!",
+        "Developing a virtual reality fitness game!",
+        "Launching a podcast about personal development!",
+        "Designing a smart home automation system!",
+        "Starting a YouTube channel for travel vlogs!",
+        "Writing a book on mindfulness and well-being!",
+        "Creating a mobile app for plant identification!",
+        "Organizing a charity concert for a good cause!",
+        "Developing a platform for online language learning!",
+        "Launching a subscription box for eco-friendly products!",
+        "Creating a community platform for pet lovers!",
+        "Starting a fashion blog for sustainable fashion!",
+        "Building a social network for entrepreneurs!",
+        "Developing a recipe-sharing app for food enthusiasts!",
+        "Creating an online course on digital marketing!",
+        "Designing a mobile app for mindfulness meditation!",
+        "Launching a webcomic series with a unique storyline!",
+    ]; // Increased to 30 idea cards
 
     const [typingText, setTypingText] = useState("");
+    const [randomIdeaCards, setRandomIdeaCards] = useState([]);
+
     const targetText =
         "MergeMinds is here to make your ideas come true."; // Replace with your desired text
 
@@ -40,6 +62,10 @@ const LandingPage = () => {
                 clearInterval(typingInterval);
             }
         }, 100); // Adjust typing speed as needed
+
+        const shuffledCards = ideaCards.sort(() => 0.5 - Math.random());
+        const selectedCards = shuffledCards.slice(0, 10);
+        setRandomIdeaCards(selectedCards);
 
         return () => {
             clearInterval(typingInterval);
@@ -68,7 +94,7 @@ const LandingPage = () => {
                     justifyContent="center"
                     flexWrap="wrap" // Allow the idea cards to wrap if needed
                 >
-                    {ideaCards.map((card, index) => (
+                    {randomIdeaCards.map((card, index) => (
                         <Box
                             key={index}
                             maxWidth="400px" // Limit the maximum width of the card
