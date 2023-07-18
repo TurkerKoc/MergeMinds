@@ -95,9 +95,12 @@ const NewsFeed = () => {
         });
         console.log(sorted);
         console.log(posts);
-
-        let result = randomizeSponsoredContent(sorted);
-        dispatch(setPosts({ posts: result }));
+        if(sorted.length > 4) {
+            let result = randomizeSponsoredContent(sorted);
+            dispatch(setPosts({ posts: result }));
+        } else {
+            dispatch(setPosts({ posts: sorted }));    
+        }    
         setPostsToShow(10);
     };
 
@@ -114,13 +117,13 @@ const NewsFeed = () => {
         let mod = nonAdminCount > 10 ? 10 : nonAdminCount - 1;
         for (let i = 0; i < nonAdminCount; i++) {
             if (i % mod === 0 && adminIndex < adminCount && i !== 0) {
-                const randomIndex = getRandomIndex(i - mod, i, result);
+                const randomIndex = getRandomIndex(i - mod + 1, i - 1, result);
                 // console.log(randomIndex);
                 // console.log(result);
                 result.splice(randomIndex, 0, adminPosts[adminIndex]);
                 adminIndex++;
             } else if (i === nonAdminCount - 1 && adminIndex < adminCount) {
-                const randomIndex = getRandomIndex(i - (i % mod), i, result);
+                const randomIndex = getRandomIndex(i - (i % mod) + 1, i - 1, result);
                 // console.log(randomIndex);
                 // console.log(result);
                 result.splice(randomIndex, 0, adminPosts[adminIndex]);
@@ -142,8 +145,12 @@ const NewsFeed = () => {
         });
         console.log('sorted', sorted);
 
-        let result = randomizeSponsoredContent(sorted);
-        dispatch(setPosts({ posts: result }));
+        if(sorted.length > 4) {
+            let result = randomizeSponsoredContent(sorted);
+            dispatch(setPosts({ posts: result }));
+        } else {
+            dispatch(setPosts({ posts: sorted }));    
+        }    
         setPostsToShow(10);
     };
 
@@ -171,17 +178,18 @@ const NewsFeed = () => {
 
         if (option && option._id) {
             var filtered = data.filter((post) => {
-                return post.userId?.username === "admin" || post.categoryId?._id === option._id;
+                return post.categoryId?._id === option._id;// || post.userId?.username === "admin";
             });
             console.log('filtered Category', filtered);
             if (selectedLocationFilter !== "") {
                 filtered = filtered.filter((post) => {
-                    return post.userId?.name === 'admin' || post.locationId?._id === selectedLocationFilter._id;
+                    return post.locationId?._id === selectedLocationFilter._id; // || post.userId?.name === 'admin';
                 });
                 console.log('filtered Location', filtered);
             }
-            let result = randomizeSponsoredContent(filtered);
-            dispatch(setPosts({ posts: result }));
+            
+            console.log(filtered);
+            dispatch(setPosts({ posts: filtered }));
         }
         setPostsToShow(10);
     };
@@ -197,17 +205,16 @@ const NewsFeed = () => {
 
         if (option && option._id) {
             var filtered = data.filter((post) => {
-                return post.locationId?._id === option._id || post.userId?.username === 'admin';
+                return post.locationId?._id === option._id;// || post.userId?.username === 'admin';
             });
             console.log('filtered Location', filtered);
             if (selectedCategoryFilter !== "") {
                 filtered = filtered.filter((post) => {
-                    return post.categoryId?._id === selectedCategoryFilter._id || post.userId?.username === 'admin';
+                    return post.categoryId?._id === selectedCategoryFilter._id;// || post.userId?.username === 'admin';
                 });
             }
             console.log('filtered category', filtered);
-            let result = randomizeSponsoredContent(filtered);
-            dispatch(setPosts({ posts: result }));
+            dispatch(setPosts({ posts: filtered }));
         }
         setPostsToShow(10);
     };

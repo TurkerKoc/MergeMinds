@@ -9,6 +9,7 @@ const MergePostsWidget = ({ userId, isProfile = false, postsToShow }) => {
   const posts = useSelector((state) => state.posts);
   const displayedPosts = posts.slice(0, postsToShow); // Get the specified number of posts to display
   const token = useSelector((state) => state.token);
+  
   function randomizeSponsoredContent(sorted) {
     // console.log("sorted");
     // console.log(sorted);
@@ -22,16 +23,16 @@ const MergePostsWidget = ({ userId, isProfile = false, postsToShow }) => {
     let mod = nonAdminCount > 10 ? 10 : nonAdminCount -1;
     for (let i = 0; i < nonAdminCount; i++) {
       if (i % mod === 0 && adminIndex < adminCount && i !== 0) {
-        const randomIndex = getRandomIndex(i - mod, i, result);
-        // console.log(randomIndex);
-        // console.log(result);
+        const randomIndex = getRandomIndex(i - mod + 1, i - 1, result);
+        console.log(randomIndex);
+        console.log(result);
         result.splice(randomIndex, 0, adminPosts[adminIndex]);
         adminIndex++;
       }
       else if(i === nonAdminCount - 1 && adminIndex < adminCount) {
-        const randomIndex = getRandomIndex(i - (i%mod), i, result);
-        // console.log(randomIndex);
-        // console.log(result);
+        const randomIndex = getRandomIndex(i - (i%mod) + 1, i - 1, result);
+        console.log(randomIndex);
+        console.log(result);
         result.splice(randomIndex, 0, adminPosts[adminIndex]);
         adminIndex++;
       }
@@ -54,8 +55,14 @@ const MergePostsWidget = ({ userId, isProfile = false, postsToShow }) => {
       headers: { Authorization: `Bearer ${token}` },
     });
     const data = await response.json();
-    const result = randomizeSponsoredContent(data);
-    dispatch(setPosts({ posts: result }));
+
+    if(data.length > 4) {
+      const result = randomizeSponsoredContent(data);
+      dispatch(setPosts({ posts: result }));
+    }
+    else {
+      dispatch(setPosts({ posts: data }));
+    }
   };
 
   const getUserPosts = async () => {
