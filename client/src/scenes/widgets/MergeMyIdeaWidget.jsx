@@ -2,7 +2,7 @@ import {
     FavoriteBorderOutlined,
     FavoriteOutlined,
   } from "@mui/icons-material";
-  import { Box, Typography, useTheme, Chip } from "@mui/material";
+  import { Box, Typography, useTheme, Chip, Tooltip } from "@mui/material";
   import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
   import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
   import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
@@ -14,8 +14,15 @@ import {
   import { setPost } from "state";
   import formatDistanceToNow from 'date-fns/formatDistanceToNow';
   import Rating from '@mui/material/Rating';
+  import {setPosts} from "state";
   import MergeApplicantsWidget from "./MergeApplicantsWidget";
-  
+  import DeleteIcon from '@mui/icons-material/Delete';
+  import {useEffect} from "react";
+  import IconButton from '@mui/material/IconButton';
+  import Switch from '@mui/material/Switch';
+  import HelpIcon from '@mui/icons-material/Help';
+import { set } from "date-fns";
+
   const MergeMyIdeaWidget = ({
     postId,
     postUserId,
@@ -28,6 +35,7 @@ import {
     title,
     description,
     isHidden,
+    isDeleted,
     prepaidApplicants,
     categoryId,
     priceId,
@@ -44,13 +52,45 @@ import {
     const isLiked = Boolean(likes[loggedInUserId]);
     const likeCount = Object.keys(likes).length;
     const DislikesCount = Object.keys(dislikes).length;
-  
+    let [selectedIsRemoved, setSelectIsRemoved] = useState(isDeleted);
+    
+
+    const patchHide = async () => {
+      const response = await fetch(`http://localhost:3001/mergePosts/${postId}/hide`, {
+          method: "PATCH",
+          headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+          },
+          body: JSON.stringify({userId: loggedInUserId}),
+      });
+      const updatedPost = await response.json();
+      dispatch(setPost({post: updatedPost}));
+      setSelectIsRemoved(updatedPost.isDeleted)
+  };
+
+
+  const patchVisible = async () => {
+    const response = await fetch(`http://localhost:3001/mergePosts/${postId}/visible`, {
+        method: "PATCH",
+        headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({userId: loggedInUserId}),
+    });
+    const updatedPost = await response.json();
+    dispatch(setPost({post: updatedPost}));
+    setSelectIsRemoved(updatedPost.isDeleted)
+};
+
     const { palette } = useTheme();
     const main = palette.neutral.main;
     const medium = palette.neutral.medium;
     const primary = palette.primary.main;
     const dark = palette.primary.dark;
   
+
     return (
       <WidgetWrapper
             mb="2rem"
@@ -69,7 +109,30 @@ import {
             trustPoints={trustPoints}
             trustPointViewCount={loggedInUser.trustPointViewCount}
           />
+          <Tooltip title={<Typography>
+            Turning off this option will hide your idea from other users, making it invisible to them. 
+            Please note that your idea will not appear or be visible in any public areas or newsfeeds.
+          </Typography>}>
+          
+
+          <Switch
+            checked={!selectedIsRemoved ? true : false}
+            onChange={(event) => {
+              if (event.target.checked) {
+                patchVisible()
+              } else {
+                patchHide()
+                
+              }
+            }}
+            color="primary"
+
+          />
+          <HelpIcon/>
+                              </Tooltip>
+          
         </FlexBetween>
+
         <Typography color={main} sx={{ mt: "1rem" }}>
           <strong>{title}</strong>
         </Typography>

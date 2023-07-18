@@ -11,7 +11,11 @@ const ideaPostSchema = mongoose.Schema(
 		title: String, // title of post
     description: String, // description of post
 		isHidden: Boolean, // if true, full post will not be visible to users (pay for details)
-		prepaidApplicants: Number, // number of applicants that can apply for free
+    isDeleted: {
+			type: Boolean,
+			default: false,
+		},		
+    prepaidApplicants: Number, // number of applicants that can apply for free
 		categoryId: mongoose.Schema.Types.ObjectId, // category of post (e.g. "Web Development")
 		priceId: mongoose.Schema.Types.ObjectId, // price to apply for idea
 		picturePath: String, // path to picture of post
@@ -24,6 +28,7 @@ const ideaPostSchema = mongoose.Schema(
       of: Boolean,
     },
 		Applications: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Application' }]
+
   },
   { timestamps: true }
 );

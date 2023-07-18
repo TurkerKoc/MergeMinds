@@ -23,6 +23,7 @@ import {
   Paid
 } from "@mui/icons-material"; // you can find icons in https://mui.com/material-ui/material-icons
 import AddIcon from '@mui/icons-material/Add';
+
 import { useDispatch, useSelector } from "react-redux"; // useDispatch used for dispatching actions to redux store and useSelector used for selecting data from redux store
 import { setMode, setLogout } from "state"; // setMode and setLogout are actions from state.js
 import { useNavigate } from "react-router-dom"; // useNavigate used for navigation between pages
@@ -38,7 +39,8 @@ const Navbar = () => {
   const navigate = useNavigate(); 
   const user = useSelector((state) => state.user); // grabbing user data from redux store
   const isNonMobileScreens = useMediaQuery("(min-width: 1000px)"); // useMediaQuery is a hook to check if the screen is mobile or not
-
+  const { palette } = useTheme();
+  const main = palette.neutral.main;
   const theme = useTheme(); // grabbing theme from material ui -> we defined theme in mern-social-media/client/src/theme.js
   const neutralLight = theme.palette.neutral.light; // grabbing neutral light color from theme
   const dark = theme.palette.neutral.dark; // grabbing neutral dark color from theme
@@ -177,9 +179,48 @@ const Navbar = () => {
                           alignItems="center" // Added alignItems="center"	
               
               />
+              <Typography
+							color={main}
+							variant="h5"
+							fontWeight="500"
+							sx={{
+								"&:hover": {
+									color: palette.primary.light,
+									cursor: "pointer",
+								},
+								marginLeft: "0.5rem"
+							}}
+						>
+							Explore
+						</Typography>
             </IconButton>
 
-
+            <IconButton>
+              <Person2Icon sx={{ fontSize: "25px", color: dark }}
+                          onClick={() => {
+                            navigate(`/mergeProfilePage/${user._id}`);
+                            navigate(0);
+                          }}
+                          display="flex"  // Added display="flex"
+                          alignItems="center" // Added alignItems="center"	
+                        
+              />
+              <Typography
+							color={main}
+							variant="h5"
+							fontWeight="500"
+							sx={{
+								"&:hover": {
+									color: palette.primary.light,
+									cursor: "pointer",
+								},
+								marginLeft: "0.5rem"
+							}}
+						>
+							Profile
+						</Typography>
+              
+            </IconButton>
 
             <IconButton>
               <Message sx={{ fontSize: "25px", color: dark }}
@@ -191,21 +232,25 @@ const Navbar = () => {
                           alignItems="center" // Added alignItems="center"	
               
               />
+              <Typography
+							color={main}
+							variant="h5"
+							fontWeight="500"
+							sx={{
+								"&:hover": {
+									color: palette.primary.light,
+									cursor: "pointer",
+								},
+								marginLeft: "0.5rem"
+							}}
+						>
+							Direct Messages
+						</Typography>
             </IconButton>
 
 
 
-            <IconButton>
-              <Person2Icon sx={{ fontSize: "25px", color: dark }}
-                          onClick={() => {
-                            navigate(`/mergeProfilePage/${user._id}`);
-                            navigate(0);
-                          }}
-                          display="flex"  // Added display="flex"
-                          alignItems="center" // Added alignItems="center"	
-              
-              />
-            </IconButton>
+
 
 
             <IconButton>
@@ -218,6 +263,20 @@ const Navbar = () => {
                           alignItems="center" // Added alignItems="center"	
               
               />
+              <Typography
+							color={main}
+							variant="h5"
+							fontWeight="500"
+							sx={{
+								"&:hover": {
+									color: palette.primary.light,
+									cursor: "pointer",
+								},
+								marginLeft: "0.5rem"
+							}}
+						>
+							MergeCoins
+						</Typography>
             </IconButton>
             
 
@@ -229,6 +288,20 @@ const Navbar = () => {
                           alignItems="center" // Added alignItems="center"	
               
               />
+                            <Typography
+							color={main}
+							variant="h5"
+							fontWeight="500"
+							sx={{
+								"&:hover": {
+									color: palette.primary.light,
+									cursor: "pointer",
+								},
+								marginLeft: "0.5rem"
+							}}
+						>
+							Webinars
+						</Typography>
             </IconButton>
 
 

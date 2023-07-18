@@ -153,6 +153,7 @@ export const createMergePost = async (req, res) => {
           likes: new Map(),
           dislikes: new Map(),
           Applications: [],
+          isDeleted: false,
           picturePath
       });
 
@@ -214,7 +215,7 @@ import SponsoredContent from '../models/SponsoredContent.js';
 
 export const getFeedPosts = async (req, res) => {
     try {
-        const ideaPosts = await IdeaPost.find()
+        const ideaPosts = await IdeaPost.find({ isDeleted: false })
             .populate([
                 {
                     path: 'userId',
@@ -354,6 +355,123 @@ export const getUserPosts = async (req, res) => {
 };
 
 /* UPDATE */
+
+
+export const hidePost = async (req, res) => {
+  try {
+    const { postId } = req.params; // get id from request parameters
+    const { userId } = req.body; // get userId from request body
+    // Validate request body
+    if (!userId || !postId) {
+      return res.status(400).json({ message: 'Missing user ID or post ID' });
+    }
+    const post = await IdeaPost.findById(postId); // find post by id
+    const isDeleted = post.isDeleted; // check if user has hidden post
+    
+    const updatedPost = await IdeaPost.findByIdAndUpdate( // update post
+      postId, // id
+      { isDeleted: true }, // isDeleted
+      { new: true } // new object
+      ).populate([
+        {
+            path: 'userId',
+            select: 'name surname username email picturePath trustPoints',
+            model: MergeUser
+        },
+        {
+            path: 'Applications',
+            select: 'content userId',
+            model: Application,
+            populate: {
+                path: 'userId',
+                select: 'name surname picturePath',
+                model: MergeUser
+            }
+        },
+        {
+            path: 'categoryId',
+            select: 'domain',
+            model: Category
+        },
+        {
+            path: 'locationId',
+            select: 'name',
+            model: Location
+        },
+        {
+            path: 'priceId',
+            select: 'amount',
+            model: Price
+        }
+    ]);
+  
+    res.status(200).json(updatedPost); // return updated post
+  } catch (err) {
+    res.status(404).json({ message: err.message }); // return error if there is one
+  }
+};
+
+
+export const visiblePost = async (req, res) => {
+  try {
+    const { postId } = req.params; // get id from request parameters
+    const { userId } = req.body; // get userId from request body
+    // Validate request body
+    if (!userId || !postId) {
+      return res.status(400).json({ message: 'Missing user ID or post ID' });
+    }
+    const post = await IdeaPost.findById(postId); // find post by id
+    const isDeleted = post.isDeleted; // check if user has hidden post
+    
+    const updatedPost = await IdeaPost.findByIdAndUpdate( // update post
+      postId, // id
+      { isDeleted: false }, // isDeleted
+      { new: true } // new object
+      ).populate([
+        {
+            path: 'userId',
+            select: 'name surname username email picturePath trustPoints',
+            model: MergeUser
+        },
+        {
+            path: 'Applications',
+            select: 'content userId',
+            model: Application,
+            populate: {
+                path: 'userId',
+                select: 'name surname picturePath',
+                model: MergeUser
+            }
+        },
+        {
+            path: 'categoryId',
+            select: 'domain',
+            model: Category
+        },
+        {
+            path: 'locationId',
+            select: 'name',
+            model: Location
+        },
+        {
+            path: 'priceId',
+            select: 'amount',
+            model: Price
+        }
+  ]);
+  
+  res.status(200).json(updatedPost); // return updated post
+  } catch (err) {
+    res.status(404).json({ message: err.message }); // return error if there is one
+  }
+};
+
+
+
+
+
+
+
 export const likePost = async (req, res) => {
   try {
     const { postId } = req.params; // get id from request parameters

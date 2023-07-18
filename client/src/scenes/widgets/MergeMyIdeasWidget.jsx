@@ -47,6 +47,7 @@ const MergeMyIdeasWidget = () => {
             title,
             description,
             isHidden,
+            isDeleted,
             prepaidApplicants,
             categoryId,
             priceId,
@@ -66,6 +67,7 @@ const MergeMyIdeasWidget = () => {
                 trustPoints={userId.trustPoints}
                 picturePath={picturePath}
                 location={locationId.name}
+                isDeleted={isDeleted}
                 title={title}
                 description={description}
                 isHidden={isHidden}

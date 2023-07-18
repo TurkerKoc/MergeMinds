@@ -1,5 +1,5 @@
 import express from "express";
-import { getUserApplications, getApplicants, getFeedPosts, getUserPosts, likePost, dislikePost, getAllCategories, getAllLocations, getLocations, getCategories, getPostsSortedByLikes, getPostsFilteredByCategory, getPostsFilteredByLocation, getLocation, getCategory } from "../controllers/mergePosts.js"; // for getting feed posts, getting user posts, liking post
+import { getUserApplications, getApplicants, getFeedPosts, getUserPosts, likePost, dislikePost, getAllCategories, getAllLocations, getLocations, getCategories, getPostsSortedByLikes, getPostsFilteredByCategory, getPostsFilteredByLocation, getLocation, getCategory, visiblePost, hidePost } from "../controllers/mergePosts.js"; // for getting feed posts, getting user posts, liking post
 import { verifyToken } from "../middleware/auth.js"; // for verifying token
 
 const router = express.Router();
@@ -19,6 +19,8 @@ router.get("/category/:categoryId", getCategory); // get all locations
 /* UPDATE */
 router.patch("/:postId/like", likePost); // like post
 router.patch("/:postId/dislike", dislikePost); // like post
+router.patch("/:postId/hide", hidePost);
+router.patch("/:postId/visible", visiblePost);
 router.get("/:postId/applicants", getApplicants); // get applicants for post
 router.get("/:userId/applications", getUserApplications); //get applications for user
 
