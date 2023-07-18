@@ -149,9 +149,7 @@ const MergePostWidget = ({
 
             if (response.ok) {
                 const data = await response.json();
-                console.log("TPCOUNT: ", data.trustPointViewCount);
                 setTrustPointViewCount(data.trustPointViewCount);
-                console.log("TPCOUNT2: ", trustPointViewCount);
             } else {
                 console.error('Error fetching user data:', response.status);
             }
@@ -189,25 +187,33 @@ const MergePostWidget = ({
                         isOwner={isOwner}
                     />
                     {!isOwner && !isApplied && (
-                        <FlexBetween gap="0.25rem" sx={{marginRight: '0.5rem'}}>
-                            <Button
-                                onClick={handleOpenPopup}// navigate to submission page when user clicks on submit button
-                                sx={{fontSize: "15px", display: 'flex', gap: '5px'}}
-                            >
-                                <span style={{textTransform: 'lowercase'}}>
-                                    <span style={{textTransform: 'capitalize'}}>a</span>pply
-                                </span>
-                                {prepaidApplicants == 0 && (
-                                    <Badge badgeContent={priceId} color="warning">
-                                        <Paid sx={{fontSize: "25px"}}/>
-                                    </Badge>
-                                )}
-                            </Button>
-                            <MergeApplyWidget userMergeCoins={loggedInUserCoins}
-                                              applicationPrice={prepaidApplicants <= 0 ? priceId : 0}
-                                              userId={loggedInUserId} ideaPostId={postId} ideaPostUserId={postUserId}
-                                              open={openPopup} onClose={handleClosePopup} onResult={handleApply}/>
-                        </FlexBetween>
+                        <div>
+                            <FlexBetween gap="0.25rem" sx={{ marginRight: '0.5rem' }}>
+                                <Button
+                                    onClick={handleOpenPopup}// navigate to submission page when user clicks on submit button
+                                    sx={{ fontSize: "15px", display: 'flex', gap: '5px', marginLeft: '2rem' }}
+                                >
+                                    <span style={{ textTransform: 'lowercase' }}>
+                                        <span style={{ textTransform: 'capitalize' }}>a</span>pply
+                                    </span>
+                                    {prepaidApplicants == 0 && (
+                                        <Badge badgeContent={priceId} color="warning">
+                                            <Paid sx={{ fontSize: "25px" }} />
+                                        </Badge>
+                                    )}
+                                </Button>
+                            </FlexBetween>
+                            <MergeApplyWidget userMergeCoins={loggedInUserCoins} applicationPrice={prepaidApplicants <= 0 ? priceId : 0}
+                                userId={loggedInUserId} ideaPostId={postId} ideaPostUserId={postUserId}
+                                open={openPopup} onClose={handleClosePopup} onResult={handleApply} />
+                            {prepaidApplicants > 0 && (
+                                <div style={{ display: 'block', textAlign: ''}}>
+                                    <Typography variant="caption" style={{ marginTop: '4px', fontWeight: 'lighter', fontStyle: 'italic', fontSize: '11px' }}>
+                                        Only {prepaidApplicants} free apply left!
+                                    </Typography>
+                                </div>
+                            )}
+                        </div>
                     )}
                     {isApplied && (
                         <FlexBetween gap="0.25rem" sx={{marginRight: '0.5rem'}}>
