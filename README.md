@@ -60,3 +60,12 @@ Add following env variables to .env file in backend
 * CLIENT_URL="http://localhost:3000"
 * STRIPE_SECRET_KEY='sk_test_51NIDePFeAkHftgQCfqsr9edAb9j1pZI6lCP3m618Bkxc07WRvdG8vmrH5hLqxI3vq2KTVtWcb8bW1qbX4lF0PjnB00viASdhSL'
 * STRIPE_WEBHOOK_SECRET='whsec_0c57272d3b7a43cf59b9369c36f2b9f0d4a64ec8ecba4327490a33517bd01f28'
+
+
+### Step 4 - Running the App
+You can simply run the app by using the commands mentioned below. 
+```
+mergeminds/backend:$ npm start
+mergeminds/frontend:$ npm start
+```
+Then you will be redirect (```localhost:3000```) to landing page of our webapp.
