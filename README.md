@@ -71,7 +71,7 @@ mergeminds/frontend:$ npm start
 Then you will be redirect (```localhost:3000```) to landing page of our webapp.
 You can use following test login credentials to access the app. 
 ```
-Email : johnsmith@gmail.com
+Email : johnsmith@example.com
 Password : 1234
 ```
 
