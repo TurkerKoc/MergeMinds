@@ -38,8 +38,9 @@ You can visit the page for stripe cli installation https://stripe.com/docs/strip
 
 #### Start the Stripe Server
 After installed the stripe cli, You first need to login. 
+
 * ```stripe login --interactive```
-After running this command mentioned above, terminal will ask for your API key. You can use **STRIPE_SECRET_KEY** defined in Configurations step below. 
+* After running this command mentioned above, terminal will ask for your API key. You can use **STRIPE_SECRET_KEY** defined in Configurations step below. 
 
 After successfully logged in. Run this command to start stripe server: 
 * ```stripe listen --forward-to localhost:3001/stripe/webhook```
