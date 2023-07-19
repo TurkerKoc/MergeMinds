@@ -1,7 +1,9 @@
 # MergeMinds 
 
 
-![alt text](https://i.postimg.cc/RZ8rGWjb/M-M.png)
+<div style="display: flex; justify-content: center;">
+  <img src="https://i.postimg.cc/RZ8rGWjb/M-M.png" alt="Image" />
+</div>
 
 The idea behind the MergeMinds is to create a platform that connects individuals who want to start a start-up based on their skills and ideas. For example, a person with a start-up idea but lacking technical expertise can post an advertisement on our website, seeking skilled developers such as backend and frontend developers. Conversely, individuals with the required skills can also reach out to people with promising ideas.
 
