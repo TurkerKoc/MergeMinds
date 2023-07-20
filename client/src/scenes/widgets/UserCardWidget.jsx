@@ -41,7 +41,7 @@ const UserCardWidget = ({userId}) => {
   const userData = {
     name: user ? `${user.name} ${user.surname}` : '',
     profilePicture: user ? `http://localhost:3001/assets/${user.picturePath}` : '',
-    trustPoints: user && user.trustPoints ? user.trustPoints : '?',
+    trustPoints: user && user.trustPoints ? user.trustPoints : null,
     trustPointViewCount: user && user.trustPointViewCount ? user.trustPointViewCount : '?',
     websiteLink: user && user.webSiteLink ? user.webSiteLink : '',
   };

@@ -22,7 +22,7 @@ const MyDraftsWidget = () => {
     const {palette} = useTheme();
     const loggedInUser = useSelector((state) => state.user);
     const navigate = useNavigate();
-
+    const token = useSelector((state) => state.token);
     const [drafts, setDrafts] = useState([]);
     const [selectedDraftId, setSelectedDraftId] = useState(null);
     const [confirmationDialogOpen, setConfirmationDialogOpen] = useState(false);
@@ -32,10 +32,11 @@ const MyDraftsWidget = () => {
             try {
                 const response = await fetch(`http://localhost:3001/mergeDraftData/${userId}`, {
                     method: "GET",
+                    headers: { Authorization: `Bearer ${token}` },
                 });
                 const draftData = await response.json();
-                console.log("draftData");
-                console.log(draftData);
+                // console.log("draftData");
+                // console.log(draftData);
                 setDrafts(draftData);
             } catch (error) {
                 console.log(error);
@@ -49,7 +50,7 @@ const MyDraftsWidget = () => {
         // Save the selected draft data to local storage
         const selectedDraft = drafts.find((draft) => draft._id === draftId);
         if (selectedDraft) {
-            console.log("selected Draft in MyDraftsWidget", selectedDraft);
+            // console.log("selected Draft in MyDraftsWidget", selectedDraft);
             localStorage.setItem("submissionFormData", JSON.stringify(selectedDraft));
             localStorage.setItem("availableDraftId", draftId);
         }
@@ -61,6 +62,7 @@ const MyDraftsWidget = () => {
         try {
             const response = await fetch(`http://localhost:3001/mergeDraftData/${selectedDraftId}`, {
                 method: "DELETE",
+                headers: { Authorization: `Bearer ${token}` },
             });
             if (response.ok) {
                 // Remove the deleted draft from the drafts list

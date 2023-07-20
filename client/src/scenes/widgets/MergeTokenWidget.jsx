@@ -39,7 +39,7 @@ const MergeTokenWidget = ({ userId }) => {
 
 
   const handleCheckout = async () => {
-    console.log(`Total coins: ${totalCoins}, Total price: ${totalPrice}`);
+    // console.log(`Total coins: ${totalCoins}, Total price: ${totalPrice}`);
     const response = await fetch("http://localhost:3001/stripe/create-checkout-session", {
       method: "POST",
       headers: { 
@@ -49,7 +49,7 @@ const MergeTokenWidget = ({ userId }) => {
       body: JSON.stringify({ userId, totalCoins, totalPrice, lastVisited }) 
     });
     const data = await response.json();
-    console.log("stripe url -------->>> ", data.url)
+    // console.log("stripe url -------->>> ", data.url)
     window.location.href = data.url;
   };
 
@@ -93,7 +93,7 @@ const MergeTokenWidget = ({ userId }) => {
         <Card key={_id} sx={{ m: 2, maxWidth: 500 }}>
           <CardMedia
             sx={{ height: 100 , width: 240 , objectFit: 'cover'}}
-            image={image || "http://localhost:3001/assets/blue_coin.png"} // use a default image in case some coins don't have one
+            image={image || "http://localhost:3001/assets/mm_token.png"} // use a default image in case some coins don't have one
             title={name}
           />
           <Typography gutterBottom variant="h5" component="div" sx={{ fontWeight: 'bold', textAlign: 'center', fontFamily: 'Arial, sans-serif', mt: 2 }}>{name}</Typography>

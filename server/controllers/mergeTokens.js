@@ -6,12 +6,12 @@ import mongoose from "mongoose";
 export const getTokens = async (req, res) => { 
   try {
     const coins = await Price.find({ 
-      name: { $in: ['MergeCoins2', 'MergeCoins4', 'MergeCoins6'] } 
+      name: { $regex: 'MergeCoins', $options: 'i' } 
     }).sort({ createdAt: -1 });
-    // console.log(coins)
+
     res.status(200).json(coins);
   } catch (err) {
-      res.status(404).json({ message: err.message });
+    res.status(404).json({ message: err.message });
   }
 };
 

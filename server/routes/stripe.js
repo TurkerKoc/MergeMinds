@@ -30,7 +30,7 @@ router.post(
       switch (event.type) {
         case "checkout.session.completed":
           const session = event.data.object;
-          console.log(session)
+          // console.log(session)
           if(session.customer_details) {
             stripe.customers
               .retrieve(session.customer)
@@ -108,8 +108,8 @@ router.post(
   // Function to update the user's coin count
   const updateUserCoinCount = async (userId, totalCoins) => {
     const user = await MergeUser.findById(userId);
-    console.log('total coins purchased-------->', user.mergeCoins);
-    console.log(totalCoins);
+    // console.log('total coins purchased-------->', user.mergeCoins);
+    // console.log(totalCoins);
     user.mergeCoins += totalCoins; // assuming User model has a 'mergeCoin' field
   
     await user.save();

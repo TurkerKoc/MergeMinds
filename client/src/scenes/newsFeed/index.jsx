@@ -61,10 +61,14 @@ const NewsFeed = () => {
     const getMergeUser = async () => {
         const response = await fetch(`http://localhost:3001/mergeUsers/${_id}`, {
             method: "GET",
+            headers: { Authorization: `Bearer ${token}` },
         });
         const mergeUser = await response.json(); // we will get the logged in user from backend (backend will send the logged in user as json)
         if (response.ok) {
             dispatch(setUser({ user: mergeUser }));
+        }
+        else {
+            alert(mergeUser.message);
         }
     };
     const handleLocationInputChange = (event) => {
@@ -93,8 +97,8 @@ const NewsFeed = () => {
             const likesB = Object.keys(b.likes || {}).length;
             return likesB - likesA;
         });
-        console.log(sorted);
-        console.log(posts);
+        // console.log(sorted);
+        // console.log(posts);
         if(sorted.length > 4) {
             let result = randomizeSponsoredContent(sorted);
             dispatch(setPosts({ posts: result }));
@@ -105,8 +109,8 @@ const NewsFeed = () => {
     };
 
     function randomizeSponsoredContent(sorted) {
-        console.log("sorted");
-        console.log(sorted);
+        // console.log("sorted");
+        // console.log(sorted);
         const nonAdminPosts = sorted.filter(post => post.userId.username !== 'admin');
         const adminPosts = sorted.filter(post => post.userId.username === 'admin');
         const nonAdminCount = nonAdminPosts.length;
@@ -131,19 +135,19 @@ const NewsFeed = () => {
             }
             result.push(nonAdminPosts[i]);
         }
-        console.log(result);
+        // console.log(result);
         return result;
     }
 
     const handleNewClick = async () => {
-        console.log('handleNewClick');
+        // console.log('handleNewClick');
         setSelectedButton('new');
         const sorted = [...posts].sort((a, b) => {
             const createdAtA = new Date(a.createdAt);
             const createdAtB = new Date(b.createdAt);
             return createdAtB - createdAtA;
         });
-        console.log('sorted', sorted);
+        // console.log('sorted', sorted);
 
         if(sorted.length > 4) {
             let result = randomizeSponsoredContent(sorted);
@@ -180,15 +184,15 @@ const NewsFeed = () => {
             var filtered = data.filter((post) => {
                 return post.categoryId?._id === option._id;// || post.userId?.username === "admin";
             });
-            console.log('filtered Category', filtered);
+            // console.log('filtered Category', filtered);
             if (selectedLocationFilter !== "") {
                 filtered = filtered.filter((post) => {
                     return post.locationId?._id === selectedLocationFilter._id; // || post.userId?.name === 'admin';
                 });
-                console.log('filtered Location', filtered);
+                // console.log('filtered Location', filtered);
             }
             
-            console.log(filtered);
+            // console.log(filtered);
             dispatch(setPosts({ posts: filtered }));
         }
         setPostsToShow(10);
@@ -207,13 +211,13 @@ const NewsFeed = () => {
             var filtered = data.filter((post) => {
                 return post.locationId?._id === option._id;// || post.userId?.username === 'admin';
             });
-            console.log('filtered Location', filtered);
+            // console.log('filtered Location', filtered);
             if (selectedCategoryFilter !== "") {
                 filtered = filtered.filter((post) => {
                     return post.categoryId?._id === selectedCategoryFilter._id;// || post.userId?.username === 'admin';
                 });
             }
-            console.log('filtered category', filtered);
+            // console.log('filtered category', filtered);
             dispatch(setPosts({ posts: filtered }));
         }
         setPostsToShow(10);
@@ -239,7 +243,7 @@ const NewsFeed = () => {
             var filtered = data.filter((post) => {
                 return post.locationId?._id === selectedLocationFilter._id;
             });
-            console.log('filtered Location', filtered);
+            // console.log('filtered Location', filtered);
             dispatch(setPosts({ posts: filtered }));
         } else {
             dispatch(setPosts({ posts: data }));
@@ -259,7 +263,7 @@ const NewsFeed = () => {
             var filtered = data.filter((post) => {
                 return post.categoryId?._id === selectedCategoryFilter._id;
             });
-            console.log('filtered category', filtered);
+            // console.log('filtered category', filtered);
             dispatch(setPosts({ posts: filtered }));
         } else {
             dispatch(setPosts({ posts: data }));

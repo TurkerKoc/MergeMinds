@@ -29,6 +29,7 @@ const MergeMyWebinarWidget = () => {
 
   // open the dialog box when a webinar is selected
   const handleWebinarClick = (webinar) => {
+    console.log(webinar);
     setSelectedWebinar(webinar);
   }
 
@@ -68,40 +69,45 @@ const MergeMyWebinarWidget = () => {
       </Typography>
       <Box>
         {userWebinars && userWebinars.length > 0 ? (
-        <List>          
-          {userWebinars.map((webinar) => (
-            <ListItem
-              key={webinar._id}
-              onClick={() => handleWebinarClick(webinar)}
-              variant="contained"
-              color='primary'
-              sx={{
-                cursor: "pointer",
-                "&:hover": {
-                },
-              }}
-            >
-              <Typography
-                color={palette.primary}
-                variant="h6"
-                fontWeight="bold"
-                sx={{ mb: "0.5rem", color: 'primary.main' }}
+          <List>
+            {userWebinars.map((webinar) => (
+              <ListItem
+                key={webinar._id}
+                onClick={() => handleWebinarClick(webinar)}
+                variant="contained"
+                color='primary'
+                sx={{
+                  cursor: "pointer",
+                  "&:hover": {
+                  },
+                }}
               >
-                {webinar.title}
-              </Typography>
-            </ListItem>
-          ))}    
-        </List> ) : (
+                <Typography
+                  color={palette.primary}
+                  variant="h6"
+                  fontWeight="bold"
+                  sx={{ mb: "0.5rem", color: 'primary.main' }}
+                >
+                  {webinar.title}
+                </Typography>
+              </ListItem>
+            ))}
+          </List>) : (
           <Typography variant="h6" style={{ marginBottom: '1rem', textAlign: 'center' }}>
-          You don't have any webinars yet.
-        </Typography> )}
+            You don't have any webinars yet.
+          </Typography>)}
       </Box>
-      { selectedWebinar ? (
+      {selectedWebinar ? (
         <Dialog open={!!selectedWebinar} onClose={handleClose}>
           <DialogTitle>{selectedWebinar.title}</DialogTitle>
           <DialogContent>
-            <DialogContentText>{selectedWebinar.description}</DialogContentText>
+            {selectedWebinar.extendedProps ? (
+              <DialogContentText>{selectedWebinar.extendedProps.description}</DialogContentText>
+            ) : (
+              <DialogContentText>{selectedWebinar.description}</DialogContentText>
+            )}
           </DialogContent>
+
           <DialogContentText sx={{ fontWeight: 'bold', mt: '0.5rem', ml: '2rem' }}>
             Date: {new Date(selectedWebinar.start).toLocaleDateString("en-US", {
               year: "numeric",
@@ -117,7 +123,7 @@ const MergeMyWebinarWidget = () => {
               Open
             </Button>
           </DialogActions>
-        </Dialog> ) : null}
+        </Dialog>) : null}
 
     </WidgetWrapper>
   );

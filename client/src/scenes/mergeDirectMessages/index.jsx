@@ -10,7 +10,7 @@ import ChatWidget from "../widgets/ChatWidget";
 import { useNavigate } from "react-router-dom";
 
 const MergeDirectMessages = () => {
-    console.log("MergeDirectMessages");
+    // console.log("MergeDirectMessages");
     const userId = useSelector((state) => state.user._id);
     const { postUserId, showMyDrafts } = useParams();
     const loggedInUser = useSelector((state) => state.user);
@@ -22,8 +22,8 @@ const MergeDirectMessages = () => {
     if (loggedInUser._id === userId) {
         myProfile = true;
     }
-    console.log("loggedInUser:", loggedInUser._id);
-    console.log("userId:", userId);
+    // console.log("loggedInUser:", loggedInUser._id);
+    // console.log("userId:", userId);
 
     useEffect(() => {
         if (!userId) return; // Skip the effect if userId is not available yet

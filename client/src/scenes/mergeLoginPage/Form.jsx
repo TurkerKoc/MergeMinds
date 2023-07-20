@@ -64,7 +64,7 @@ const Form = () => {
   const [formError, setFormError] = useState(null); // error is a state to show error message
 
   const register = async (values, onSubmitProps) => {
-    console.log("on register");
+    // console.log("on register");
     setFormError(null); // we will set formError to null before submitting the form
     // this allows us to send form info with image
     const formData = new FormData(); // FormData is a javascript class to send form data with images (like profile picture)
@@ -83,7 +83,7 @@ const Form = () => {
     const savedUser = await savedUserResponse.json(); // we will get the saved user from backend (backend will send the saved user as json)
     onSubmitProps.resetForm(); // we will reset the form after submitting
     
-    console.log(savedUser)
+    // console.log(savedUser)
     //if user is saved backend will return 201 status code
     if (!savedUserResponse.ok) { // if the user is not saved then we will show the error message}
       setFormError(savedUser.error); // if the user is not saved then we will show the error message
@@ -106,7 +106,7 @@ const Form = () => {
       setFormError(loggedIn.msg); // if the user is not logged in then we will show the error message      
     }
     else if (loggedInResponse.ok) { // if the user is logged in then we will dispatch setLogin action to redux store and navigate to home page
-      console.log(loggedIn)
+      // console.log(loggedIn)
       dispatch(
         setLogin({ // setLogin is an action from state.js
           user: loggedIn.user,
@@ -118,17 +118,17 @@ const Form = () => {
   };
 
   const handleFormSubmit = async (values, onSubmitProps) => { // this function will be called when user submits the form -> onSubmitProps coming from Formik
-    console.log("on handleFormSubmit");
+    // console.log("on handleFormSubmit");
     if (isLogin) await login(values, onSubmitProps); // if the pageType is login then call login function
     if (isRegister) await register(values, onSubmitProps); // if the pageType is register then call register function        
   };
 
-  useEffect(() => { // this function will be called when the pageType changes
-    console.log("Checking page type");
-    console.log(isLogin);
-    console.log(isRegister);
-    console.log(pageType);
-  }, [isLogin, isRegister, pageType]);
+  // useEffect(() => { // this function will be called when the pageType changes
+  //   console.log("Checking page type");
+  //   console.log(isLogin);
+  //   console.log(isRegister);
+  //   console.log(pageType);
+  // }, [isLogin, isRegister, pageType]);
 
   return (
     <Formik // Formik is a library to handle forms in react from https://formik.org/docs/overview

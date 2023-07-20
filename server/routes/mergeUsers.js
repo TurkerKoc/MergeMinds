@@ -2,7 +2,7 @@ import express from "express";
 
 import {
   updateUserCoins,
-	getMergeUser,
+  getMergeUser,
   getMergeUserFriends,
   addRemoveMergeFriend,
   rateUser,
@@ -15,9 +15,9 @@ const router = express.Router();
 router.use(bodyParser.json({ limit: "30mb", extended: true }));
 router.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 /* READ */
-router.patch("/:userId/rate", rateUser);
-router.get("/:id", getMergeUser); // get user by id -> verify token first -> users/:id
-router.patch("/mergeCoins/:userId", updateUserCoins); // update user coins by id -> verify token first -> users/:id
+router.patch("/:userId/rate", verifyToken, rateUser);
+router.get("/:id", verifyToken, getMergeUser); // get user by id -> verify token first -> users/:id
+router.patch("/mergeCoins/:userId", verifyToken, updateUserCoins); // update user coins by id -> verify token first -> users/:id
 // router.get("/:id/friends", getMergeUserFriends); // get user friends by id -> verify token first -> users/:id/friends
 
 // /* UPDATE */

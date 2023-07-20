@@ -2,19 +2,23 @@ import messageModel from '../models/MessageModel.js';
 import chatModel from '../models/Chat.js';
 
 export const createMessage = async (req, res) => {
-    const {chatId, senderId, text} = req.body;
+    const { chatId, senderId, text } = req.body;
 
     try {
         const newMessage = new messageModel({
             chatId,
             senderId,
             text
-        })
+        });
+
         const response = await newMessage.save();
+
+        await chatModel.findByIdAndUpdate(chatId, { updatedAt: new Date() });
+
         res.status(200).json(response);
     } catch (err) {
         console.log(err);
-        res.status(500).json({error: err.message});
+        res.status(500).json({ error: err.message });
     }
 }
 

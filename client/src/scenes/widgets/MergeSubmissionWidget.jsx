@@ -77,6 +77,7 @@ const MergeSubmissionWidget = ({id, savedDraftData}) => {
     const getMergeUser = async () => {
         const response = await fetch(`http://localhost:3001/mergeUsers/${_id}`, {
             method: "GET",
+            headers: { Authorization: `Bearer ${token}` },
         });
         const mergeUser = await response.json();
         if (response.ok) {
@@ -129,6 +130,7 @@ const MergeSubmissionWidget = ({id, savedDraftData}) => {
     const getLocation = async (value) => {
         const response = await fetch(`http://localhost:3001/mergePosts/location/${value}`, {
             method: "GET",
+            headers: { Authorization: `Bearer ${token}` },
         });
         const curLocation = await response.json(); // we will get the logged in user from backend (backend will send the logged in user as json)
         if (response.ok) {
@@ -138,6 +140,7 @@ const MergeSubmissionWidget = ({id, savedDraftData}) => {
     const getCategory = async (value) => {
         const response = await fetch(`http://localhost:3001/mergePosts/category/${value}`, {
             method: "GET",
+            headers: { Authorization: `Bearer ${token}` },
         });
         const curCategory = await response.json(); // we will get the logged in user from backend (backend will send the logged in user as json)
         if (response.ok) {
@@ -246,7 +249,10 @@ const MergeSubmissionWidget = ({id, savedDraftData}) => {
             const curData = {mergeCoins: updatedMergeCoins};
             const mergeUserResponse = await fetch(`http://localhost:3001/mergeUsers/mergeCoins/${id}`, {
                 method: "PATCH",
-                headers: {"Content-Type": "application/json"},
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json"
+                },
                 body: JSON.stringify(curData),
             });
             const mergeUser = await mergeUserResponse.json();
@@ -260,6 +266,7 @@ const MergeSubmissionWidget = ({id, savedDraftData}) => {
                 try {
                     await fetch(`http://localhost:3001/mergeDraftData/${availableDraftId}`, {
                         method: "DELETE",
+                        headers: { Authorization: `Bearer ${token}` },
                     });
                 } catch (error) {
                     console.log(error);
@@ -283,18 +290,19 @@ const MergeSubmissionWidget = ({id, savedDraftData}) => {
             selectedLocation,
             selectedIsHidden,
         };
-        console.log("Saving draft...");
-        console.log(draftData);
+        // console.log("Saving draft...");
+        // console.log(draftData);
         const availableDraftId = localStorage.getItem("availableDraftId") || "";
         // console.log("HEY " + availableDraftId.length);
         // console.log(draftData);
         if (availableDraftId.length === 0) {
-            console.log("availableDraftId is not empty");
+            // console.log("availableDraftId is not empty");
             try {
                 await fetch("http://localhost:3001/mergeDraftData", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
                     },
                     body: JSON.stringify(draftData),
                 });
@@ -306,6 +314,7 @@ const MergeSubmissionWidget = ({id, savedDraftData}) => {
             try {
                 const response = await fetch(`http://localhost:3001/mergeDraftData/${availableDraftId}`, {
                     method: "GET",
+                    headers: { Authorization: `Bearer ${token}` },
                 });
 
                 if (response.ok) {
@@ -317,6 +326,7 @@ const MergeSubmissionWidget = ({id, savedDraftData}) => {
                                 method: "PATCH",
                                 headers: {
                                     "Content-Type": "application/json",
+                                    Authorization: `Bearer ${token}`,
                                 },
                                 body: JSON.stringify(draftData),
                             });
@@ -332,6 +342,7 @@ const MergeSubmissionWidget = ({id, savedDraftData}) => {
                                 method: "POST",
                                 headers: {
                                     "Content-Type": "application/json",
+                                    Authorization: `Bearer ${token}`,
                                 },
                                 body: JSON.stringify(draftData),
                             });
@@ -446,7 +457,7 @@ const MergeSubmissionWidget = ({id, savedDraftData}) => {
 
     //get the saved draft data from local storage
     useEffect(() => {        
-        console.log(savedDraftData);
+        // console.log(savedDraftData);
         if (savedDraftData) {
             setSelectedCategory(savedDraftData.selectedCategory || "");
             if (savedDraftData.selectedCategory) {

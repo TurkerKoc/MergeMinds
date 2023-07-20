@@ -14,7 +14,7 @@ const MergeMyIdeasWidget = () => {
     const cur_user = useSelector((state) => state.user);
 
     const getUserPosts = async () => {
-        console.log(cur_user._id);
+        // console.log(cur_user._id);
         const response = await fetch(
         `http://localhost:3001/mergePosts/${cur_user._id}/posts`,
         {

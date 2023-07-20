@@ -34,6 +34,7 @@ const MergeWebinarWidget = () => {
   const getMergeUser = async () => {
     const response = await fetch(`http://localhost:3001/mergeUsers/${_id}`, {
         method: "GET",
+        headers: { Authorization: `Bearer ${token}` },
     });
     const mergeUser = await response.json(); // we will get the logged in user from backend (backend will send the logged in user as json)
     if (response.ok) {
@@ -87,11 +88,11 @@ const MergeWebinarWidget = () => {
   const enrollInWebinar = async (webinar) => {
     try {
       const updatedMergeCoins = mergeCoins - webinar.extendedProps.price;
-      console.log('updatedMergeCoins', updatedMergeCoins);
-      console.log('webinar.extendedProps.price', webinar.extendedProps.price);
-      console.log('mergeCoins', mergeCoins);
-      console.log('webinar.extendedProps.atendees', webinar.extendedProps.atendees);
-      console.log('webinar.extendedProps._id', webinar.extendedProps._id);
+      // console.log('updatedMergeCoins', updatedMergeCoins);
+      // console.log('webinar.extendedProps.price', webinar.extendedProps.price);
+      // console.log('mergeCoins', mergeCoins);
+      // console.log('webinar.extendedProps.atendees', webinar.extendedProps.atendees);
+      // console.log('webinar.extendedProps._id', webinar.extendedProps._id);
       if (updatedMergeCoins >= 0) {
         // Update: Add userId to the request body
         const enrollResponse = await fetch(`http://localhost:3001/mergeWebinars/enroll/${webinar.extendedProps._id}/${_id}`, {
@@ -100,7 +101,7 @@ const MergeWebinarWidget = () => {
         });
 
         if (enrollResponse.ok) {
-          console.log(`Enrolled in webinar: ${webinar.title}`);
+          // console.log(`Enrolled in webinar: ${webinar.title}`);
           setEnrolled(true);
 
           const userResponse = await fetch(`http://localhost:3001/mergeWebinars/user/${_id}`, {
@@ -113,7 +114,7 @@ const MergeWebinarWidget = () => {
           });
 
           if (userResponse.ok) {
-            console.log(`Updated user's merge coins to: ${updatedMergeCoins}`);
+            // console.log(`Updated user's merge coins to: ${updatedMergeCoins}`);
           } else {
             console.error('Failed to update user coins');
           }
@@ -124,7 +125,7 @@ const MergeWebinarWidget = () => {
         const curData = {mergeCoins: updatedMergeCoins};
         const mergeUserResponse = await fetch(`http://localhost:3001/mergeUsers/mergeCoins/${_id}`, {
           method: "PATCH",
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
           body: JSON.stringify(curData), // we will send the form data as json
         });
         const mergeUser = await mergeUserResponse.json(); // we will get the logged in user from backend (backend will send the logged in user as json)
@@ -146,7 +147,7 @@ const MergeWebinarWidget = () => {
 
 
   useEffect(() => {
-    console.log('Webinars from Redux:', webinars);
+    // console.log('Webinars from Redux:', webinars);
     getWebinars();
     getMergeUser();
   }, []); // Empty dependency array to run the effect once after component mounts

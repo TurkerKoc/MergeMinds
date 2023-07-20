@@ -131,6 +131,8 @@ export const applyMergePost = async (req, res) => {
 
 /* CREATE */
 export const createMergePost = async (req, res) => {
+  // console.log('Received request body:', req.body);
+
   // Extract post details from request body
   const { userId, locationId, title, description, isHidden, prepaidApplicants, categoryId, priceId, picturePath } = req.body;
 

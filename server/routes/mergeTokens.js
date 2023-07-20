@@ -9,6 +9,6 @@ router.use(bodyParser.json({ limit: "30mb", extended: true }));
 router.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 
 /* READ */
-router.get("/", getTokens); // get feed posts 
+router.get("/", verifyToken, getTokens); // get feed posts 
 
 export default router;

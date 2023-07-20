@@ -84,6 +84,7 @@ const ChatWidget = () => {
         try {
             const response = await fetch(`http://localhost:3001/mergeChat/${userId}`, {
                 method: "GET",
+                headers: { Authorization: `Bearer ${token}` },
             });
 
             if (response.ok && !postUserId) {
@@ -114,6 +115,7 @@ const ChatWidget = () => {
                 `http://localhost:3001/mergeChat/${userId}/${contact._id}`,
                 {
                     method: "GET",
+                    headers: { Authorization: `Bearer ${token}` },
                 }
             );
 
@@ -125,6 +127,7 @@ const ChatWidget = () => {
                     `http://localhost:3001/mergeMessages/${chatId}`,
                     {
                         method: "GET",
+                        headers: { Authorization: `Bearer ${token}` },
                     }
                 );
 
@@ -173,7 +176,7 @@ const ChatWidget = () => {
             formData.append("senderName", user.name);
             formData.append("senderSurname", user.surname);
             formData.append("chatId", currentChatId);
-            console.log(selectedFile);
+            // console.log(selectedFile);
             if (selectedFile) {
                 formData.append("file", selectedFile);
                 formData.append("text", "http://localhost:3001/assets/" + selectedFile.name);
@@ -184,6 +187,7 @@ const ChatWidget = () => {
             const response = await fetch("http://localhost:3001/mergeMessages", {
                 method: "POST",
                 body: formData,
+                headers: { Authorization: `Bearer ${token}` },
             });
 
             if (response.ok) {
@@ -232,10 +236,10 @@ const ChatWidget = () => {
 
             // Listen for new messages
             socket.on("msg", (message, receivedChatId) => {
-                console.log("Received message:", message);
-                console.log(message.receivedChatId, currentChatId)
+                // console.log("Received message:", message);
+                // console.log(message.receivedChatId, currentChatId)
                 if (message.receivedChatId === currentChatId) {
-                    console.log(message.message);
+                    // console.log(message.message);
                     setChatHistory((prevChatHistory) => ({
                         ...prevChatHistory,
                         messages: [...prevChatHistory.messages, message.message],
@@ -259,14 +263,14 @@ const ChatWidget = () => {
     //     if (curContact) {
     //         fetchChatHistory(curContact);
     //     }
-    //
+    
     //     // Fetch chat history every 5 seconds
     //     const interval = setInterval(() => {
     //         if (curContact) {
     //             fetchChatHistory(curContact);
     //         }
     //     }, 1000);
-    //
+    
     //     // Clean up interval when component unmounts or curContact changes
     //     return () => clearInterval(interval);
     // }, [curContact]);

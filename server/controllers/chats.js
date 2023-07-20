@@ -29,12 +29,14 @@ export const createChat = async (req, res) => {
 export const findUserChats = async (req, res) => {
     const userId = req.params.userId;
 
-    try{
+    try {
         const chats = await chatModel.find({
             members: { $in: [userId] }
         })
+            .sort({ updatedAt: -1 }); // Sort by updatedAt in descending order (newer to older)
+
         res.status(200).json(chats);
-    }catch(err){
+    } catch (err) {
         console.log(err);
         res.status(500).json({ error: err.message });
     }

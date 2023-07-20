@@ -17,15 +17,15 @@ const SubmissionPage = () => {
     const [showMyDrafts, setShowMyDrafts] = useState(false);
 
     const [savedDraftData, setSavedDraftData] = useState(() => {
-        console.log("getting saved data");
+        // console.log("getting saved data");
         const savedFormData = localStorage.getItem('submissionFormData');
-        console.log(savedFormData)
+        // console.log(savedFormData)
         if (savedFormData) {
-            console.log("parsing saved data");
-            console.log(JSON.parse(savedFormData));
+            // console.log("parsing saved data");
+            // console.log(JSON.parse(savedFormData));
             return JSON.parse(savedFormData);
         }
-        console.log("no saved data")
+        // console.log("no saved data")
         return null;
     });
 

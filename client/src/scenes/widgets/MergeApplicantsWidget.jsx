@@ -13,17 +13,25 @@ import { useTheme } from "@mui/material/styles";
 import FlexBetween from "components/FlexBetween";
 import Divider from '@mui/material/Divider';
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const MergeApplicantsWidget = ({ PostId }) => {
   const { palette } = useTheme();
   const navigate = useNavigate();
   const [users, setUsers] = useState([]);
   const [isDialogOpen, setDialogOpen] = useState(false);
+  const token = useSelector((state) => state.token);
 
   const getApplicants = async () => {
     try {
-      console.log(PostId);
-      const res = await fetch(`http://localhost:3001/mergePosts/${PostId}/applicants`);
+      // console.log(PostId);
+      const res = await fetch(
+        `http://localhost:3001/mergePosts/${PostId}/applicants`,
+        {
+          method: "GET",
+          headers: { Authorization: `Bearer ${token}` },
+        }
+        );
       const data = await res.json();
       const updatedUsers = data.map((applicant) => applicant.user);
       setUsers(updatedUsers);

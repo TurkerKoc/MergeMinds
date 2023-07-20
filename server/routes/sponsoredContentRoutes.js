@@ -4,11 +4,12 @@ import {
     getAllSponsoredContent,
     getSponsoredContent
 } from '../controllers/sponsoredContentController.js';
+import { verifyToken } from "../middleware/auth.js"; // for verifying token
 
 const router = express.Router();
 
-router.post('/', createSponsoredContent);
-router.get('/', getAllSponsoredContent); // Route to fetch all sponsored content
-router.get('/:sponsoredContentId', getSponsoredContent);
+router.post('/', verifyToken, createSponsoredContent);
+router.get('/', verifyToken, getAllSponsoredContent); // Route to fetch all sponsored content
+router.get('/:sponsoredContentId', verifyToken, getSponsoredContent);
 
 export default router;

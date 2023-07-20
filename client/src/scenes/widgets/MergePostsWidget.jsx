@@ -24,15 +24,15 @@ const MergePostsWidget = ({ userId, isProfile = false, postsToShow }) => {
     for (let i = 0; i < nonAdminCount; i++) {
       if (i % mod === 0 && adminIndex < adminCount && i !== 0) {
         const randomIndex = getRandomIndex(i - mod + 1, i - 1, result);
-        console.log(randomIndex);
-        console.log(result);
+        // console.log(randomIndex);
+        // console.log(result);
         result.splice(randomIndex, 0, adminPosts[adminIndex]);
         adminIndex++;
       }
       else if(i === nonAdminCount - 1 && adminIndex < adminCount) {
         const randomIndex = getRandomIndex(i - (i%mod) + 1, i - 1, result);
-        console.log(randomIndex);
-        console.log(result);
+        // console.log(randomIndex);
+        // console.log(result);
         result.splice(randomIndex, 0, adminPosts[adminIndex]);
         adminIndex++;
       }
