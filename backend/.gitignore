@@ -23,5 +23,3 @@ yarn-debug.log*
 yarn-error.log*
 
 *.pdf
-server/package-lock.json
-server/public/diesel-cat-386019-907938ee9073.json
